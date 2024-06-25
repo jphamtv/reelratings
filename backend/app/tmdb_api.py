@@ -1,8 +1,7 @@
 import requests
-import json
 
 from environs import Env
-from app.utils.format_runtime_utils import format_runtime
+from app.format_runtime_utils import format_runtime
 
 # Loads environment variables
 env = Env()
@@ -99,14 +98,6 @@ def get_media_details(tmdb_id, media_type, TMDB_API_KEY):
     url = f"https://api.themoviedb.org/3/{media_type.lower()}/{tmdb_id}?api_key={TMDB_API_KEY}&language=en-US&append_to_response=release_dates,watch/providers,external_ids,credits"
     response = requests.get(url)
     response.raise_for_status()
-
-    # Assume `response` is the variable containing the API response
-    response_data = response.json()
-
-    # Open a file named 'api_data.json' in write mode
-    with open("api_data.json", "w") as file:
-        # Write the JSON data to the file, with indentation for readability
-        json.dump(response_data, file, indent=4)
 
     return response.json()
 

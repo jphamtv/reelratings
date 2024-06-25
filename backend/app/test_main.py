@@ -26,7 +26,7 @@ async def test_title_details():
     ), f"Expected 200, got {response.status_code}. Response: {response.text}"
     data = response.json()
 
-    assert "details" in data, f"Response missing 'details'. Full response: {data}"
+    assert "tmdb_data" in data, f"Response missing 'tmdb_data'. Full response: {data}"
     assert (
-        "additional_info" in data
-    ), f"Response missing 'additional_info'. Full response: {data}"
+        "external_data" in data
+    ), f"Response missing 'external_data'. Full response: {data}"
