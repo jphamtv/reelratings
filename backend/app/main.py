@@ -1,11 +1,12 @@
 import asyncio
 import logging
+import traceback
 
 from environs import Env
-from fastapi import FastAPI, Form, HTTPException, Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from .scraper import (
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+from app.data_collection import (
     get_imdb_rating,
     get_rottentomatoes_url,
     get_rottentomatoes_scores,
@@ -16,8 +17,7 @@ from .scraper import (
     get_box_office_amounts,
     get_justwatch_page,
 )
-from starlette.middleware.sessions import SessionMiddleware
-from .tmdb_api import get_title_details, search_title
+from app.tmdb_api import get_title_details, search_title
 
 # Initialize environment variables
 env = Env()
@@ -29,94 +29,96 @@ SESSION_SECRET_KEY = env.str("SESSION_SECRET_KEY")
 # Initialize FastAPI app
 app = FastAPI()
 
-# Mount static files
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"], # TODO: Add frontend URL later
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],    
+)
 
-# Initialize template engine
-templates = Jinja2Templates(directory="app/templates")
-
-
+# Error handling
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     logging.error(f"An HTTP exception occurred: {exc}")
-    return templates.TemplateResponse(
-        "500_error.html", {"request": request}, status_code=exc.status_code
-    )
+    return {"error": str(exc), "status_code": exc.status_code}
 
 
 @app.exception_handler(Exception)
 async def internal_server_error(request: Request, exc: Exception):
     logging.error(f"An error occurred: {exc}")
-    return templates.TemplateResponse(
-        "500_error.html", {"request": request}, status_code=500
-    )
+    return {"error": "Internal Server Error", "status_code": 500}
 
 
-@app.get("/")
-def index(request: Request):
-    """Show home page"""
-    return templates.TemplateResponse("index.html", {"request": request})
-
-
-@app.get("/search")
-@app.post("/search")
-def search(request: Request, title: str = Form(None)):
-    """Search for a movie or TV show and display the results"""
-    search_results = []
-
+# API routes
+@app.get("/api/search")
+def search(query: str):
     try:
-        if title:
-            user_input = title.strip()
-            if user_input:
-                search_results = search_title(user_input)
-    except Exception:
-        raise HTTPException(status_code=500)
-
-    return templates.TemplateResponse(
-        "search.html",
-        {
-            "request": request,
-            "search_results": search_results,
-            "title": title,
-        },
-    )
+        search_results = search_title(query)
+        return {"results": search_results}
+    except Exception as e:
+        logging.error(f"Search error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error performing search")
 
 
-@app.get("/details/{tmdb_id}/{media_type}/")
-async def title_details(request: Request, tmdb_id: str, media_type: str):
-    """Display detailed information and ratings for the selected title"""
+@app.get("/api/details/{tmdb_id}/{media_type}")
+async def title_details(tmdb_id: str, media_type: str):
+    try:
+        # Fetch title details from TMDB API
+        tmdb_data = get_title_details(tmdb_id, media_type, TMDB_API_KEY)
 
-    # Fetch title details
-    details = get_title_details(tmdb_id, media_type, TMDB_API_KEY)
-    title = details["title"]
-    year = details["year"]
-    imdb_id = details["imdb_id"]
-    imdb_url = f"https://www.imdb.com/title/{imdb_id}"
-    justwatch_url = details["justwatch_url"]
+        # tmdb_data = {
+        #     "title": details["title"],
+        #     "year": details["year"],
+        #     "media_type": media_type,
+        #     "imdb_id": details["imdb_id"],
+        #     "justwatch_url": details["justwatch_url"],            
+        # }
 
-    # Movie specific tasks
-    if media_type == "Movie":
-        tasks = await execute_movie_tasks(
-            imdb_id, title, year, media_type, justwatch_url
+        imdb_url = f"https://www.imdb.com/title/{tmdb_data['imdb_id']}"
+
+        # Movie specific info
+        if media_type == "Movie":
+            external_data = await get_movie_info(
+                tmdb_data["imdb_id"],
+                tmdb_data["title"],
+                tmdb_data["year"],
+                media_type,
+                tmdb_data["justwatch_url"],
+            )
+        # TV show specific info
+        elif media_type == "TV":
+            external_data = await get_tv_info(
+                tmdb_data["imdb_id"],
+                tmdb_data["title"],
+                tmdb_data["year"],
+                media_type,
+                tmdb_data["justwatch_url"],
+            )
+        else:
+            raise HTTPException(status_code=400, detail="Invalid media type")
+
+        external_data_model = {
+            "imdb_url": imdb_url,
+            **external_data,    
+        }
+
+        return {
+            # "details": details,
+            "tmdb_data": tmdb_data,
+            "external_data": external_data_model
+        }
+    except Exception as e:
+        logging.error(f"Error fetching details: {str(e)}")
+        logging.error(f"Traceback: {traceback.format_exc()}")
+        return JSONResponse(
+            status_code=500,
+            content={"detail": f"Error fetching title details: {str(e)}"},
         )
 
-    # TV show specific tasks
-    elif media_type == "TV":
-        tasks = await execute_tv_tasks(imdb_id, title, year, media_type, justwatch_url)
 
-    return templates.TemplateResponse(
-        "details.html",
-        {
-            "request": request,
-            "details": details,
-            "imdb_url": imdb_url,
-            "media_type": media_type,
-            **tasks,
-        },
-    )
-
-
-async def execute_movie_tasks(
+async def get_movie_info(
     imdb_id: str, title: str, year: str, media_type: str, justwatch_url: str
 ):
     """Execute asynchronous tasks specifically for movies."""
@@ -165,7 +167,7 @@ async def execute_movie_tasks(
     }
 
 
-async def execute_tv_tasks(
+async def get_tv_info(
     imdb_id: str, title: str, year: str, media_type: str, justwatch_url: str
 ):
     """Execute asynchronous tasks specifically for TV shows."""
@@ -206,5 +208,4 @@ async def execute_tv_tasks(
 
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="0.0.0.0", port=8000)
