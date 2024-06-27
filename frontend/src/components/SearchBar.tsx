@@ -5,6 +5,7 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ className }) => { 
+
   return (
     <div className={className}>
       <form method="POST" action="/search">
