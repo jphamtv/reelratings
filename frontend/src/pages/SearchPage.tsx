@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import { useLocation } from 'react-router-dom';
+import { searchTitles } from '../services/api';
 import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import SearchResultItem from '../components/SearchResultItem';
@@ -7,25 +9,27 @@ import SearchResultItem from '../components/SearchResultItem';
 const SearchPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
 
   useEffect(() => {
-    const fetchSearchResultsForPage = async () => {
-      try {
-        const searchResultsData = await fetchSearchResults();
-        setSearchResults(searchResultsData);
-        setError(null);
-      } catch (error) {
-        setError(error.message);
-        setSearchResults(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSearchResultsForPage();
-  }, []);
-
+    const query = new URLSearchParams(location.search).get('query');
+    if (query) {
+      fetchSearchResults(query);
+    }
+  }, [location.search]);
+  
+  const fetchSearchResults = async (query: string) => {
+    try {
+      setLoading(true);
+      const results = await searchTitles(query);
+      setSearchResults(results);
+    } catch (err) {
+      setError('Failed to fetch search results');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const renderLoading = () => {
     <div id="loading">Loading...</div>

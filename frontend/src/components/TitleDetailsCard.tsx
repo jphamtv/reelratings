@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DetailsCard: React.FC = () => { 
+const DetailsCard: React.FC = ({ details }) => { 
   return (
     <div className="title-details-container">
   <img src="{{ details.poster_img }}" alt="{{ details.title }}" className="poster-image">

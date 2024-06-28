@@ -1,8 +1,8 @@
 import React from 'react';
 
-const RatingsDetails: React.FC = () => { 
+const RatingsDetails: React.FC = ({ details }) => { 
   return (
-    {% if rottentomatoes_url %}
+    // {% if rottentomatoes_url %}
     <a href="{{ rottentomatoes_url }}" target="_blank" rel="noopener noreferrer">
       <div class="rottentomatoes-container card">
         <div class="tomatometer-wrapper">
@@ -105,8 +105,6 @@ const RatingsDetails: React.FC = () => {
         </div>
       </a>
     </div>
-    {% endif %}
-    {% endif %}
   );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BoxOfficeAmounts: React.FC = () => { 
+const BoxOfficeAmounts: React.FC = ({ details }) => { 
   return (
     {% if media_type == 'Movie' %}
     {% if box_office_amounts and box_office_amounts[2] != '–'%}
