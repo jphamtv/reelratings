@@ -14,25 +14,18 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   mediaType
 }) => {
   return (
-    // {% if search_results %}
-    <ul>
-      {/* {% for item in search_results %} */}
-      <li className="search-result-item">
-        <a href="/details/{{ item.tmdb_id }}/{{ item.media_type }}" className="search-result-item-link">
-          <div className="search-result-wrapper">
-            <img src={image} alt={title} className="poster-image" />
-            <div className="title-details-wrapper">
-              <h3>{{ title }}</h3>
-              {/* {% if item.year %} */}
-              <p>{{ year }}</p>
-              {/* {% endif %} */}
-              <p>{{ mediaType }}</p>
-            </div>
+    <li className="search-result-item">
+      <a href="/details/{{ item.tmdb_id }}/{{ item.media_type }}" className="search-result-item-link">
+        <div className="search-result-wrapper">
+          <img src={image} alt={title} className="poster-image" />
+          <div className="title-details-wrapper">
+            <h3>{title}</h3>
+            {year && <p>{year}</p>}
+            <p>{mediaType}</p>
           </div>
-        </a>
-      </li>
-      {/* {% endfor %} */}
-    </ul>
+        </div>
+      </a>
+    </li>
   );
 };
 

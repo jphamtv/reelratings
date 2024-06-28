@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import DetailsCard from '../components/DetailsCard';
 import RatingsDetails from '../components/RatingsDetails';
@@ -8,6 +8,9 @@ import errorImage from '../assets/img/500_error.png';
 
 
 const DetailsPage: React.FC = () => {
+  const [titleDetails, setTitleDetails] = useState(null);
+  const [ratings, setRatings] = useState(null);
+  const [boxOfficeAmounts, setBoxOfficeAmounts] = useState(null);
   const [detailsCardLoading, setDetailsCardLoading] = useState(true);
   const [ratingsDetailsLoading, setratingsDetailsLoading] = useState(true);
   const [error, setError] = useState(null);

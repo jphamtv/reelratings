@@ -1,17 +1,49 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface SearchBarProps {
-  className: string;
+  className?: string;
+  placeholder?: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ className }) => { 
+const SearchBar: React.FC<SearchBarProps> = ({
+  className = 'search-field',
+  placeholder = 'Search Movies & TV'
+}) => {
+  const [searchValue, setSearchValue] = useState('');
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchValue.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchValue.trim())}`);
+    }
+  };
+
+  const handleClear = () => {
+    setSearchValue('');
+    inputRef.current?.focus();
+  };
 
   return (
     <div className={className}>
-      <form method="POST" action="/search">
+      <form onSubmit={handleSubmit}>
         <div className="search-wrapper">
-          <input type="text" name="title" placeholder="Search Movies & TV" className="search-field" value="{{ title }}" required />
-          <button type="button" className="clear-button">&times;</button>
+          <input
+            ref={inputRef}
+            type="text"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            placeholder={placeholder}
+            className={className}
+            required
+          />
+          {searchValue && (
+            <button type="button" className="clear-button" onClick={handleClear}>
+              &times;
+            </button>
+          )}
         </div>
       </form>
     </div>

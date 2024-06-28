@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import SearchBar from '../components/SearchBar';
+import logoYellow from '../assets/img/logo_yellow.svg';
 
 const HomePage: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const HomePage: React.FC = () => {
       <div className="homepage-body">
         <div className="homepage-container">
           <div className="homepage-logo-wrapper">
-            <img src="/img/logo_yellow_v2.svg" className="homepage-logo" alt="Logo" />
+            <img src={logoYellow} className="homepage-logo" alt="Logo" />
             <div className="homepage-tagline">Get ratings for movies and TV shows</div>
           </div>
           <div className="homepage-search-container">

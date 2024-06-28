@@ -1,48 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import SearchResultItem from '../components/SearchResultItem';
 
 const SearchPage: React.FC = () => {
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSearchResultsForPage = async () => {
+      try {
+        const searchResultsData = await fetchSearchResults();
+        setSearchResults(searchResultsData);
+        setError(null);
+      } catch (error) {
+        setError(error.message);
+        setSearchResults(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSearchResultsForPage();
+  }, []);
 
 
-  // <script>
-  //   document.addEventListener("DOMContentLoaded", function () {
-  //     const clickableResults = document.querySelectorAll('.search-result-item-link');
-
-  //     clickableResults.forEach(function (element) {
-  //       element.addEventListener('click', function () {
-  //         // Set the session storage item to indicate loading state
-  //         sessionStorage.setItem('displayState', 'loading');
-          
-  //         // Hide results and show loading animation
-  //         document.getElementById("results").style.display = "none";
-  //         document.getElementById("loading").style.display = "block";
-  //       });
-  //     });
-  //   });
-
-  //   window.addEventListener('pageshow', function(event) {
-  //     const displayState = sessionStorage.getItem('displayState');
-      
-  //     if (displayState === 'loading') {
-  //       // Show results and hide loading animation
-  //       document.getElementById("results").style.display = "block";
-  //       document.getElementById("loading").style.display = "none";
-        
-  //       // Clear the stored state
-  //       sessionStorage.removeItem('displayState');
-  //     }
-  //   });
-  // </script>
-
-  const Error = () => { 
-    return (
-      <p className="error-message">Bummer, no matches for that title. Check the spelling and try again.</p>
-    );
+  const renderLoading = () => {
+    <div id="loading">Loading...</div>
   };
+
+  const renderError = () => { 
+    <p className="error-message">Bummer, no matches for that title. Check the spelling and try again.</p>    
+  };
+
+  if (loading) {
+    return renderLoading();
+  }
+
+  if (error) {
+    return renderError();
+  }
 
   return (
       <>
@@ -52,8 +51,16 @@ const SearchPage: React.FC = () => {
         <Layout>
           <SearchBar className='search-container' />
           <div className='search-list-container'>
-          {searchResults && 
-            }
+            <ul>
+              {searchResults.map((result) => (
+                <SearchResultItem
+                  image={result.img}
+                  title={result.title}
+                  year={result.year}
+                  mediaType={result.mediaType}
+                />
+              ))}
+            </ul>
           </div>
         </Layout>
       </>

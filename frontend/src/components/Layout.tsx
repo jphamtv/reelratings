@@ -9,7 +9,7 @@ const Layout: React.FC = () => {
     <div className="app-container">
       <Header />
       <div className="search-container">
-        <SearchBar className=''/>
+        <SearchBar className='search-container'/>
       </div>
       <main><Outlet /></main>
       <Footer />
