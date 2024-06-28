@@ -1,20 +1,17 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import Footer from './Footer';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC = () => {
   return (
     <div className="app-container">
       <Header />
       <div className="search-container">
         <SearchBar className=''/>
       </div>
-      <main>{children}</main>
+      <main><Outlet /></main>
       <Footer />
     </div>
   );

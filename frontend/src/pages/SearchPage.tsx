@@ -7,26 +7,6 @@ import SearchResultItem from '../components/SearchResultItem';
 const SearchPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState([]);
 
-  const Loading = () => {
-    return (
-      <div id="loading">
-        <div className="empty-state-details-container">
-          <div className="empty-state-poster"></div>
-          <div className="empty-state-details-wrapper">
-            <div className="empty-state-info"></div>
-            <div className="empty-state-info"></div>
-            <div className="empty-state-info"></div>
-          </div>
-        </div>
-        <div className="empty-state-card">
-        </div>
-        <div className="empty-state-card">
-        </div>
-        <div className="empty-state-card">
-        </div>
-      </div>
-    );
-  };
 
   // <script>
   //   document.addEventListener("DOMContentLoaded", function () {
@@ -72,7 +52,8 @@ const SearchPage: React.FC = () => {
         <Layout>
           <SearchBar className='search-container' />
           <div className='search-list-container'>
-            {/* Search results */}
+          {searchResults && 
+            }
           </div>
         </Layout>
       </>
