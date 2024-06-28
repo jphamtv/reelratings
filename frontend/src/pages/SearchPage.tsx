@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import SearchResultItem from '../components/SearchResultItem';
 
 const SearchPage: React.FC = () => {
+  const [searchResults, setSearchResults] = useState([]);
 
   const Loading = () => {
     return (
-      <div id="loading" style="display: none">
+      <div id="loading">
         <div className="empty-state-details-container">
           <div className="empty-state-poster"></div>
           <div className="empty-state-details-wrapper">
@@ -27,11 +28,39 @@ const SearchPage: React.FC = () => {
     );
   };
 
+  // <script>
+  //   document.addEventListener("DOMContentLoaded", function () {
+  //     const clickableResults = document.querySelectorAll('.search-result-item-link');
+
+  //     clickableResults.forEach(function (element) {
+  //       element.addEventListener('click', function () {
+  //         // Set the session storage item to indicate loading state
+  //         sessionStorage.setItem('displayState', 'loading');
+          
+  //         // Hide results and show loading animation
+  //         document.getElementById("results").style.display = "none";
+  //         document.getElementById("loading").style.display = "block";
+  //       });
+  //     });
+  //   });
+
+  //   window.addEventListener('pageshow', function(event) {
+  //     const displayState = sessionStorage.getItem('displayState');
+      
+  //     if (displayState === 'loading') {
+  //       // Show results and hide loading animation
+  //       document.getElementById("results").style.display = "block";
+  //       document.getElementById("loading").style.display = "none";
+        
+  //       // Clear the stored state
+  //       sessionStorage.removeItem('displayState');
+  //     }
+  //   });
+  // </script>
+
   const Error = () => { 
     return (
-      {/* {% elif not search_results %} */}
-        <p className="error-message">Bummer, no matches for that title. Check the spelling and try again.</p>
-      {/* {% endif %} */}
+      <p className="error-message">Bummer, no matches for that title. Check the spelling and try again.</p>
     );
   };
 
@@ -41,7 +70,7 @@ const SearchPage: React.FC = () => {
           <title>Search Results | ReelRatings</title>
         </Helmet>
         <Layout>
-          <SearchBar />
+          <SearchBar className='search-container' />
           <div className='search-list-container'>
             {/* Search results */}
           </div>
