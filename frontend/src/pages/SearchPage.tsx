@@ -6,8 +6,16 @@ import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import SearchResultItem from '../components/SearchResultItem';
 
+interface SearchResult {
+  tmdb_id: number;
+  title: string;
+  year: string;
+  media_type: string;
+  poster_img: string;
+}
+
 const SearchPage: React.FC = () => {
-  const [searchResults, setSearchResults] = useState(null);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const location = useLocation();
@@ -22,9 +30,11 @@ const SearchPage: React.FC = () => {
   const fetchSearchResults = async (query: string) => {
     try {
       setLoading(true);
-      const results = await searchTitles(query);
-      setSearchResults(results);
+      const response = await searchTitles(query);
+      console.log('API response:', response);
+      setSearchResults(response.results);
     } catch (err) {
+      console.error('Search error:', err);
       setError('Failed to fetch search results');
     } finally {
       setLoading(false);
@@ -52,21 +62,20 @@ const SearchPage: React.FC = () => {
         <Helmet>
           <title>Search Results | ReelRatings</title>
         </Helmet>
-        <Layout>
-          <SearchBar className='search-container' />
-          <div className='search-list-container'>
-            <ul>
-              {searchResults.map((result) => (
-                <SearchResultItem
-                  image={result.img}
-                  title={result.title}
-                  year={result.year}
-                  mediaType={result.mediaType}
-                />
-              ))}
-            </ul>
-          </div>
-        </Layout>
+        <div className='search-list-container'>
+          <ul>
+            {searchResults.map((result) => (
+              <SearchResultItem
+                key={result.tmdb_id}
+                tmdb_id={result.tmdb_id}
+                title={result.title}
+                year={result.year}
+                media_type={result.media_type}
+                poster_img={result.poster_img}
+              />
+            ))}
+          </ul>
+        </div>
       </>
   );
 };

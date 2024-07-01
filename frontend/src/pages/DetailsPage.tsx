@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { getTitleDetails } from '../services/api';
-import TitleDetailsCard from '../components/TitleDetailsCard';
-import RatingsDetails from '../components/RatingsDetails';
-import BoxOfficeAmounts from '../components/BoxOfficeAmounts';
-import Button from '../components/Button';
+// import TitleDetailsCard from '../components/TitleDetailsCard';
+// import RatingsDetails from '../components/RatingsDetails';
+// import BoxOfficeAmounts from '../components/BoxOfficeAmounts';
+// import Button from '../components/Button';
 import errorImage from '../assets/img/500_error.png';
 
 

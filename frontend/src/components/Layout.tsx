@@ -8,9 +8,7 @@ const Layout: React.FC = () => {
   return (
     <div className="app-container">
       <Header />
-      <div className="search-container">
-        <SearchBar className='search-container'/>
-      </div>
+      <SearchBar className='search-container'/>
       <main><Outlet /></main>
       <Footer />
     </div>

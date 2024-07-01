@@ -7,7 +7,7 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
-  className = 'search-field',
+  className = 'search-container',
   placeholder = 'Search Movies & TV'
 }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -36,7 +36,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder={placeholder}
-            className={className}
+            className="search-field"
             required
           />
           {searchValue && (
