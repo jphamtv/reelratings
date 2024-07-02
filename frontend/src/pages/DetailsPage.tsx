@@ -134,7 +134,10 @@ const DetailsPage: React.FC = () => {
         />
       )}
       {external_data.justwatch_page && (
-        <Button justwatchUrl={external_data.justwatch_page} />
+        <Button
+          justwatchUrl={external_data.justwatch_url}
+          justwatchPage={external_data.justwatch_page}
+        />
       )}
     </>
   );
