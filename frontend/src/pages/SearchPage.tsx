@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 import { searchTitles } from '../services/api';
-import Layout from '../components/Layout';
-import SearchBar from '../components/SearchBar';
 import SearchResultItem from '../components/SearchResultItem';
 
 interface SearchResult {
@@ -31,10 +29,8 @@ const SearchPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await searchTitles(query);
-      console.log('API response:', response);
       setSearchResults(response.results);
     } catch (err) {
-      console.error('Search error:', err);
       setError('Failed to fetch search results');
     } finally {
       setLoading(false);

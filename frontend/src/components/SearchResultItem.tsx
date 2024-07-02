@@ -11,7 +11,6 @@ interface SearchResultItemProps {
 }
 
 const SearchResultItem: React.FC<SearchResultItemProps> = ({
-  key,
   tmdb_id,
   title,
   year,
@@ -19,7 +18,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   poster_img
 }) => {
   return (
-    <li className="search-result-item" key={key}>
+    <li className="search-result-item">
       <Link to={`/details/${tmdb_id}/${media_type}`} className="search-result-item-link">
         <div className="search-result-wrapper">
           <img src={poster_img} alt={title} className="poster-image" />
