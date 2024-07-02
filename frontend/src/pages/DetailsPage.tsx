@@ -13,6 +13,7 @@ interface TitleDetails {
     imdb_id: string;
     media_type: "Movie" | "TV";
     title: string;
+    year: string;
     poster_img: string;
     justwatch_url: string;
     director?: string[];
@@ -109,7 +110,7 @@ const DetailsPage: React.FC = () => {
       <Helmet>
         <title>{`${tmdb_data.title} (${tmdb_data.year}) | ReelRatings`}</title>
       </Helmet>
-      <TitleDetailsCard details={tmdb_data} />
+      <TitleDetailsCard details={{ tmdb_data, external_data }} />
       <RatingsDetails
         imdbData={{
           url: external_data.imdb_url, rating: external_data.imdb_rating
