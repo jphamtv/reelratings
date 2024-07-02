@@ -1,111 +1,137 @@
-// import React from 'react';
+import React from 'react';
 
-// const RatingsDetails: React.FC = ({ details }) => { 
-//   return (
-//     // {% if rottentomatoes_url %}
-//     <a href="{{ rottentomatoes_url }}" target="_blank" rel="noopener noreferrer">
-//       <div class="rottentomatoes-container card">
-//         <div class="tomatometer-wrapper">
-//           <div class="rating-box-wrapper-rt">
-//             {% if rottentomatoes_scores.tomatometer_state == 'certified-fresh' %}
-//             <img src="/static/img/certified_fresh.svg" class="rating-image-rt">
-//             {% elif rottentomatoes_scores.tomatometer_state == 'fresh' %}
-//             <img src="/static/img/tomatometer-fresh.svg" class="rating-image-rt">
-//             {% elif rottentomatoes_scores.tomatometer_state == 'rotten' %}
-//             <img src="/static/img/tomatometer-rotten.svg" class="rating-image-rt">
-//             {% else %}
-//             <img src="/static/img/tomatometer-empty.svg" class="rating-image-rt">
-//             {% endif %}
-//             {% if rottentomatoes_scores.tomatometer %}
-//             <p class="rating">{{ rottentomatoes_scores.tomatometer }}%</p>
-//             {% else %}
-//             <p class="no_rating">--</p>
-//             {% endif %}
-//           </div>
-//           <p class="label">Tomatometer</p>
-//         </div>
-//         <div class="audiencescore-wrapper">
-//           <div class="rating-box-wrapper-rt">
-//             {% if rottentomatoes_scores.audience_state == 'upright' %}
-//             <img src="/static/img/aud_score-fresh.svg" class="rating-image-rt">
-//             {% elif rottentomatoes_scores.audience_state == 'spilled' %}
-//             <img src="/static/img/aud_score-rotten.svg" class="rating-image-rt">
-//             {% else %}
-//             <img src="/static/img/aud_score-empty.svg" class="rating-image-rt">
-//             {% endif %}
-//             {% if rottentomatoes_scores.audience_score %}
-//             <p class="rating">{{ rottentomatoes_scores.audience_score }}%</p>
-//             {% else %}
-//             <p class="no_rating">--</p>
-//             {% endif %}
-//           </div>
-//           <p class="label">Audience Score</p>
-//         </div>
-//       </div>
-//     </a>
-//     {% endif %}
+interface RatingsDetailsProps {
+  imdbData: {
+    url: string;
+    rating: string | null;
+  };
+  rottenTomatoesData: {
+    url: string;
+    scores: {
+      tomatometer: string | null;
+      tomatometer_state: string;
+      audience_score: string | null;
+      audience_state: string;
+    };
+  };
+  letterboxdData?: {
+    url: string;
+    rating: string | null;
+  };
+}
 
-//     <div class="ratings-container">
-//       <a href="{{ imdb_url }}" target="_blank" rel="noopener noreferrer">
-//         <div class="imdb-wrapper card">
-//           <div class="rating-box-wrapper">
-//             {% if imdb_rating %}
-//             <img src="/static/img/star.svg" class="rating-image">
-//             <p class="rating">{{ imdb_rating }}<span class="rating-scale">/10</span></p>
-//             {% else %}
-//             <img src="/static/img/star-empty.svg" class="rating-image">
-//             <p class="no_rating">--</p>
-//             {% endif %}
-//           </div>
-//           <p class="label">IMDb</p>
-//         </div>
-//       </a>
+const RatingsDetails: React.FC<RatingsDetailsProps> = ({
+  imdbData,
+  rottenTomatoesData,
+  letterboxdData
+}) => { 
+  const renderRottenTomatoes = () => {
+    if (!rottenTomatoesData.url) return null;
 
-//       {% if letterboxd_url %}
-//       <a href="{{ letterboxd_url }}" target="_blank" rel="noopener noreferrer">
-//         <div class="letterbxd-wrapper card">
-//           <div class="rating-box-wrapper">
-//             {% if letterboxd_rating %}
-//             <img src="/static/img/star-letterboxd.svg" class="rating-image">
-//             <p class="rating">{{ letterboxd_rating }}<span class="rating-scale">/5</span></p>
-//             {% else %}
-//             <img src="/static/img/star-letterboxd-empty.svg" class="rating-image">
-//             <p class="no_rating">--</p>
-//             {% endif %}
-//           </div>
-//           <p class="label">Letterboxd</p>
-//         </div>
-//       </a>
-//       {% endif %}
-//     </div>
+    return (
+      <a href={rottenTomatoesData.url} target="_blank" rel="noopener noreferrer">
+        <div className="rottentomatoes-container card">
+          <div className="tomatometer-wrapper">
+            <div className="rating-box-wrapper-rt">
+              <img 
+                src={`/static/img/${getTomatoMeterImage(rottenTomatoesData.scores.tomatometer_state)}`} 
+                className="rating-image-rt"
+                alt="Tomatometer"
+              />
+              <p className={rottenTomatoesData.scores.tomatometer ? "rating" : "no_rating"}>
+                {rottenTomatoesData.scores.tomatometer || "--"}
+                {rottenTomatoesData.scores.tomatometer && "%"}
+              </p>
+            </div>
+            <p className="label">Tomatometer</p>
+          </div>
+          <div className="audiencescore-wrapper">
+            <div className="rating-box-wrapper-rt">
+              <img 
+                src={`/static/img/${getAudienceScoreImage(rottenTomatoesData.scores.audience_state)}`} 
+                className="rating-image-rt"
+                alt="Audience Score"
+              />
+              <p className={rottenTomatoesData.scores.audience_score ? "rating" : "no_rating"}>
+                {rottenTomatoesData.scores.audience_score || "--"}
+                {rottenTomatoesData.scores.audience_score && "%"}
+              </p>
+            </div>
+            <p className="label">Audience Score</p>
+          </div>
+        </div>
+      </a>
+    );
+  }; 
 
-//     {% if media_type == 'Movie' %}
-//     {% if box_office_amounts and box_office_amounts[2] != '–'%}
-//     <div class="box-office-container">
-//       <a href="{{ boxofficemojo_url }}" target="_blank" rel="noopener noreferrer">
-//         <div class="box-office-wrapper card">
-//           {% if box_office_amounts[0] != '–' %}
-//           <div>
-//             <p class="box-office-rating">{{ box_office_amounts[0] }}</p>
-//             <p class="label-box-office">Domestic</p>
-//           </div>
-//           {% endif %}
-//           {% if box_office_amounts[1] != '–' %}
-//           <div>
-//             <p class="box-office-rating">{{ box_office_amounts[1] }}</p>
-//             <p class="label-box-office">International</p>
-//           </div>
-//           {% endif %}
-//           {% if box_office_amounts[0] != '–' and box_office_amounts[1] != '–' %}
-//           <div>
-//             <p class="box-office-rating">{{ box_office_amounts[2] }}</p>
-//             <p class="label-box-office">Worldwide</p>
-//           </div>
-//           {% endif %}
-//         </div>
-//       </a>
-//     </div>
-//   );
-// };
+  const renderIMDb = () => (
+    <a href={imdbData.url} target="_blank" rel="noopener noreferrer">
+      <div className="imdb-wrapper card">
+        <div className="rating-box-wrapper">
+          <img 
+            src={`/static/img/${imdbData.rating ? 'star.svg' : 'star-empty.svg'}`} 
+            className="rating-image"
+            alt="IMDb rating"
+          />
+          <p className={imdbData.rating ? "rating" : "no_rating"}>
+            {imdbData.rating || "--"}
+            {imdbData.rating && <span className="rating-scale">/10</span>}
+          </p>
+        </div>
+        <p className="label">IMDb</p>
+      </div>
+    </a>
+  );
 
-// export default RatingsDetails;
+  const renderLetterboxd = () => {
+    if (!letterboxdData) return null;
+
+    return (
+      <a href={letterboxdData.url} target="_blank" rel="noopener noreferrer">
+        <div className="letterbxd-wrapper card">
+          <div className="rating-box-wrapper">
+            <img 
+              src={`/static/img/${letterboxdData.rating ? 'star-letterboxd.svg' : 'star-letterboxd-empty.svg'}`} 
+              className="rating-image"
+              alt="Letterboxd rating"
+            />
+            <p className={letterboxdData.rating ? "rating" : "no_rating"}>
+              {letterboxdData.rating || "--"}
+              {letterboxdData.rating && <span className="rating-scale">/5</span>}
+            </p>
+          </div>
+          <p className="label">Letterboxd</p>
+        </div>
+      </a>
+    );
+  };
+
+  return (
+    <>
+      {renderRottenTomatoes()}
+      <div className="ratings-container">
+        {renderIMDb()}
+        {renderLetterboxd()}
+      </div>
+    </>
+  );
+};
+
+function getTomatoMeterImage(state: string): string {
+  switch (state) {
+    case 'certfied-fresh': return 'certified_fresh.svg';
+    case 'fresh': return 'tomatometer-fresh.svg';
+    case 'rotten': return 'tomatometer-rotten.svg';
+    default: return 'tomatometer-empty.svg';
+  }
+}
+
+function getAudienceScoreImage(state: string): string {
+  switch (state) {
+    case 'upright': return 'aud_score-fresh.svg';
+    case 'spilled': return 'aud_score-rotten.svg';
+    default: return 'aud_score-empty.svg';
+  }
+}
+
+export default RatingsDetails;

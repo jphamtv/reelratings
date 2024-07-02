@@ -41,7 +41,7 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdb_data, external
     return (
       <a href={commonsense_info.url} target="_blank" rel="noopener noreferrer">
         <div className="commonsense-wrapper">
-          <img src="/static/img/logo-checkmark-green.svg" className="commonsense-icon" />
+          <img src="/static/img/logo-checkmark-green.svg" alt="" className="commonsense-icon" />
           <div>{commonsense_info.rating}</div>
         </div>
       </a>

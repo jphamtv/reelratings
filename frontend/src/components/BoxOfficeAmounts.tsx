@@ -1,5 +1,34 @@
 // import React from 'react';
 
+const renderBoxOffice = () => {
+    if (mediaType !== 'Movie' || !boxOfficeData || boxOfficeData.amounts[2] === '–') return null;
+    return (
+      <div className="box-office-container">
+        <a href={boxOfficeData.url} target="_blank" rel="noopener noreferrer">
+          <div className="box-office-wrapper card">
+            {boxOfficeData.amounts[0] !== '–' && (
+              <div>
+                <p className="box-office-rating">{boxOfficeData.amounts[0]}</p>
+                <p className="label-box-office">Domestic</p>
+              </div>
+            )}
+            {boxOfficeData.amounts[1] !== '–' && (
+              <div>
+                <p className="box-office-rating">{boxOfficeData.amounts[1]}</p>
+                <p className="label-box-office">International</p>
+              </div>
+            )}
+            {boxOfficeData.amounts[0] !== '–' && boxOfficeData.amounts[1] !== '–' && (
+              <div>
+                <p className="box-office-rating">{boxOfficeData.amounts[2]}</p>
+                <p className="label-box-office">Worldwide</p>
+              </div>
+            )}
+          </div>
+        </a>
+      </div>
+    );
+
 // const BoxOfficeAmounts: React.FC = ({ details }) => { 
 //   return (
 //     {% if media_type == 'Movie' %}
