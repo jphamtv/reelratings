@@ -112,7 +112,6 @@ const DetailsPage: React.FC = () => {
       </Helmet>
       <TitleDetailsCard details={{ tmdb_data, external_data }} />
       <RatingsDetails
-        mediaType={tmdb_data.media_type}
         imdbData={{
           url: external_data.imdb_url, rating: external_data.imdb_rating
         }}
