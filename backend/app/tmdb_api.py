@@ -199,7 +199,7 @@ def get_title_details(tmdb_id, media_type, TMDB_API_KEY):
             "title": title,
             "year": year,
             "runtime": runtime,
-            "certifcation": certification,
+            "certification": certification,
             "poster_img": poster_img,
             "justwatch_url": justwatch_url,
         }
