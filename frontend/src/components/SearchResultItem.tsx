@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import posterEmpty from '../assets/img/poster_empty.jpg'
 
 interface SearchResultItemProps {
   key: number;
@@ -21,7 +22,11 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
     <li className="search-result-item">
       <Link to={`/details/${tmdb_id}/${media_type}`} className="search-result-item-link">
         <div className="search-result-wrapper">
-          <img src={poster_img} alt={title} className="poster-image" />
+          <img
+            src={poster_img ? poster_img : posterEmpty}
+            alt={title}
+            className="poster-image"
+          />
           <div className="title-details-wrapper">
             <h3>{title}</h3>
             {year && <p>{year}</p>}

@@ -1,5 +1,16 @@
 import React from 'react';
-import freshIcon from '../assets/img/'
+import imdbStar from '../assets/img/imdb_star.svg';
+import imdbStarEmpty from '../assets/img/imdb_star_empty.svg';
+import justwatchLogo from '../assets/img/justwatch_logo.svg';
+import letterboxdStar from '../assets/img/letterboxd_star.svg';
+import letterboxdStarEmpty from '../assets/img/letterboxd_star_empty.svg';
+import tomatometerCertfiedFresh from '../assets/img/rt_tomatometer_certified_fresh.svg';
+import tomatometerFresh from '../assets/img/rt_tomatometer_fresh.svg';
+import tomatometerRotten from '../assets/img/rt_tomatometer_rotten.svg';
+import tomatometerEmpty from '../assets/img/rt_tomatometer_empty.svg';
+import audienceFresh from '../assets/img/rt_aud_score_fresh.svg';
+import audienceRotten from '../assets/img/rt_aud_score_rotten.svg';
+import audienceEmpty from '../assets/img/rt_aud_score_empty.svg';
 
 interface RatingsDetailsProps {
   imdbData: {
@@ -35,7 +46,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
           <div className="tomatometer-wrapper">
             <div className="rating-box-wrapper-rt">
               <img 
-                src={`/static/img/${getTomatoMeterImage(rottenTomatoesData.scores.tomatometer_state)}`} 
+                src={getTomatoMeterImage(rottenTomatoesData.scores.tomatometer_state)} 
                 className="rating-image-rt"
                 alt="Tomatometer"
               />
@@ -49,7 +60,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
           <div className="audiencescore-wrapper">
             <div className="rating-box-wrapper-rt">
               <img 
-                src={`/static/img/${getAudienceScoreImage(rottenTomatoesData.scores.audience_state)}`} 
+                src={getAudienceScoreImage(rottenTomatoesData.scores.audience_state)} 
                 className="rating-image-rt"
                 alt="Audience Score"
               />
@@ -70,7 +81,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
       <div className="imdb-wrapper card">
         <div className="rating-box-wrapper">
           <img 
-            src={`/static/img/${imdbData.rating ? 'star.svg' : 'star-empty.svg'}`} 
+            src={imdbData.rating ? imdbStar : imdbStarEmpty} 
             className="rating-image"
             alt="IMDb rating"
           />
@@ -92,7 +103,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
         <div className="letterbxd-wrapper card">
           <div className="rating-box-wrapper">
             <img 
-              src={`/static/img/${letterboxdData.rating ? 'star-letterboxd.svg' : 'star-letterboxd-empty.svg'}`} 
+              src={letterboxdData.rating ? letterboxdStar : letterboxdStarEmpty} 
               className="rating-image"
               alt="Letterboxd rating"
             />
@@ -120,18 +131,18 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
 
 function getTomatoMeterImage(state: string): string {
   switch (state) {
-    case 'certfied-fresh': return 'certified_fresh.svg';
-    case 'fresh': return 'tomatometer-fresh.svg';
-    case 'rotten': return 'tomatometer-rotten.svg';
-    default: return 'tomatometer-empty.svg';
+    case 'certified-fresh': return tomatometerCertfiedFresh;
+    case 'fresh': return tomatometerFresh;
+    case 'rotten': return tomatometerRotten;
+    default: return tomatometerEmpty;
   }
 }
 
 function getAudienceScoreImage(state: string): string {
   switch (state) {
-    case 'upright': return 'aud_score-fresh.svg';
-    case 'spilled': return 'aud_score-rotten.svg';
-    default: return 'aud_score-empty.svg';
+    case 'upright': return audienceFresh;
+    case 'spilled': return audienceRotten;
+    default: return audienceEmpty;
   }
 }
 

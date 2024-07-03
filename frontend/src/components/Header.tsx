@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logoYellow from '../assets/img/logo_yellow.svg';
+import reelRatingsLogo from '../assets/img/reelratings_logo_yellow.svg';
 
 const Header: React.FC = () => {
   return (
     <header>
       <Link to='/'>
-        <img src={logoYellow} className="logo" alt="ReelRatings" />
+        <img src={reelRatingsLogo} className="logo" alt="ReelRatings" />
       </Link>
     </header>
   );

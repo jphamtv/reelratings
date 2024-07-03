@@ -6,7 +6,7 @@ import TitleDetailsCard from '../components/TitleDetailsCard';
 import RatingsDetails from '../components/RatingsDetails';
 import BoxOfficeAmounts from '../components/BoxOfficeAmounts';
 import Button from '../components/Button';
-import errorImage from '../assets/img/500_error.png';
+import errorImage from '../assets/img/error_500.png';
 
 interface TitleDetails {
   tmdb_data: {
