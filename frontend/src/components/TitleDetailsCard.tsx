@@ -1,5 +1,5 @@
 import React from 'react';
-import commonsenseIcon from '../assets/img/logo-checkmark-green.svg'
+import commonsenseIcon from '../assets/img/commonsense_checkmark.svg'
 
 interface TitleDetailsCardProps {
   tmdbData: {

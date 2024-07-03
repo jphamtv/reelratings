@@ -1,4 +1,5 @@
 import React from 'react';
+import freshIcon from '../assets/img/'
 
 interface RatingsDetailsProps {
   imdbData: {
