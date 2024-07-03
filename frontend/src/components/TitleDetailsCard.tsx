@@ -1,7 +1,8 @@
 import React from 'react';
+import commonsenseIcon from '../assets/img/logo-checkmark-green.svg'
 
 interface TitleDetailsCardProps {
-  tmdb_data: {
+  tmdbData: {
     imdb_id: string;
     media_type: "Movie" | "TV";
     title: string;
@@ -13,21 +14,18 @@ interface TitleDetailsCardProps {
     certification?: string;
     creator?: string[];
   };
-  external_data: {
-    commonsense_info?: {
-      url: string;
-      rating: string;
-    };
+  commonsenseData?: {
+    url: string;
+    rating: string;
   };
 }
 
-const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdb_data, external_data }) => { 
-  const { media_type, poster_img, title, certification, year, runtime, director, creator } = tmdb_data;
-  const { commonsense_info } = external_data;
+const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsenseData }) => { 
+  const { media_type, poster_img, title, certification, year, runtime, director, creator } = tmdbData;
 
   const renderDirectorsOrCreators = () => { 
     const people = media_type === 'Movie' ? director : creator;
-    if (!people) return null;
+    if (!people || people.length === 0) return null;
 
     const label = media_type === 'Movie' ? 'Director' : 'Creator';  
     return (
@@ -36,13 +34,13 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdb_data, external
   };
 
   const renderCommonSenseInfo = () => {
-    if (!commonsense_info) return null;
+    if (!commonsenseData) return null;
 
     return (
-      <a href={commonsense_info.url} target="_blank" rel="noopener noreferrer">
+      <a href={commonsenseData.url} target="_blank" rel="noopener noreferrer">
         <div className="commonsense-wrapper">
-          <img src="/static/img/logo-checkmark-green.svg" alt="" className="commonsense-icon" />
-          <div>{commonsense_info.rating}</div>
+          <img src={commonsenseIcon} alt="Common Sense Media" className="commonsense-icon" />
+          <div>{commonsenseData.rating}</div>
         </div>
       </a>
     );
@@ -54,7 +52,7 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdb_data, external
       <div className="title-details-wrapper">
         <h3>{title}</h3>
         <div>
-          {certification && <span className='certfication'>{certification}</span>}
+          {certification && <span className='certification'>{certification}</span>}
           {year}
           {runtime && ` • ${runtime}`}
         </div>

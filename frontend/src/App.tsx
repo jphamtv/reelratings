@@ -10,7 +10,7 @@ function App() {
       <Route path='/' element={<HomePage />} />
       <Route element={<Layout />}>
         <Route path='/search' element={<SearchPage />} />
-        <Route path='/details/:id/:mediaType' element={<DetailsPage />} />
+        <Route path='/details/:tmdbId/:mediaType' element={<DetailsPage />} />
       </Route>
     </Routes>
   );

@@ -23,23 +23,23 @@ interface TitleDetails {
   };
   external_data: {
     imdb_url: string;
-    imdb_ratings: string;
+    imdb_rating: string | null;
     rottentomatoes_url: string;
     rottentomatoes_scores: {
-      tomatometer: string;
-      tomatometer_state: string;
-      audience_score: string;
-      audience_state: string;
+      tomatometer: string | null;
+      tomatometer_state: string | null;
+      audience_score: string | null;
+      audience_state: string | null;
     };
     letterboxd_url?: string;
-    letterboxd_rating?: string;
+    letterboxd_rating?: string | null;
     commonsense_info?: {
       url: string;
       rating: string;
-    };
+    } | null;
     boxofficemojo_url?: string;
-    box_office_amounts?: string[];
-    justwatch_page: string;
+    box_office_amounts?: string[] | null;
+    justwatch_page: string | null;
   };
 }
 
@@ -103,26 +103,73 @@ const DetailsPage: React.FC = () => {
     return renderError();
   }
 
-  const { tmdb_data, external_data } = details;
+const defaultTmdbData: TitleDetails['tmdb_data'] = {
+  imdb_id: '',
+  media_type: 'Movie',
+  title: '',
+  year: '',
+  poster_img: '',
+  justwatch_url: '',
+  director: [],
+  runtime: '',
+  certification: '',
+  creator: []
+};
+
+const defaultExternalData: TitleDetails['external_data'] = {
+  imdb_url: '',
+  imdb_rating: null,
+  rottentomatoes_url: '',
+  rottentomatoes_scores: {
+    tomatometer: null,
+    tomatometer_state: null,
+    audience_score: null,
+    audience_state: null
+  },
+  justwatch_page: '',
+  letterboxd_url: '',
+  letterboxd_rating: null,
+  commonsense_info: undefined,
+  boxofficemojo_url: '',
+  box_office_amounts: []
+};
+
+  const tmdb_data = details?.tmdb_data ?? defaultTmdbData;
+  const external_data = details?.external_data ?? defaultExternalData;
 
   return (
     <>
       <Helmet>
         <title>{`${tmdb_data.title} (${tmdb_data.year}) | ReelRatings`}</title>
       </Helmet>
-      <TitleDetailsCard details={{ tmdb_data, external_data }} />
+      <TitleDetailsCard
+        tmdbData={tmdb_data}
+        commonsenseData={external_data.commonsense_info}
+      />
       <RatingsDetails
-        imdbData={{
-          url: external_data.imdb_url, rating: external_data.imdb_rating
-        }}
-        rottenTomatoesData={{
-          url: external_data.rottentomatoes_url,
-          scores: external_data.rottentomatoes_scores
-        }}
-        letterboxdData={external_data.letterboxd_url && external_data.letterboxd_rating
+        imdbData={external_data.imdb_url
+          ? {
+            url: external_data.imdb_url,
+            rating: external_data.imdb_rating ?? null
+          }
+          : undefined
+        }
+        rottenTomatoesData={external_data.rottentomatoes_url
+          ? {
+            url: external_data.rottentomatoes_url,
+            scores: external_data.rottentomatoes_scores ?? {
+              tomatometer: null,
+              tomatometer_state: null,
+              audience_score: null,
+              audience_state: null
+            }
+            }
+          : undefined
+        }
+        letterboxdData={external_data.letterboxd_url
           ? {
             url: external_data.letterboxd_url,
-            rating: external_data.letterboxd_rating
+            rating: external_data.letterboxd_rating ?? null
             }
           : undefined
         }
@@ -135,7 +182,7 @@ const DetailsPage: React.FC = () => {
       )}
       {external_data.justwatch_page && (
         <Button
-          justwatchUrl={external_data.justwatch_url}
+          justwatchUrl={tmdb_data.justwatch_url}
           justwatchPage={external_data.justwatch_page}
         />
       )}
