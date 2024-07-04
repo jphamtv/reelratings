@@ -1,7 +1,6 @@
 import React from 'react';
 import imdbStar from '../assets/img/imdb_star.svg';
 import imdbStarEmpty from '../assets/img/imdb_star_empty.svg';
-import justwatchLogo from '../assets/img/justwatch_logo.svg';
 import letterboxdStar from '../assets/img/letterboxd_star.svg';
 import letterboxdStarEmpty from '../assets/img/letterboxd_star_empty.svg';
 import tomatometerCertfiedFresh from '../assets/img/rt_tomatometer_certified_fresh.svg';
