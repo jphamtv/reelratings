@@ -7,6 +7,7 @@ import RatingsDetails from '../components/RatingsDetails';
 import BoxOfficeAmounts from '../components/BoxOfficeAmounts';
 import Button from '../components/Button';
 import errorImage from '../assets/img/error_500.png';
+import styles from './DetailsPage.module.css';
 
 interface TitleDetails {
   tmdb_data: {
@@ -71,27 +72,27 @@ const DetailsPage: React.FC = () => {
   }, [tmdbId, mediaType]);
 
     const renderLoading = () => {
-    <div id="loading">
-      <div className="empty-state-details-container">
-        <div className="empty-state-poster"></div>
-        <div className="empty-state-details-wrapper">
-          <div className="empty-state-info"></div>
-          <div className="empty-state-info"></div>
-          <div className="empty-state-info"></div>
+    <div>
+      <div className={styles.emptyStateContainer}>
+        <div className={styles.poster}></div>
+        <div className={styles.emptyStateWrapper}>
+          <div className={styles.info}></div>
+          <div className={styles.info}></div>
+          <div className={styles.info}></div>
         </div>
       </div>
-      <div className="empty-state-card">
+      <div className={styles.card}>
       </div>
-      <div className="empty-state-card">
+      <div className={styles.card}>
       </div>
-      <div className="empty-state-card">
+      <div className={styles.card}>
       </div>
     </div>
   };
 
   const renderError = () => { 
-    <div className="error-container">
-      <img src={errorImage} className="error-image" />
+    <div className={styles.errorContainer}>
+      <img src={errorImage} className={styles.errorImage} />
     </div>
   };
 
