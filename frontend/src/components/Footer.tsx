@@ -1,12 +1,13 @@
 import React from 'react';
+import styles from './Footer.module.css';
 
 const Footer: React.FC = () => {
   return (
     <footer>
-      <div className="footer">
-        <p className="copyright">© 2024 ReelRatings</p>
+      <div className={styles.footer}>
+        <p className={styles.copyright}>© 2024 ReelRatings</p>
       </div>
-  </footer>
+    </footer>
   );
 };
 

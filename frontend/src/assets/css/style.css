@@ -20,29 +20,6 @@ h3 {
   width: auto;
 }
 
-footer {
-  margin-top: auto;
-  background-color: #100D04;
-  color: #848484;
-  font-size: .75rem;
-  padding: 2rem 1rem;
-}
-
-footer p {
-  text-align: left;
-}
-
-.footer {
-  display: flex;
-  flex-direction: column;
-  max-width: 49rem;
-  margin: auto;
-}
-
-.copyright {
-  margin-bottom: .5rem;
-}
-
 /* ------------ HOMEPAGE STYLING ------------ */
 
 .search-container {
