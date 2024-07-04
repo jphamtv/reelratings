@@ -180,12 +180,10 @@ const defaultExternalData: TitleDetails['external_data'] = {
           amounts={external_data.box_office_amounts}
         />
       )}
-      {external_data.justwatch_page && (
-        <Button
-          justwatchUrl={tmdb_data.justwatch_url}
-          justwatchPage={external_data.justwatch_page}
-        />
-      )}
+      <Button
+        justwatchUrl={tmdb_data.justwatch_url}
+        justwatchPage={external_data.justwatch_page}
+      />
     </>
   );
 };

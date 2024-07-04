@@ -1,5 +1,5 @@
 import React from 'react';
-import commonsenseIcon from '../assets/img/commonsense_checkmark.svg'
+import commonSenseIcon from '../assets/img/commonsense_checkmark.svg'
 
 interface TitleDetailsCardProps {
   tmdbData: {
@@ -39,7 +39,7 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
     return (
       <a href={commonsenseData.url} target="_blank" rel="noopener noreferrer">
         <div className="commonsense-wrapper">
-          <img src={commonsenseIcon} alt="Common Sense Media" className="commonsense-icon" />
+          <img src={commonSenseIcon} alt="Common Sense Media" className="commonsense-icon" />
           <div>{commonsenseData.rating}</div>
         </div>
       </a>

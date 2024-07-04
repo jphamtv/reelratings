@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import posterEmpty from '../assets/img/poster_empty.jpg'
+import posterPlaceholder from '../assets/img/poster_empty.jpg'
 
 interface SearchResultItemProps {
   key: number;
@@ -23,7 +23,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
       <Link to={`/details/${tmdb_id}/${media_type}`} className="search-result-item-link">
         <div className="search-result-wrapper">
           <img
-            src={poster_img ? poster_img : posterEmpty}
+            src={poster_img ? poster_img : posterPlaceholder}
             alt={title}
             className="poster-image"
           />
