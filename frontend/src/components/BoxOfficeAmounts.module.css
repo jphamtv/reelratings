@@ -1,0 +1,27 @@
+.boxOfficeContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+}
+
+.boxOfficeWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+}
+
+.boxOfficeRating {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  padding-top: .5rem;
+}
+
+.boxOfficeLabel {
+  font-size: 0.75rem;
+  padding-top: .25rem;
+  margin-bottom: .5rem;
+  text-transform: uppercase;
+  text-align: center;
+}

@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './BoxOfficeAmounts.module.css';
+import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface BoxOfficeAmountsProps {
   boxOfficeMojoUrl: string;
@@ -9,25 +11,25 @@ const BoxOfficeAmounts: React.FC<BoxOfficeAmountsProps> = ({ boxOfficeMojoUrl, a
   if (amounts[2] === '–') return null;
 
   return (
-    <div className="box-office-container">
+    <div className={styles.boxOfficeContainer}>
       <a href={boxOfficeMojoUrl} target="_blank" rel="noopener noreferrer">
-        <div className="box-office-wrapper card">
+        <div className={`${styles.boxOfficeWrapper} ${sharedStyles.card}`}>
           {amounts[0] !== '–' && (
             <div>
-              <p className="box-office-rating">{amounts[0]}</p>
-              <p className="label-box-office">Domestic</p>
+              <p className={styles.boxOfficeRating}>{amounts[0]}</p>
+              <p className={styles.boxOfficeLabel}>Domestic</p>
             </div>
           )}
           {amounts[1] !== '–' && (
             <div>
-              <p className="box-office-rating">{amounts[1]}</p>
-              <p className="label-box-office">International</p>
+              <p className={styles.boxOfficeRating}>{amounts[1]}</p>
+              <p className={styles.boxOfficeLabel}>International</p>
             </div>
           )}
           {amounts[0] !== '–' && amounts[1] !== '–' && (
             <div>
-              <p className="box-office-rating">{amounts[2]}</p>
-              <p className="label-box-office">Worldwide</p>
+              <p className={styles.boxOfficeRating}>{amounts[2]}</p>
+              <p className={styles.boxOfficeLabel}>Worldwide</p>
             </div>
           )}
         </div>
