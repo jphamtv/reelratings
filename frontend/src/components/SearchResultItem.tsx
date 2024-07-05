@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import posterPlaceholder from '../assets/img/poster_empty.jpg'
+import styles from './SearchResultItem.module.css';
+import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface SearchResultItemProps {
   key: number;
@@ -19,15 +21,15 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   poster_img
 }) => {
   return (
-    <li className="search-result-item">
-      <Link to={`/details/${tmdb_id}/${media_type}`} className="search-result-item-link">
-        <div className="search-result-wrapper">
+    <li className={styles.searchResultItem}>
+      <Link to={`/details/${tmdb_id}/${media_type}`} className={styles.searchResultLink}>
+        <div className={styles.searchResultWrapper}>
           <img
             src={poster_img ? poster_img : posterPlaceholder}
             alt={title}
-            className="poster-image"
+            className={sharedStyles.posterImage}
           />
-          <div className="title-details-wrapper">
+          <div className={sharedStyles.titleDetailsWrapper}>
             <h3>{title}</h3>
             {year && <p>{year}</p>}
             <p>{media_type}</p>

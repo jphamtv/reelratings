@@ -1,0 +1,18 @@
+.searchResultItem {
+  border-bottom: 1px solid #ddd;
+}
+
+.searchResultLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.searchResultLink:hover {
+  background-color: #f3f3f3;
+}
+
+.searchResultWrapper {
+  display: flex;
+  align-items: start;
+  gap: .5rem;
+}

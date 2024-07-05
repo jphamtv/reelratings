@@ -1,24 +1,3 @@
-/* ------------ SEARCH RESULTS PAGE------------ */
-
-
-.search-result-item {
-  border-bottom: 1px solid #ddd;
-}
-
-.search-result-item-link {
-  color: inherit; 
-  text-decoration: none;
-}
-
-.search-result-item-link:hover {
-  background-color: #f3f3f3; 
-}
-
-.search-result-wrapper {
-  display: flex;
-  align-items: start;
-  gap: .5rem; 
-}
 
 .error-message {
   text-align: center;
@@ -28,21 +7,7 @@
 
 /* ------------ DETAILS PAGE------------ */
 
-.title-details-container {
-  display: flex;
-  align-items: flex-start;
-  margin: 1rem;
-}
 
-.title-details-wrapper {
-  margin-top: .25rem;
-}
-
-.title-details-wrapper > h3,
-.title-details-wrapper > div,
-.title-details-wrapper > p {
-  padding-bottom: 5px;
-}
 
 .rottentomatoes-container {
   display: flex;

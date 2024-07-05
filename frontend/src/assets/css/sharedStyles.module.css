@@ -4,3 +4,30 @@
   box-sizing: border-box;
   border-radius: 8px;
 }
+
+.card:hover {
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.15);
+}
+
+.titleDetailsContainer {
+  display: flex;
+  align-items: flex-start;
+  margin: 1rem;
+}
+
+.titleDetailsWrapper {
+  margin-top: .25rem;
+}
+
+.titleDetailsWrapper > h3,
+.titleDetailsWrapper > div,
+.titleDetailsWrapper > p {
+  padding-bottom: 5px;
+}
+
+.posterImage {
+  width: 6.25rem;
+  height: auto;
+  margin-right: 1rem;
+  border-radius: 4px;
+}
