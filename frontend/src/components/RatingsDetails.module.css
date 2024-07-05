@@ -1,0 +1,83 @@
+/* RottenTomatoes Scores */
+
+.rottenTomatoesContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 1rem;
+}
+
+.scoreWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scoreBoxWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.rottenTomatoesRatingImage {
+  height: 1.75rem;
+  width: auto;
+  margin-right: 3px;
+}
+
+/* IMDB & Letterboxd Ratings */
+
+.ratingsContainer {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem;
+  gap: 1rem;
+}
+
+.ratingLink {
+  flex: 1;
+}
+
+.ratingContainer {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ratingBoxWrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.ratingScale {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-left: 2px;
+  color: #a5a5a5;
+}
+
+.ratingImage {
+  height: 1.5rem;
+  width: auto;
+  margin-right: 3px;
+}
+
+/* All */
+
+.rating {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.noRating {
+  font-weight: 700;
+  color: #BCBDBE;
+  font-size: 1.25rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  padding-top: .25rem;
+  text-transform: uppercase;
+}

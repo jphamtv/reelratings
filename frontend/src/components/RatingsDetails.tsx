@@ -10,13 +10,15 @@ import tomatometerEmpty from '../assets/img/rt_tomatometer_empty.svg';
 import audienceFresh from '../assets/img/rt_aud_score_fresh.svg';
 import audienceRotten from '../assets/img/rt_aud_score_rotten.svg';
 import audienceEmpty from '../assets/img/rt_aud_score_empty.svg';
+import styles from './RatingsDetails.module.css';
+import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface RatingsDetailsProps {
-  imdbData: {
+  imdbData?: {
     url: string;
     rating: string | null;
   };
-  rottenTomatoesData: {
+  rottenTomatoesData?: {
     url: string;
     scores: {
       tomatometer: string | null;
@@ -37,81 +39,69 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
   letterboxdData
 }) => { 
   const renderRottenTomatoes = () => {
-    if (!rottenTomatoesData.url) return null;
+    if (!rottenTomatoesData?.url) return null;
 
     return (
       <a href={rottenTomatoesData.url} target="_blank" rel="noopener noreferrer">
-        <div className="rottentomatoes-container card">
-          <div className="tomatometer-wrapper">
-            <div className="rating-box-wrapper-rt">
-              <img 
-                src={getTomatoMeterImage(rottenTomatoesData.scores.tomatometer_state)} 
-                className="rating-image-rt"
-                alt="Tomatometer"
-              />
-              <p className={rottenTomatoesData.scores.tomatometer ? "rating" : "no_rating"}>
-                {rottenTomatoesData.scores.tomatometer || "--"}
-                {rottenTomatoesData.scores.tomatometer && "%"}
-              </p>
-            </div>
-            <p className="label">Tomatometer</p>
-          </div>
-          <div className="audiencescore-wrapper">
-            <div className="rating-box-wrapper-rt">
-              <img 
-                src={getAudienceScoreImage(rottenTomatoesData.scores.audience_state)} 
-                className="rating-image-rt"
-                alt="Audience Score"
-              />
-              <p className={rottenTomatoesData.scores.audience_score ? "rating" : "no_rating"}>
-                {rottenTomatoesData.scores.audience_score || "--"}
-                {rottenTomatoesData.scores.audience_score && "%"}
-              </p>
-            </div>
-            <p className="label">Audience Score</p>
-          </div>
+        <div className={`${styles.rottenTomatoesContainer} ${sharedStyles.card}`}>
+          <RatingScore
+            score={rottenTomatoesData.scores.tomatometer}
+            state={rottenTomatoesData.scores.tomatometer_state}
+            label="Tomatometer"
+            getImage={getTomatoMeterImage}
+          />
+          <RatingScore
+            score={rottenTomatoesData.scores.audience_score}
+            state={rottenTomatoesData.scores.audience_state}
+            label="Audience Score"
+            getImage={getAudienceScoreImage}
+          />
         </div>
       </a>
     );
   }; 
 
-  const renderIMDb = () => (
-    <a href={imdbData.url} target="_blank" rel="noopener noreferrer">
-      <div className="imdb-wrapper card">
-        <div className="rating-box-wrapper">
-          <img 
-            src={imdbData.rating ? imdbStar : imdbStarEmpty} 
-            className="rating-image"
-            alt="IMDb rating"
-          />
-          <p className={imdbData.rating ? "rating" : "no_rating"}>
-            {imdbData.rating || "--"}
-            {imdbData.rating && <span className="rating-scale">/10</span>}
-          </p>
-        </div>
-        <p className="label">IMDb</p>
-      </div>
-    </a>
-  );
-
-  const renderLetterboxd = () => {
-    if (!letterboxdData) return null;
+  const renderIMDb = () => { 
+    if (!imdbData?.url) return null;
 
     return (
-      <a href={letterboxdData.url} target="_blank" rel="noopener noreferrer">
-        <div className="letterbxd-wrapper card">
-          <div className="rating-box-wrapper">
+      <a href={imdbData.url} target="_blank" rel="noopener noreferrer" className={styles.ratingLink}>
+        <div className={`${styles.ratingContainer} ${sharedStyles.card}`}>
+          <div className={styles.ratingBoxWrapper}>
             <img 
-              src={letterboxdData.rating ? letterboxdStar : letterboxdStarEmpty} 
-              className="rating-image"
-              alt="Letterboxd rating"
+              src={imdbData.rating ? imdbStar : imdbStarEmpty} 
+              className={styles.ratingImage}
+              alt="IMDb rating"
             />
-            <p className={letterboxdData.rating ? "rating" : "no_rating"}>
-              {letterboxdData.rating || "--"}
-              {letterboxdData.rating && <span className="rating-scale">/5</span>}
+            <p className={imdbData.rating ? styles.rating : styles.noRating}>
+              {imdbData.rating || "--"}
+              {imdbData.rating && <span className={styles.ratingScale}>/10</span>}
             </p>
           </div>
-          <p className="label">Letterboxd</p>
+          <p className={styles.label}>IMDb</p>
+        </div>
+      </a>
+    );
+  };
+
+  const renderLetterboxd = () => {
+    if (!letterboxdData?.url) return null;
+
+    return (
+      <a href={letterboxdData.url} target="_blank" rel="noopener noreferrer" className={styles.ratingLink}>
+        <div className={`${styles.ratingContainer} ${sharedStyles.card}`}>
+          <div className={styles.ratingBoxWrapper}>
+            <img 
+              src={letterboxdData.rating ? letterboxdStar : letterboxdStarEmpty} 
+              className={styles.ratingImage}
+              alt="Letterboxd rating"
+            />
+            <p className={letterboxdData.rating ? styles.rating : styles.noRating}>
+              {letterboxdData.rating || "--"}
+              {letterboxdData.rating && <span className={styles.ratingScale}>/5</span>}
+            </p>
+          </div>
+          <p className={styles.label}>Letterboxd</p>
         </div>
       </a>
     );
@@ -120,13 +110,37 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
   return (
     <>
       {renderRottenTomatoes()}
-      <div className="ratings-container">
+      <div className={styles.ratingsContainer}>
         {renderIMDb()}
         {renderLetterboxd()}
       </div>
     </>
   );
 };
+
+interface RatingScoreProps {
+  score: string | null;
+  state: string;
+  label: string;
+  getImage: (state: string) => string;
+}
+
+const RatingScore: React.FC<RatingScoreProps> = ({ score, state, label, getImage }) => (
+  <div className={styles.scoreWrapper}>
+    <div className={styles.scoreBoxWrapper}>
+      <img 
+        src={getImage(state)} 
+        className={styles.rottenTomatoesRatingImage}
+        alt={label}
+      />
+      <p className={score ? styles.rating : styles.noRating}>
+        {score || "--"}
+        {score && "%"}
+      </p>
+    </div>
+    <p className={styles.label}>{label}</p>
+  </div>
+);
 
 function getTomatoMeterImage(state: string): string {
   switch (state) {
