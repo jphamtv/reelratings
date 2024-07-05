@@ -10,81 +10,9 @@ h3 {
 
 
 
-.search-wrapper {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  width: 100vw;
-  max-width: 35rem;
-}
 
-.homepage-search-field:focus-visible {
-  outline: none;
-  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
-}
 
-.homepage-search-field:hover,
-.homepage-search-field:focus-visible {
-  outline: none;
-  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
-}
 
-.search-field {
-  width: 100%;
-  max-width: 35rem;
-  margin: 0 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 24px; 
-  padding: 0.75rem;
-  padding-left: 40px; 
-  background-image: url('/static/img/icon-search.svg');
-  background-repeat: no-repeat;
-  background-position: left 10px center; /* Adjust the left padding as needed */
-  background-size: 20px; /* Adjust the size of the icon as needed */
-  box-sizing: border-box;
-}
-
-.search-field:hover,
-.search-field:focus-visible {
-  outline: none;
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.15);
-}
-
-.homepage-search::placeholder {
-  color: #999; 
-}
-
-.homepage-search:focus {
-  outline: none;
-  border-color: #999; 
-}
-
-.homepage-search-icon {
-  fill: #999; 
-}
-
-.clear-button {
-  position: absolute;
-  top: 50%;
-  right: 30px; /* Adjust the right value to position */
-  transform: translateY(-60%);
-  border: none;
-  background: transparent;
-  font-size: 1.75rem;
-  font-weight: 300;
-  line-height: 1; /* Adjust the line-height to position */
-  color: #999;
-  cursor: pointer;
-  padding: 0;
-  width: 1.5rem;
-  height: 1.5rem;
-  display: none;
-}
-
-.homepage-clear-position {
-  right: 2rem;
-}
 
 
 /* ------------ SEARCH RESULTS PAGE------------ */

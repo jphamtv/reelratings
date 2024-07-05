@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
   className?: string;
@@ -7,7 +8,7 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
-  className = 'search-container',
+  className = 'searchContainer',
   placeholder = 'Search Movies & TV'
 }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -29,18 +30,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className={className}>
       <form onSubmit={handleSubmit}>
-        <div className="search-wrapper">
+        <div className={styles.searchWrapper}>
           <input
             ref={inputRef}
             type="text"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder={placeholder}
-            className="search-field"
+            className={styles.searchField}
             required
           />
           {searchValue && (
-            <button type="button" className="clear-button" onClick={handleClear}>
+            <button type="button" className={styles.clearButton} onClick={handleClear}>
               &times;
             </button>
           )}

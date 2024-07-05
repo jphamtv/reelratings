@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
             <img src={reelRatingsLogo} className={styles.logo} alt="Reel Ratings" />
             <div className={styles.tagline}>Get ratings for movies and TV shows</div>
           </div>
-          <SearchBar className={styles.searchContainer} />
+          <SearchBar className={styles.homePageSearchContainer} />
         </div>
         <Footer />
       </div>

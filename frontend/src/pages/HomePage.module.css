@@ -9,6 +9,12 @@
   width: 100%;
 }
 
+.homePageSearchContainer {
+  display: flex;
+  justify-content: center;
+  margin: 0 1rem;
+}
+
 .logoWrapper {
   display: flex;
   flex-direction: column;
@@ -30,8 +36,35 @@
   color: #FAAD00;
 }
 
-.searchContainer {
-  display: flex;
-  justify-content: center;
-  margin: 0 1rem;
+
+/* SAVE FOR LATER
+
+.homepage-search-field:focus-visible {
+  outline: none;
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
 }
+
+.homepage-search-field:hover,
+.homepage-search-field:focus-visible {
+  outline: none;
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
+}
+
+.homepage-search::placeholder {
+  color: #999;
+}
+
+.homepage-search:focus {
+  outline: none;
+  border-color: #999;
+}
+
+.homepage-search-icon {
+  fill: #999;
+}
+
+.homepage-clear-position {
+  right: 2rem;
+}
+
+*/
