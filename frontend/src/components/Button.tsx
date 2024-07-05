@@ -1,13 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import justwatchLogo from '../assets/img/justwatch_logo.svg'
+import justWatchLogo from '../assets/img/justwatch_logo.svg'
+import styles from './Button.module.css';
 
 interface ButtonProps {
-  justwatchUrl: string;
-  justwatchPage?: string;
+  justWatchUrl: string;
+  justWatchPage?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ justwatchUrl, justwatchPage }) => {
+const Button: React.FC<ButtonProps> = ({ justWatchUrl, justWatchPage }) => {
   const navigate = useNavigate();
 
   const handleBack = (e: React.MouseEvent) => {
@@ -16,17 +17,17 @@ const Button: React.FC<ButtonProps> = ({ justwatchUrl, justwatchPage }) => {
   };
 
   return (
-    <div className="button-container">
-      {justwatchUrl && (
-        <a href={justwatchPage || justwatchUrl} target="_blank" rel="noopener noreferrer">
-          <div className="justwatch-button">
-            <img src={justwatchLogo} className="justwatch-icon" alt="JustWatch" />
+    <div className={styles.buttonContainer}>
+      {justWatchUrl && (
+        <a href={justWatchPage || justWatchUrl} target="_blank" rel="noopener noreferrer">
+          <div className={styles.justWatchButton}>
+            <img src={justWatchLogo} alt="JustWatch" />
             <span>Where to Rent or Stream</span>
           </div>
         </a>
       )}
       <a href="#" onClick={handleBack}>
-        <div className="button">
+        <div className={styles.button}>
           <span>Back to Results</span>
         </div>
       </a>

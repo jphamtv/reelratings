@@ -182,8 +182,8 @@ const defaultExternalData: TitleDetails['external_data'] = {
         />
       )}
       <Button
-        justwatchUrl={tmdb_data.justwatch_url}
-        justwatchPage={external_data.justwatch_page}
+        justWatchUrl={tmdb_data.justwatch_url}
+        justWatchPage={external_data.justwatch_page}
       />
     </>
   );

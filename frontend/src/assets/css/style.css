@@ -1,15 +1,6 @@
 /* ------------ GLOBAL STYLING ------------ */
 
-header {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #100D04;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 1.75rem 1rem 1rem;
-}
+
 
 h3 {
   font-size: 1.5rem;
@@ -203,51 +194,11 @@ h3 {
   margin: 1rem;
 }
 
-.button-container {
-  display: flex;
-  flex-direction: column;
-  margin: 1rem 1rem 3rem 1rem;
-}
 
-.justwatch-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #FAAD00;
-  color: #100D04;
-  font-size: 1rem;
-  line-height: 1;
-  font-weight: 700;
-  text-align: center;
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1rem;
-}
 
-.justwatch-button img {
-  margin-right: 10px;
-  height: 1.5rem;
-  width: auto;
-}
 
-.button,
-.button:visited {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 1.25rem;
-  color: #100D04;
-  font-size: 1rem;
-  font-weight: 700;
-  text-decoration: none;
-  border-radius: 8px;
-  border: 1px solid #100D04;
-}
 
-.button:hover,
-.justwatch-button:hover {
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.15);
-}
+
 
 .box-office-wrapper {
   display: flex;

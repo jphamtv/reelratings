@@ -5,7 +5,7 @@ import styles from './Header.module.css';
 
 const Header: React.FC = () => {
   return (
-    <header>
+    <header className={styles.header}>
       <Link to='/'>
         <img src={reelRatingsLogo} className={styles.logo} alt="ReelRatings" />
       </Link>
