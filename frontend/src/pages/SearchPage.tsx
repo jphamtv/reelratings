@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 import { searchTitles } from '../services/api';
 import SearchResultItem from '../components/SearchResultItem';
+import styles from './SearchPage.module.css';
 
 interface SearchResult {
   tmdb_id: number;
@@ -37,20 +38,12 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  const renderLoading = () => {
-    <div id="loading">Loading...</div>
-  };
-
-  const renderError = () => { 
-    <p className="error-message">Bummer, no matches for that title. Check the spelling and try again.</p>    
-  };
-
   if (loading) {
-    return renderLoading();
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   if (error) {
-    return renderError();
+    return <p className={styles.errorMessage}>Bummer, no matches for that title. Check the spelling and try again.</p>;
   }
 
   return (
