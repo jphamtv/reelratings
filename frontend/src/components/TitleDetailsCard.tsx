@@ -1,5 +1,7 @@
 import React from 'react';
-import commonSenseIcon from '../assets/img/commonsense_checkmark.svg'
+import commonSenseIcon from '../assets/img/commonsense_checkmark.svg';
+import styles from './TitleDetailsCard.module.css';
+import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface TitleDetailsCardProps {
   tmdbData: {
@@ -38,8 +40,8 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
 
     return (
       <a href={commonsenseData.url} target="_blank" rel="noopener noreferrer">
-        <div className="commonsense-wrapper">
-          <img src={commonSenseIcon} alt="Common Sense Media" className="commonsense-icon" />
+        <div className={styles.commonSenseWrapper}>
+          <img src={commonSenseIcon} alt="Common Sense Media" className={styles.commonSenseIcon} />
           <div>{commonsenseData.rating}</div>
         </div>
       </a>
@@ -47,12 +49,12 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
   };
 
   return (
-    <div className="title-details-container">
-      <img src={poster_img} alt={title} className="poster-image" />
-      <div className="title-details-wrapper">
+    <div className={styles.titleDetailsContainer}>
+      <img src={poster_img} alt={title} className={sharedStyles.posterImage} />
+      <div className={sharedStyles.titleDetailsWrapper}>
         <h3>{title}</h3>
         <div>
-          {certification && <span className='certification'>{certification}</span>}
+          {certification && <span className={styles.certifiedRating}>{certification}</span>}
           {year}
           {runtime && ` • ${runtime}`}
         </div>

@@ -43,16 +43,6 @@
   text-align: center;
 }
 
-.commonsense-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-.commonsense-icon {
-  height: 1.5rem;
-  width: auto;
-  margin-right: 2px;
-}
 
 .rating-box-wrapper {
   display: flex;
@@ -81,12 +71,7 @@
   color: #c0c0c0;
 }
 
-.certification {
-  border: 1px solid #BCBDBE;
-  border-radius: 3px;
-  padding: 0 5px;
-  margin-right: 7px;
-}
+
 
 
 /* ------------ RATING AND SCORE CARDS ------------ */

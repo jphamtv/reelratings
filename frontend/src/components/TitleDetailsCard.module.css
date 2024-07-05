@@ -1,0 +1,23 @@
+.titleDetailsContainer {
+  display: flex;
+  align-items: flex-start;
+  margin: 1rem;
+}
+
+.commonSenseWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.commonSenseIcon {
+  height: 1.5rem;
+  width: auto;
+  margin-right: 2px;
+}
+
+.certifiedRating {
+  border: 1px solid #BCBDBE;
+  border-radius: 3px;
+  padding: 0 5px;
+  margin-right: 7px;
+}
