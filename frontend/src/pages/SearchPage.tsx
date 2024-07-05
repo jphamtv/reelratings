@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 import { searchTitles } from '../services/api';
 import SearchResultItem from '../components/SearchResultItem';
-import styles from './SearchPage.module.css';
 
 interface SearchResult {
   tmdb_id: number;
