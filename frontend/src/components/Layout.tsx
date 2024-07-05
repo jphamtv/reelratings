@@ -3,12 +3,13 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import Footer from './Footer';
+import styles from './Layout.module.css'
 
 const Layout: React.FC = () => {
   return (
-    <div className="app-container">
+    <div>
       <Header />
-      <SearchBar className='search-container'/>
+      <SearchBar className={styles.searchContainer}/>
       <main><Outlet /></main>
       <Footer />
     </div>
