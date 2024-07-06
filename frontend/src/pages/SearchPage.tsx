@@ -31,6 +31,7 @@ const SearchPage: React.FC = () => {
       setLoading(true);
       const response = await searchTitles(query);
       setSearchResults(response.results);
+      console.log(`response: ${response}`)
     } catch (err) {
       setError('Failed to fetch search results');
     } finally {
@@ -42,7 +43,7 @@ const SearchPage: React.FC = () => {
     return <div className={styles.loading}>Loading...</div>;
   }
 
-  if (error) {
+  if (error || searchResults.length === 0) {
     return <p className={styles.errorMessage}>Bummer, no matches for that title. Check the spelling and try again.</p>;
   }
 

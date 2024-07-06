@@ -19,6 +19,7 @@ const HomePage: React.FC = () => {
           </div>
           <SearchBar className={styles.homePageSearchContainer} />
         </div>
+        <main></main>
         <Footer />
       </div>
     </>

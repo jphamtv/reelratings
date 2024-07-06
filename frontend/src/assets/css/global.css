@@ -69,6 +69,7 @@ body {
 main {
   width: 100%;
   max-width: 35rem;
+  min-height: 100vh;
   margin: 0 auto;
 }
 
