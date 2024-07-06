@@ -8,12 +8,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FAAD00;
+  background-color: #faad00;
   color: #100D04;
   font-size: 1rem;
   line-height: 1;
   font-weight: 700;
   text-align: center;
+  border: 1px solid rgba(74, 60, 27, 0.12);
   border-radius: 8px;
   padding: 1rem 1.25rem;
   margin-bottom: 1rem;
@@ -36,10 +37,16 @@
   font-weight: 700;
   text-decoration: none;
   border-radius: 8px;
-  border: 1px solid #100D04;
+  border: 1px solid rgba(42, 51, 69, 0.3);
 }
 
 .button:hover,
 .justWatchButton:hover {
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.15);
+  box-shadow:
+      0 0 0 1px rgba(14, 63, 126, 0.04),
+      0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
+      0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
+      0 6px 6px -3px rgba(42, 51, 69, 0.04),
+      0 12px 12px -6px rgba(14, 63, 126, 0.04),
+      0 24px 24px -12px rgba(14, 63, 126, 0.04);
 }
