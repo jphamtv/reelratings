@@ -71,7 +71,8 @@ const DetailsPage: React.FC = () => {
     fetchDetails();
   }, [tmdbId, mediaType]);
 
-    const renderLoading = () => {
+if (loading) {
+  return (
     <div>
       <div className={styles.emptyStateContainer}>
         <div className={styles.poster}></div>
@@ -81,28 +82,20 @@ const DetailsPage: React.FC = () => {
           <div className={styles.info}></div>
         </div>
       </div>
-      <div className={styles.card}>
-      </div>
-      <div className={styles.card}>
-      </div>
-      <div className={styles.card}>
-      </div>
+      <div className={styles.card}></div>
+      <div className={styles.card}></div>
+      <div className={styles.card}></div>
     </div>
-  };
+  ); 
+}
 
-  const renderError = () => { 
+if (error) {
+  return (
     <div className={styles.errorContainer}>
-      <img src={errorImage} className={styles.errorImage} />
-    </div>
-  };
-
-  if (loading) {
-    return renderLoading();
-  }
-
-  if (error) {
-    return renderError();
-  }
+    <img src={errorImage} className={styles.errorImage} />
+  </div>
+  ); 
+}
 
 const defaultTmdbData: TitleDetails['tmdb_data'] = {
   imdb_id: '',
