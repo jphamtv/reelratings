@@ -64,7 +64,7 @@ def filter_search_results(search_results):
 def get_poster_image(poster_base_url, poster_path):
     # Use image placeholder if no poster file path exists
     if poster_path is None:
-        return "/static/img/poster-holder.jpg"
+        return ""
     else:
         return f"{poster_base_url}{poster_path}"
 
@@ -108,7 +108,7 @@ def get_common_details(media_details):
     poster_img = (
         f"https://image.tmdb.org/t/p/w500{poster_path}"
         if poster_path
-        else "/static/img/poster-holder.jpg"
+        else ""
     )
     justwatch_url = get_justwatch_url(media_details)
 
