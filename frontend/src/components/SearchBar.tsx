@@ -50,7 +50,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
             required
           />
           {searchValue && (
-            <button type="button" className={styles.clearButton} onClick={handleClear}>
+            <button
+              type="button"
+              className={styles.clearButton}
+              onClick={handleClear}
+              aria-label="Clear search"
+            >
               &times;
             </button>
           )}
