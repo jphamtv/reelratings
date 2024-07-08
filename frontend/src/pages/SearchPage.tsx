@@ -52,7 +52,7 @@ const SearchPage: React.FC = () => {
         <Helmet>
           <title>Search Results | ReelRatings</title>
         </Helmet>
-        <div>
+        <div className={styles.searchResultsContainer}>
           <ul>
             {searchResults.map((result) => (
               <SearchResultItem

@@ -1,3 +1,7 @@
+.searchResultsContainer {
+  margin: 0 1rem;
+}
+
 .errorMessage,
 .loading {
   text-align: center;
