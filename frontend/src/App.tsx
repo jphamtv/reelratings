@@ -4,7 +4,7 @@ import SearchPage from './pages/SearchPage';
 import DetailsPage from './pages/DetailsPage';
 import Layout from './components/Layout';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Routes>
       <Route path='/' element={<HomePage />} />
@@ -14,6 +14,7 @@ function App() {
       </Route>
     </Routes>
   );
-}
+};
+
 
 export default App;

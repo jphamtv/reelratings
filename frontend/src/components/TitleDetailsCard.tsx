@@ -1,7 +1,6 @@
 import React from 'react';
 import commonSenseIcon from '../assets/img/commonsense_checkmark.svg';
 import styles from './TitleDetailsCard.module.css';
-import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface TitleDetailsCardProps {
   tmdbData: {
@@ -50,8 +49,8 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
 
   return (
     <div className={styles.titleDetailsContainer}>
-      <img src={poster_img} alt={title} className={sharedStyles.posterImage} />
-      <div className={sharedStyles.titleDetailsWrapper}>
+      <img src={poster_img} alt={title} className={styles.posterImage} />
+      <div className={styles.titleDetailsWrapper}>
         <h3>{title}</h3>
         <div>
           {certification && <span className={styles.certifiedRating}>{certification}</span>}

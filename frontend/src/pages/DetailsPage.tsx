@@ -48,7 +48,7 @@ interface TitleDetails {
 const DetailsPage: React.FC = () => {
   const [details, setDetails] = useState<TitleDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
   const { tmdbId, mediaType } = useParams<{ tmdbId: string; mediaType: string }>();
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const DetailsPage: React.FC = () => {
         setDetails(data);
       } catch (err) {
         console.error('Details error:', err);
-        setError('Failed to fetch title details');
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -177,6 +177,7 @@ const defaultExternalData: TitleDetails['external_data'] = {
       <Button
         justWatchUrl={tmdb_data.justwatch_url}
         justWatchPage={external_data.justwatch_page}
+        title={tmdb_data.title}
       />
     </>
   );

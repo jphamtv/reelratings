@@ -22,13 +22,13 @@ const Button: React.FC<ButtonProps> = ({ justWatchUrl, justWatchPage }) => {
         <a href={justWatchPage || justWatchUrl} target="_blank" rel="noopener noreferrer">
           <div className={styles.justWatchButton}>
             <img src={justWatchLogo} alt="JustWatch" />
-            <span>Where to Rent or Stream</span>
+            <span>Where to Stream</span>
           </div>
         </a>
       )}
       <a href="#" onClick={handleBack}>
         <div className={styles.button}>
-          <span>Back to Results</span>
+          <span>Back to Search Results</span>
         </div>
       </a>
     </div>

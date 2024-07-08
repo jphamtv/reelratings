@@ -27,9 +27,9 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
           <img
             src={poster_img ? poster_img : posterPlaceholder}
             alt={title}
-            className={sharedStyles.posterImage}
+            className={styles.posterImage}
           />
-          <div className={sharedStyles.titleDetailsWrapper}>
+          <div className={styles.titleDetailsWrapper}>
             <h3>{title}</h3>
             {year && <p>{year}</p>}
             <p>{media_type}</p>

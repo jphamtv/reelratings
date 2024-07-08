@@ -62,6 +62,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 110vh;
+  min-width: 350px;
   line-height: 1.25;
 }
 
@@ -81,9 +82,4 @@ a:visited {
 
 ul {
   list-style-type: none;
-}
-
-li {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }

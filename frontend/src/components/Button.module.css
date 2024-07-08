@@ -37,7 +37,7 @@
   font-weight: 700;
   text-decoration: none;
   border-radius: 8px;
-  border: 1px solid rgba(42, 51, 69, 0.3);
+  border: 1px solid rgba(42, 51, 69, 0.16);
 }
 
 .button:hover,
