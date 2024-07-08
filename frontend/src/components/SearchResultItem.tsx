@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import posterPlaceholder from '../assets/img/poster_empty.jpg'
 import styles from './SearchResultItem.module.css';
-import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface SearchResultItemProps {
   key: number;
