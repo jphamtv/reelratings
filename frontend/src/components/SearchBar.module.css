@@ -16,7 +16,7 @@
   border-radius: 24px;
   padding: 0.75rem;
   padding-left: 40px;
-  background-image: url('/static/img/icon-search.svg');
+  background-image: url('../assets/img/search_icon.svg');
   background-repeat: no-repeat;
   background-position: left 10px center; /* Adjust the left padding as needed */
   background-size: 20px; /* Adjust the size of the icon as needed */
