@@ -16,7 +16,7 @@ interface SearchResult {
 const SearchPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -29,11 +29,12 @@ const SearchPage: React.FC = () => {
   const fetchSearchResults = async (query: string) => {
     try {
       setLoading(true);
+      setError(false);
       const response = await searchTitles(query);
-      console.log('Response:', response)
       setSearchResults(response.results);
     } catch (err) {
-      setError('Failed to fetch search results');
+      console.error("Error fetching search results:", err);
+      setError(true);
     } finally {
       setLoading(false);
     }

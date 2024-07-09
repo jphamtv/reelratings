@@ -57,7 +57,6 @@ const DetailsPage: React.FC = () => {
       setLoading(true);
       setError(false);
       const data = await getTitleDetails(tmdbId, mediaType);
-      console.log('Data:', data)
       setDetails(data);
     } catch (err) {
       console.error("Error fetching details:", err);
