@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { getTitleDetails } from '../services/api';
 import TitleDetailsCard from '../components/TitleDetailsCard';
 import RatingsDetails from '../components/RatingsDetails';
@@ -57,10 +57,8 @@ const DetailsPage: React.FC = () => {
       try {
         setLoading(true);
         const data = await getTitleDetails(tmdbId, mediaType);
-        console.log('Details Data:', data);
         setDetails(data);
       } catch (err) {
-        console.error('Details error:', err);
         setError(true);
       } finally {
         setLoading(false);

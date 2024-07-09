@@ -1,5 +1,5 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
 import reelRatingsLogo from '../assets/img/reelratings_logo_yellow.svg';
