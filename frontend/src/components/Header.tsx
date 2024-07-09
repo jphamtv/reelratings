@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import reelRatingsLogo from '../assets/img/reelratings_logo_yellow.svg';
 import styles from './Header.module.css';

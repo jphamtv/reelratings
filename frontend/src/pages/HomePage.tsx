@@ -1,4 +1,3 @@
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';

@@ -1,4 +1,3 @@
-import React from 'react';
 import commonSenseIcon from '../assets/img/commonsense_checkmark.svg';
 import styles from './TitleDetailsCard.module.css';
 

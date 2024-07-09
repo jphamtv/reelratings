@@ -9,7 +9,7 @@ interface SearchResult {
   tmdb_id: number;
   title: string;
   year: string;
-  media_type: string;
+  media_type: "Movie" | "TV";
   poster_img: string;
 }
 
@@ -30,6 +30,7 @@ const SearchPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await searchTitles(query);
+      console.log('Response:', response)
       setSearchResults(response.results);
     } catch (err) {
       setError('Failed to fetch search results');

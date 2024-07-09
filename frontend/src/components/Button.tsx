@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import justWatchLogo from '../assets/img/justwatch_logo.svg'
 import styles from './Button.module.css';

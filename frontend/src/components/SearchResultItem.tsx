@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import posterPlaceholder from '../assets/img/poster_empty.jpg'
 import styles from './SearchResultItem.module.css';
@@ -8,7 +7,7 @@ interface SearchResultItemProps {
   tmdb_id: number;
   title: string;
   year: string;
-  media_type: string;
+  media_type: "Movie" | "TV";
   poster_img: string;
 }
 

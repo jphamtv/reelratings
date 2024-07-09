@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './BoxOfficeAmounts.module.css';
 import sharedStyles from '../assets/css/sharedStyles.module.css';
 

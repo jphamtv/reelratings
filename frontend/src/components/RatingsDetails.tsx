@@ -1,4 +1,3 @@
-import React from 'react';
 import imdbStar from '../assets/img/imdb_star.svg';
 import imdbStarEmpty from '../assets/img/imdb_star_empty.svg';
 import letterboxdStar from '../assets/img/letterboxd_star.svg';

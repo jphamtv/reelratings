@@ -32,7 +32,7 @@ interface TitleDetails {
       audience_score: string | null;
       audience_state: string | null;
     };
-    letterboxd_url?: string;
+    letterboxd_url?: string | null;
     letterboxd_rating?: string | null;
     commonsense_info?: {
       url: string;
@@ -57,6 +57,7 @@ const DetailsPage: React.FC = () => {
       setLoading(true);
       setError(false);
       const data = await getTitleDetails(tmdbId, mediaType);
+      console.log('Data:', data)
       setDetails(data);
     } catch (err) {
       console.error("Error fetching details:", err);
