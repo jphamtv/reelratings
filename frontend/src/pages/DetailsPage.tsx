@@ -44,7 +44,6 @@ interface TitleDetails {
   };
 }
 
-
 const DetailsPage: React.FC = () => {
   const [details, setDetails] = useState<TitleDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -138,7 +137,7 @@ const defaultExternalData: TitleDetails['external_data'] = {
       </Helmet>
       <TitleDetailsCard
         tmdbData={tmdb_data}
-        commonsenseData={external_data.commonsense_info}
+        commonsenseData={external_data.commonsense_info ?? undefined}
       />
       <RatingsDetails
         imdbData={external_data.imdb_url
@@ -176,8 +175,7 @@ const defaultExternalData: TitleDetails['external_data'] = {
       )}
       <Button
         justWatchUrl={tmdb_data.justwatch_url}
-        justWatchPage={external_data.justwatch_page}
-        title={tmdb_data.title}
+        justWatchPage={external_data.justwatch_page ?? undefined}
       />
     </>
   );

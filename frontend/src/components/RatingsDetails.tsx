@@ -22,9 +22,9 @@ interface RatingsDetailsProps {
     url: string;
     scores: {
       tomatometer: string | null;
-      tomatometer_state: string;
+      tomatometer_state: string | null;
       audience_score: string | null;
-      audience_state: string;
+      audience_state: string | null;
     };
   };
   letterboxdData?: {
@@ -120,9 +120,9 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
 
 interface RatingScoreProps {
   score: string | null;
-  state: string;
+  state: string | null;
   label: string;
-  getImage: (state: string) => string;
+  getImage: (state: string | null) => string;
 }
 
 const RatingScore: React.FC<RatingScoreProps> = ({ score, state, label, getImage }) => (
@@ -142,7 +142,7 @@ const RatingScore: React.FC<RatingScoreProps> = ({ score, state, label, getImage
   </div>
 );
 
-function getTomatoMeterImage(state: string): string {
+function getTomatoMeterImage(state: string | null): string {
   switch (state) {
     case 'certified-fresh': return tomatometerCertfiedFresh;
     case 'fresh': return tomatometerFresh;
@@ -151,7 +151,7 @@ function getTomatoMeterImage(state: string): string {
   }
 }
 
-function getAudienceScoreImage(state: string): string {
+function getAudienceScoreImage(state: string | null): string {
   switch (state) {
     case 'upright': return audienceFresh;
     case 'spilled': return audienceRotten;

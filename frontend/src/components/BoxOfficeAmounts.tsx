@@ -3,12 +3,12 @@ import styles from './BoxOfficeAmounts.module.css';
 import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface BoxOfficeAmountsProps {
-  boxOfficeMojoUrl: string;
+  boxOfficeMojoUrl: string | undefined;
   amounts: string[];
 }
 
 const BoxOfficeAmounts: React.FC<BoxOfficeAmountsProps> = ({ boxOfficeMojoUrl, amounts }) => {
-  if (amounts[2] === '–') return null;
+  if (amounts[2] === '–' || !boxOfficeMojoUrl) return null;
 
   return (
     <div className={styles.boxOfficeContainer}>
