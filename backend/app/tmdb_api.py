@@ -3,21 +3,14 @@ import requests
 from environs import Env
 from app.format_runtime_utils import format_runtime
 
-# Loads environment variables
-env = Env()
-env.read_env()
-
-# Gets the TMDB API key from the environment variables
-TMDB_API_KEY = env.str("TMDB_API_KEY")
-
 
 # --------- SEARCH FOR MOVIE OR TV SERIES -------------- #
 
 
-def search_title(user_input):
+def search_title(user_input, api_key):
     """Look up movie, TV shows, and people using the TMDB API"""
     title = user_input.replace(" ", "%20")
-    url = f"https://api.themoviedb.org/3/search/multi?api_key={TMDB_API_KEY}&query={title}&include_adult=false&language=en-US&page=1"
+    url = f"https://api.themoviedb.org/3/search/multi?api_key={api_key}&query={title}&include_adult=false&language=en-US&page=1"
     search_results = get_search_results(url)
     filtered_results = filter_search_results(search_results)
 
@@ -93,9 +86,9 @@ def get_filtered_results(result, media_type, tmdb_id, poster_img):
 # --------- SEARCH TITLE DETAILS -------------- #
 
 
-def get_media_details(tmdb_id, media_type, TMDB_API_KEY):
+def get_media_details(tmdb_id, media_type, api_key):
     """Fetch the details of the selected title details using the TMDB API"""
-    url = f"https://api.themoviedb.org/3/{media_type.lower()}/{tmdb_id}?api_key={TMDB_API_KEY}&language=en-US&append_to_response=release_dates,watch/providers,external_ids,credits"
+    url = f"https://api.themoviedb.org/3/{media_type.lower()}/{tmdb_id}?api_key={api_key}&language=en-US&append_to_response=release_dates,watch/providers,external_ids,credits"
     response = requests.get(url)
     response.raise_for_status()
 
@@ -183,9 +176,9 @@ def get_justwatch_url(media_details):
     return justwatch_url
 
 
-def get_title_details(tmdb_id, media_type, TMDB_API_KEY):
+def get_title_details(tmdb_id, media_type, api_key):
     """Get the details for the selected title and media type"""
-    media_details = get_media_details(tmdb_id, media_type, TMDB_API_KEY)
+    media_details = get_media_details(tmdb_id, media_type, api_key)
     poster_img, justwatch_url = get_common_details(media_details)
 
     if media_type == "Movie":

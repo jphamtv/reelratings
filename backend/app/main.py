@@ -24,7 +24,6 @@ env = Env()
 env.read_env()
 
 TMDB_API_KEY = env.str("TMDB_API_KEY")
-SESSION_SECRET_KEY = env.str("SESSION_SECRET_KEY")
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -55,7 +54,7 @@ async def internal_server_error(request: Request, exc: Exception):
 @app.get("/api/search")
 def search(query: str):
     try:
-        search_results = search_title(query)
+        search_results = search_title(query, TMDB_API_KEY)
         return {"results": search_results}
     except Exception as e:
         logging.error(f"Search error: {str(e)}")
