@@ -1,7 +1,6 @@
-/* ERROR IMAGE */
-
 .errorContainer {
   display: flex;
+  flex-direction: column;
   margin: 1rem;
 }
 
@@ -12,7 +11,27 @@
   box-sizing: border-box;
 }
 
-/* ------------ EMPTY STATE ------------ */
+.retryButton {
+  background-color: #faad00;
+  color: #100D04;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid rgba(74, 60, 27, 0.12);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.retryButton:hover {
+  box-shadow: 0 0 0 1px rgba(14, 63, 126, 0.04),
+    0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
+    0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
+    0 6px 6px -3px rgba(42, 51, 69, 0.04),
+    0 12px 12px -6px rgba(14, 63, 126, 0.04);
+}
+
+/* EMPTY STATE */
 
 .emptyStateContainer {
   display: flex;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getTitleDetails } from '../services/api';
@@ -50,80 +50,85 @@ const DetailsPage: React.FC = () => {
   const [error, setError] = useState(false);
   const { tmdbId, mediaType } = useParams<{ tmdbId: string; mediaType: string }>();
 
-  useEffect(() => {
-    const fetchDetails = async () => {
-      if (!tmdbId || !mediaType) return;
+  const fetchDetails = useCallback(async () => {
+    if (!tmdbId || !mediaType) return;
 
-      try {
-        setLoading(true);
-        const data = await getTitleDetails(tmdbId, mediaType);
-        setDetails(data);
-      } catch (err) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchDetails();
+    try {
+      setLoading(true);
+      setError(false);
+      const data = await getTitleDetails(tmdbId, mediaType);
+      setDetails(data);
+    } catch (err) {
+      console.error("Error fetching details:", err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   }, [tmdbId, mediaType]);
 
-if (loading) {
-  return (
-    <div>
-      <div className={styles.emptyStateContainer}>
-        <div className={styles.poster}></div>
-        <div className={styles.emptyStateWrapper}>
-          <div className={styles.info}></div>
-          <div className={styles.info}></div>
-          <div className={styles.info}></div>
+  useEffect(() => {
+    fetchDetails();
+   }, [fetchDetails]);
+
+  if (loading) {
+    return (
+      <div>
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.poster}></div>
+          <div className={styles.emptyStateWrapper}>
+            <div className={styles.info}></div>
+            <div className={styles.info}></div>
+            <div className={styles.info}></div>
+          </div>
         </div>
+        <div className={styles.card}></div>
+        <div className={styles.card}></div>
+        <div className={styles.card}></div>
       </div>
-      <div className={styles.card}></div>
-      <div className={styles.card}></div>
-      <div className={styles.card}></div>
-    </div>
-  ); 
-}
+    ); 
+  }
 
-if (error) {
-  return (
-    <div className={styles.errorContainer}>
-    <img src={errorImage} className={styles.errorImage} />
-  </div>
-  ); 
-}
+  if (error) {
+    return (
+      <div className={styles.errorContainer}>
+        <img src={errorImage} className={styles.errorImage} alt='Error occured'/>
+        <button onClick={fetchDetails} className={styles.retryButton}>
+          Try fetching again?
+        </button>
+      </div>
+    ); 
+  }
 
-const defaultTmdbData: TitleDetails['tmdb_data'] = {
-  imdb_id: '',
-  media_type: 'Movie',
-  title: '',
-  year: '',
-  poster_img: '',
-  justwatch_url: '',
-  director: [],
-  runtime: '',
-  certification: '',
-  creator: []
-};
+  const defaultTmdbData: TitleDetails['tmdb_data'] = {
+    imdb_id: '',
+    media_type: 'Movie',
+    title: '',
+    year: '',
+    poster_img: '',
+    justwatch_url: '',
+    director: [],
+    runtime: '',
+    certification: '',
+    creator: []
+  };
 
-const defaultExternalData: TitleDetails['external_data'] = {
-  imdb_url: '',
-  imdb_rating: null,
-  rottentomatoes_url: '',
-  rottentomatoes_scores: {
-    tomatometer: null,
-    tomatometer_state: null,
-    audience_score: null,
-    audience_state: null
-  },
-  justwatch_page: '',
-  letterboxd_url: '',
-  letterboxd_rating: null,
-  commonsense_info: undefined,
-  boxofficemojo_url: '',
-  box_office_amounts: []
-};
+  const defaultExternalData: TitleDetails['external_data'] = {
+    imdb_url: '',
+    imdb_rating: null,
+    rottentomatoes_url: '',
+    rottentomatoes_scores: {
+      tomatometer: null,
+      tomatometer_state: null,
+      audience_score: null,
+      audience_state: null
+    },
+    justwatch_page: '',
+    letterboxd_url: '',
+    letterboxd_rating: null,
+    commonsense_info: undefined,
+    boxofficemojo_url: '',
+    box_office_amounts: []
+  };
 
   const tmdb_data = details?.tmdb_data ?? defaultTmdbData;
   const external_data = details?.external_data ?? defaultExternalData;

@@ -31,7 +31,6 @@ const SearchPage: React.FC = () => {
       setLoading(true);
       const response = await searchTitles(query);
       setSearchResults(response.results);
-      console.log(`response: ${response}`)
     } catch (err) {
       setError('Failed to fetch search results');
     } finally {
