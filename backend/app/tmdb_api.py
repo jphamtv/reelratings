@@ -4,6 +4,18 @@ from environs import Env
 from app.format_runtime_utils import format_runtime
 
 
+# --------- HOMEPAGE - TRENDING MOVIES -------------- #
+
+
+def get_trending_movies(api_key):
+    """Fetch top 20 trending movies of the week using the TMDB API"""
+    url = f"https://api.themoviedb.org/3/trending/movie/week?language=en-US?api_key={api_key}"
+    movies = fetch_api_data(url)
+    filtered_movies = filter_api_data(movies)
+
+    return filtered_movies
+
+
 # --------- SEARCH FOR MOVIE OR TV SERIES -------------- #
 
 
@@ -11,13 +23,13 @@ def search_title(user_input, api_key):
     """Look up movie, TV shows, and people using the TMDB API"""
     title = user_input.replace(" ", "%20")
     url = f"https://api.themoviedb.org/3/search/multi?api_key={api_key}&query={title}&include_adult=false&language=en-US&page=1"
-    search_results = get_search_results(url)
-    filtered_results = filter_search_results(search_results)
+    search_results = fetch_api_data(url)
+    filtered_results = filter_api_data(search_results)
 
     return filtered_results
 
 
-def get_search_results(url):
+def fetch_api_data(url):
     """Make an HTTP GET request to TMDB API and return JSON data"""
 
     # Make the HTTP GET request
@@ -29,13 +41,13 @@ def get_search_results(url):
     return response.json()
 
 
-def filter_search_results(search_results):
-    """Filter the search results based on media type"""
+def filter_api_data(api_data):
+    """Filter the API data based on media type"""
     poster_base_url = "https://www.themoviedb.org/t/p/w185"
     seen_tmdb_ids = set()
     filtered_results = []
 
-    for result in search_results["results"]:
+    for result in api_data["results"]:
         tmdb_id = result.get("id")
         poster_path = result.get("poster_path")
         media_type = result.get("media_type")

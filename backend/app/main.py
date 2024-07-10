@@ -51,6 +51,16 @@ async def internal_server_error(request: Request, exc: Exception):
 
 
 # API routes
+@app.get("/api/trending")
+def trending_movies():
+    try:
+        movies = search_title(query, TMDB_API_KEY)
+        return {"results": movies}
+    except Exception as e:
+        logging.error(f"Search error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error fetching movies")
+
+
 @app.get("/api/search")
 def search(query: str):
     try:
@@ -66,14 +76,6 @@ async def title_details(tmdb_id: str, media_type: str):
     try:
         # Fetch title details from TMDB API
         tmdb_data = get_title_details(tmdb_id, media_type, TMDB_API_KEY)
-
-        # tmdb_data = {
-        #     "title": details["title"],
-        #     "year": details["year"],
-        #     "media_type": media_type,
-        #     "imdb_id": details["imdb_id"],
-        #     "justwatch_url": details["justwatch_url"],            
-        # }
 
         imdb_url = f"https://www.imdb.com/title/{tmdb_data['imdb_id']}"
 
