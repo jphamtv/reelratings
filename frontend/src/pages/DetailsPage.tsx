@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { getTitleDetails } from '../services/api';
+import { fetchTitleDetails } from '../services/api';
 import TitleDetailsCard from '../components/TitleDetailsCard';
 import RatingsDetails from '../components/RatingsDetails';
 import BoxOfficeAmounts from '../components/BoxOfficeAmounts';
@@ -56,11 +56,11 @@ const DetailsPage: React.FC = () => {
     try {
       setLoading(true);
       setError(false);
-      const data = await getTitleDetails(tmdbId, mediaType);
+      const data = await fetchTitleDetails(tmdbId, mediaType);
       setDetails(data);
     } catch (err) {
-      console.error("Error fetching details:", err);
       setError(true);
+      console.error("Error fetching details:", err);
     } finally {
       setLoading(false);
     }

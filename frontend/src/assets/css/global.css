@@ -12,7 +12,7 @@
 }
 
 body {
-  line-height: 1.5;
+  /* line-height: 1.25; */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -63,7 +63,6 @@ body {
   flex-direction: column;
   min-height: 110vh;
   min-width: 350px;
-  line-height: 1.25;
 }
 
 main {
@@ -82,4 +81,8 @@ a:visited {
 
 ul {
   list-style-type: none;
+}
+
+h3 {
+  font-size: 1.125rem;
 }

@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .homePageSearchContainer {
@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 280px;
+  margin-top: 5rem;
 }
 
 .logo {
@@ -34,4 +34,43 @@
   text-align: center;
   margin-bottom: 1.75rem;
   color: #FAAD00;
+}
+
+.moviesContainer {
+  margin: 2rem 0;
+}
+
+.movieGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin: 1rem;
+}
+
+.title {
+  color: #FAAD00;
+  margin: 1rem;
+}
+
+.posterImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.posterImage:hover {
+  border: 1px solid #FAAD00;
+}
+
+@media (max-width: 480px) {
+  .movieGrid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+  }
+  .logoWrapper {
+    margin-top: 2rem;
+  }
 }

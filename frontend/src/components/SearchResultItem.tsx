@@ -12,6 +12,7 @@ interface SearchResultItemProps {
 }
 
 const SearchResultItem: React.FC<SearchResultItemProps> = ({
+  key,
   tmdb_id,
   title,
   year,
@@ -19,7 +20,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   poster_img
 }) => {
   return (
-    <li className={styles.searchResultItem}>
+    <li className={styles.searchResultItem} key={key}>
       <Link to={`/details/${tmdb_id}/${media_type}`} className={styles.searchResultLink}>
         <div className={styles.searchResultWrapper}>
           <img
@@ -28,9 +29,9 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
             className={styles.posterImage}
           />
           <div className={styles.titleDetailsWrapper}>
-            <h3>{title}</h3>
-            {year && <p>{year}</p>}
-            <p>{media_type}</p>
+            <span className={styles.title}>{title}</span>
+            {year && <span className={styles.year}> {year}</span>}
+            <span className={styles.mediaType}> ({media_type})</span>
           </div>
         </div>
       </Link>

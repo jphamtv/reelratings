@@ -9,9 +9,10 @@ from app.format_runtime_utils import format_runtime
 
 def fetch_trending_movies(api_key):
     """Fetch top 20 trending movies of the week using the TMDB API"""
-    url = f"https://api.themoviedb.org/3/trending/movie/week?language=en-US?api_key={api_key}"
+    url = f"https://api.themoviedb.org/3/trending/movie/week?language=en-US&api_key={api_key}"
     movies = fetch_api_data(url)
-    filtered_movies = filter_api_data(movies)
+    poster_size = 'w500'
+    filtered_movies = filter_api_data(movies, poster_size)
 
     return filtered_movies
 
@@ -24,7 +25,8 @@ def search_title(user_input, api_key):
     title = user_input.replace(" ", "%20")
     url = f"https://api.themoviedb.org/3/search/multi?api_key={api_key}&query={title}&include_adult=false&language=en-US&page=1"
     search_results = fetch_api_data(url)
-    filtered_results = filter_api_data(search_results)
+    poster_size = 'w185'
+    filtered_results = filter_api_data(search_results, poster_size)
 
     return filtered_results
 
@@ -41,9 +43,9 @@ def fetch_api_data(url):
     return response.json()
 
 
-def filter_api_data(api_data):
+def filter_api_data(api_data, poster_size):
     """Filter the API data based on media type"""
-    poster_base_url = "https://www.themoviedb.org/t/p/w185"
+    poster_base_url = f"https://www.themoviedb.org/t/p/{poster_size}"
     seen_tmdb_ids = set()
     filtered_results = []
 

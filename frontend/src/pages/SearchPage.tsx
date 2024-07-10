@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
-import { searchTitles } from '../services/api';
+import { searchTitle } from '../services/api';
 import SearchResultItem from '../components/SearchResultItem';
 import styles from './SearchPage.module.css';
 
@@ -30,7 +30,7 @@ const SearchPage: React.FC = () => {
     try {
       setLoading(true);
       setError(false);
-      const response = await searchTitles(query);
+      const response = await searchTitle(query);
       setSearchResults(response.results);
     } catch (err) {
       console.error("Error fetching search results:", err);

@@ -1,10 +1,11 @@
 .searchResultItem {
   border: 1px solid rgba(14, 62, 124, 0.16);
   border-radius: 8px;
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 
 .searchResultItem:hover {
+  border: 1px solid #FAAD00;
   box-shadow:
       0 0 0 1px rgba(14, 63, 126, 0.04),
       0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
@@ -15,23 +16,27 @@
 
 .searchResultWrapper {
   display: flex;
-  align-items: start;
-  gap: .5rem;
+  align-items: center;
+  gap: 1rem;
 }
 
 .titleDetailsWrapper {
-  margin-top: 1rem;
-}
-
-.titleDetailsWrapper>h3,
-.titleDetailsWrapper>div,
-.titleDetailsWrapper>p {
-  padding-bottom: 5px;
+  padding-right: 1rem;
 }
 
 .posterImage {
-  width: 6.25rem;
+  width: 5rem;
   height: auto;
-  margin-right: 1rem;
   border-radius: 8px 0 0 8px;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.year,
+.mediaType {
+  color: #5c5c5c;
+  font-size: 0.875rem;
 }
