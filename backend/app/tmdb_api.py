@@ -7,7 +7,7 @@ from app.format_runtime_utils import format_runtime
 # --------- HOMEPAGE - TRENDING MOVIES -------------- #
 
 
-def get_trending_movies(api_key):
+def fetch_trending_movies(api_key):
     """Fetch top 20 trending movies of the week using the TMDB API"""
     url = f"https://api.themoviedb.org/3/trending/movie/week?language=en-US?api_key={api_key}"
     movies = fetch_api_data(url)
@@ -98,15 +98,6 @@ def get_filtered_results(result, media_type, tmdb_id, poster_img):
 # --------- SEARCH TITLE DETAILS -------------- #
 
 
-def get_media_details(tmdb_id, media_type, api_key):
-    """Fetch the details of the selected title details using the TMDB API"""
-    url = f"https://api.themoviedb.org/3/{media_type.lower()}/{tmdb_id}?api_key={api_key}&language=en-US&append_to_response=release_dates,watch/providers,external_ids,credits"
-    response = requests.get(url)
-    response.raise_for_status()
-
-    return response.json()
-
-
 def get_common_details(media_details):
     """Extract common details for both Movie and TV series"""
     poster_path = media_details.get("poster_path")
@@ -188,9 +179,10 @@ def get_justwatch_url(media_details):
     return justwatch_url
 
 
-def get_title_details(tmdb_id, media_type, api_key):
-    """Get the details for the selected title and media type"""
-    media_details = get_media_details(tmdb_id, media_type, api_key)
+def fetch_title_details(tmdb_id, media_type, api_key):
+    """Fetch the details for the selected title and filter the results"""
+    url = f"https://api.themoviedb.org/3/{media_type.lower()}/{tmdb_id}?api_key={api_key}&language=en-US&append_to_response=release_dates,watch/providers,external_ids,credits"
+    media_details = fetch_api_data(url)
     poster_img, justwatch_url = get_common_details(media_details)
 
     if media_type == "Movie":

@@ -17,7 +17,7 @@ from app.data_collection import (
     get_box_office_amounts,
     get_justwatch_page,
 )
-from app.tmdb_api import get_title_details, search_title
+from app.tmdb_api import fetch_title_details, search_title, fetch_trending_movies
 
 # Initialize environment variables
 env = Env()
@@ -54,7 +54,7 @@ async def internal_server_error(request: Request, exc: Exception):
 @app.get("/api/trending")
 def trending_movies():
     try:
-        movies = search_title(query, TMDB_API_KEY)
+        movies = fetch_trending_movies(TMDB_API_KEY)
         return {"results": movies}
     except Exception as e:
         logging.error(f"Search error: {str(e)}")
@@ -75,7 +75,7 @@ def search(query: str):
 async def title_details(tmdb_id: str, media_type: str):
     try:
         # Fetch title details from TMDB API
-        tmdb_data = get_title_details(tmdb_id, media_type, TMDB_API_KEY)
+        tmdb_data = fetch_title_details(tmdb_id, media_type, TMDB_API_KEY)
 
         imdb_url = f"https://www.imdb.com/title/{tmdb_data['imdb_id']}"
 
