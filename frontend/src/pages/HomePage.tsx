@@ -6,7 +6,6 @@ import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
 import reelRatingsLogo from '../assets/img/reelratings_logo_yellow.svg';
 import styles from './HomePage.module.css';
-import SearchResultItem from '../components/SearchResultItem';
 
 interface Movie {
   tmdb_id: number;

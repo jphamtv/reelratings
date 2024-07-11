@@ -18,8 +18,8 @@
   padding-left: 40px;
   background-image: url('../assets/img/search_icon.svg');
   background-repeat: no-repeat;
-  background-position: left 10px center; /* Adjust the left padding as needed */
-  background-size: 20px; /* Adjust the size of the icon as needed */
+  background-position: left 10px center; 
+  background-size: 20px; 
 }
 
 .searchField:hover,
