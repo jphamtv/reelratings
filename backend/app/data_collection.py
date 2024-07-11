@@ -74,21 +74,27 @@ async def make_request(url, headers=None):
 async def get_rottentomatoes_url(title, year, media_type):
     """Extract the RottenTomatoes URL for the title"""
     title = unidecode(title)
-    year = year[:4]
+    year = int(year)
     search_url = f"{BASE_URLS['rottentomatoes']}{title.replace(' ', '%20')}"
     soup = await make_request(search_url, HEADERS)
-    search_result = soup.find(
-        "search-page-media-row",
-        {"releaseyear": {year}} if media_type == "Movie" else {"startyear": {year}},
-    )
 
-    if search_result:
-        url_tag = search_result.find("a", {"data-qa": "thumbnail-link"})
-        rottentomatoes_url = url_tag["href"]
-        return rottentomatoes_url
+    # Loop through to check exact year, then -/+ 1 year for discrepencies
+    for check_year in [year, year - 1, year + 1]:
+        search_result = soup.find(
+            "search-page-media-row",
+            (
+                {"releaseyear": {str(check_year)}}
+                if media_type == "Movie"
+                else {"startyear": {str(check_year)}}
+            ),
+        )
 
-    else:
-        return None
+        if search_result:
+            url_tag = search_result.find("a", {"data-qa": "thumbnail-link"})
+            rottentomatoes_url = url_tag["href"]
+            return rottentomatoes_url
+
+    return None
 
 
 async def get_letterboxd_url(title, year):
@@ -96,16 +102,19 @@ async def get_letterboxd_url(title, year):
     search_url = f"{BASE_URLS['letterboxd']}{title.replace(' ', '+')}/"
     soup = await make_request(search_url, HEADERS)
     search_results = soup.find_all("span", {"class": "film-title-wrapper"})
+    year = int(year)
 
-    for result in search_results:
-        # Extract the text content
-        year_element = result.find("small", class_="metadata")
+    # Loop through to check exact year, then -/+ 1 year for discrepencies
+    for check_year in [year, year - 1, year + 2]:
+        for result in search_results:
 
-        # If year matches, get the href from the parent <a> tag
-        if year_element and year_element.text.strip() == year:
-            href = result.find("a")["href"]
+            # Extract the text content
+            year_element = result.find("small", class_="metadata")
 
-            return f"https://letterboxd.com{href}"
+            # If matched, get the href from the parent <a> tag
+            if year_element and year_element.text.strip() == str(check_year):
+                href = result.find("a")["href"]
+                return f"https://letterboxd.com{href}"
 
     return None
 
@@ -115,39 +124,49 @@ async def get_commonsense_info(title, year, media_type):
     search_url = f"{BASE_URLS['commonsensemedia']}{title.replace(' ', '%20')}"
     soup = await make_request(search_url, HEADERS)
     search_results = soup.find_all("div", {"class": "site-search-teaser"})
+    year = int(year)
 
-    for result in search_results:
-        product_type_element = result.find("div", class_="review-product-type caption")
-        product_type = (
-            product_type_element.text.strip()
-            if product_type_element is not None
-            else None
-        )
+    with open("raw_search_results.html", "w", encoding="utf-8") as f:
+        f.write(str(search_results))
 
-        if product_type != media_type.upper():
-            continue
+    with open("parsed_results.txt", "w", encoding="utf-8") as f:
+        for result in search_results:
+            f.write(result.text)
+            f.write("\n---\n")  # Separator between results
 
-        # If year matches, get the href and age ratiing
-        year_element = result.find("div", class_="review-product-summary")
-        if year_element and year_element.text.strip()[-5:-1] != year:
-            continue
+    for check_year in [year, year - 1, year + 1]:
+        for result in search_results:
+            product_type_element = result.find("div", class_="review-product-type caption")
+            product_type = (
+                product_type_element.text.strip()
+                if product_type_element is not None
+                else None
+            )
+            if product_type != media_type.upper():
+                continue
 
-        rating_age_element = result.find("span", {"class": "rating__age"})
-        rating_age = (
-            rating_age_element.text.strip() if rating_age_element is not None else None
-        )
-        if not rating_age:
-            continue
+            # If year matches, get the href and age ratiing
+            year_element = result.find("div", class_="review-product-summary")
+            year_text = year_element.text.strip()[-5:-1]
+            if year_text != str(check_year):
+                continue
 
-        a_element = result.find("a")
-        href = a_element["href"] if a_element is not None else None
-        if not href:
-            continue
+            rating_age_element = result.find("span", {"class": "rating__age"})
+            rating_age = (
+                rating_age_element.text.strip() if rating_age_element is not None else None
+            )
+            if not rating_age:
+                continue
 
-        return {
-            "url": f"https://www.commonsensemedia.org{href}",
-            "rating": rating_age,
-        }
+            a_element = result.find("a")
+            href = a_element["href"] if a_element is not None else None
+            if not href:
+                continue
+
+            return {
+                "url": f"https://www.commonsensemedia.org{href}",
+                "rating": rating_age,
+            }
 
     return None
 

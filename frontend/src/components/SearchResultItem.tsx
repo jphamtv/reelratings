@@ -3,7 +3,6 @@ import posterPlaceholder from '../assets/img/poster_empty.jpg'
 import styles from './SearchResultItem.module.css';
 
 interface SearchResultItemProps {
-  key: number;
   tmdb_id: number;
   title: string;
   year: string;
@@ -12,7 +11,6 @@ interface SearchResultItemProps {
 }
 
 const SearchResultItem: React.FC<SearchResultItemProps> = ({
-  key,
   tmdb_id,
   title,
   year,
@@ -20,7 +18,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   poster_img
 }) => {
   return (
-    <li className={styles.searchResultItem} key={key}>
+    <li className={styles.searchResultItem}>
       <Link to={`/details/${tmdb_id}/${media_type}`} className={styles.searchResultLink}>
         <div className={styles.searchResultWrapper}>
           <img
