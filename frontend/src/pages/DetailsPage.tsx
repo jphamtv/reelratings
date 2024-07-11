@@ -45,6 +45,7 @@ interface TitleDetails {
   };
 }
 
+
 const DetailsPage: React.FC = () => {
   const [details, setDetails] = useState<TitleDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,11 +53,11 @@ const DetailsPage: React.FC = () => {
   const { tmdbId, mediaType } = useParams<{ tmdbId: string; mediaType: string }>();
   const { getItem, setItem } = useClientCache();
 
-  const fetchDetails = useCallback(async (forceRefresh = false) => {
+  const fetchDetails = useCallback(async (skipCache = false) => {
     if (!tmdbId || !mediaType) return;
 
     const cacheKey = `details_${tmdbId}_${mediaType}`;
-    const cachedDetails = !forceRefresh ? getItem<TitleDetails>(cacheKey) : null;
+    const cachedDetails = !skipCache ? getItem<TitleDetails>(cacheKey) : null;
 
     if (cachedDetails) {
       setDetails(cachedDetails);
@@ -72,8 +73,8 @@ const DetailsPage: React.FC = () => {
       setDetails(data);
       setItem(cacheKey, data);
     } catch (err) {
-      setError(true);
       console.error("Error fetching details:", err);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -82,10 +83,10 @@ const DetailsPage: React.FC = () => {
   useEffect(() => {
     fetchDetails();
   }, [fetchDetails]);
-  
+
   const handleRetry = () => {
-    fetchDetails(true); // Force refresh on retry
-   };
+    fetchDetails(true); // Skip cache on retry
+  };
 
   if (loading) {
     return (

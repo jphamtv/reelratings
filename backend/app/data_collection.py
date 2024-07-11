@@ -50,7 +50,7 @@ async def make_request(url, headers=None):
     try:
         # Create an asynchronous HTTP client
         async with httpx.AsyncClient(
-            timeout=5, limits=httpx.Limits(max_connections=10)
+            timeout=10, limits=httpx.Limits(max_connections=10)
         ) as client:
             # Make the HTTP GET request
             response = await client.get(
