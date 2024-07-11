@@ -105,7 +105,7 @@ async def get_letterboxd_url(title, year):
     year = int(year)
 
     # Loop through to check exact year, then -/+ 1 year for discrepencies
-    for check_year in [year, year - 1, year + 2]:
+    for check_year in [year, year - 1, year + 1]:
         for result in search_results:
 
             # Extract the text content
