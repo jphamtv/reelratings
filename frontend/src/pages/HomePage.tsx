@@ -65,7 +65,7 @@ const HomePage: React.FC = () => {
             <h3 className={styles.title}>Popular Movies This Week</h3>
             <div className={styles.movieGrid}>
             {trendingMovies.map((result) => (
-              <Link to={`/details/${result.tmdb_id}/${result.media_type}`}>
+              <Link to={`/details/${result.tmdb_id}/${result.media_type}`} key={result.tmdb_id}>
                 <img src={result.poster_img} alt={result.title} className={styles.posterImage}/>
               </Link>
             ))}
