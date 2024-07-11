@@ -5,6 +5,7 @@ import logging
 from bs4 import BeautifulSoup
 from fastapi import HTTPException
 from unidecode import unidecode
+from functools import lru_cache
 
 
 BASE_URLS = {
@@ -26,6 +27,10 @@ HEADERS = {
 }
 
 
+def get_cached_url(url):
+    return url
+
+
 async def make_request(url, headers=None):
     """
     Make an asynchronous HTTP GET request and parse the content with BeautifulSoup.
@@ -41,13 +46,15 @@ async def make_request(url, headers=None):
     - HTTPException: If the request fails or returns a non-2xx HTTP status code.
 
     """
-
+    cached_url = get_cached_url(url)
     try:
         # Create an asynchronous HTTP client
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(
+            timeout=5, limits=httpx.Limits(max_connections=10)
+        ) as client:
             # Make the HTTP GET request
             response = await client.get(
-                url, headers=headers, timeout=15, follow_redirects=True
+                cached_url, headers=headers, timeout=5, follow_redirects=True
             )
 
             # Check that the request was successful (status code 2xx)
@@ -60,15 +67,11 @@ async def make_request(url, headers=None):
         # Log any exception specific to HTTPX
         logging.error(f"HTTPX Request Error: {exc}")
 
-        # Raise a FastAPI HTTPException with a 500 status code
-        raise HTTPException(status_code=500, detail="Internal Server Error")
-
     except Exception as generic_exc:
         # Log any other generic exceptions
         logging.error(f"Generic Exception: {generic_exc}")
-
-        # Raise a FastAPI HTTPException with a 500 status code
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        
+    return None
 
 
 async def get_rottentomatoes_url(title, year, media_type):
@@ -77,6 +80,8 @@ async def get_rottentomatoes_url(title, year, media_type):
     year = int(year)
     search_url = f"{BASE_URLS['rottentomatoes']}{title.replace(' ', '%20')}"
     soup = await make_request(search_url, HEADERS)
+    if soup is None:
+        return None
 
     # Loop through to check exact year, then -/+ 1 year for discrepencies
     for check_year in [year, year - 1, year + 1]:
@@ -101,6 +106,8 @@ async def get_letterboxd_url(title, year):
     """Extract the Letterboxd URL for the movie"""
     search_url = f"{BASE_URLS['letterboxd']}{title.replace(' ', '+')}/"
     soup = await make_request(search_url, HEADERS)
+    if soup is None:
+        return None
     search_results = soup.find_all("span", {"class": "film-title-wrapper"})
     year = int(year)
 
@@ -123,16 +130,10 @@ async def get_commonsense_info(title, year, media_type):
     """Extract the title's specific URL page and age rating"""
     search_url = f"{BASE_URLS['commonsensemedia']}{title.replace(' ', '%20')}"
     soup = await make_request(search_url, HEADERS)
+    if soup is None:
+        return None
     search_results = soup.find_all("div", {"class": "site-search-teaser"})
     year = int(year)
-
-    with open("raw_search_results.html", "w", encoding="utf-8") as f:
-        f.write(str(search_results))
-
-    with open("parsed_results.txt", "w", encoding="utf-8") as f:
-        for result in search_results:
-            f.write(result.text)
-            f.write("\n---\n")  # Separator between results
 
     for check_year in [year, year - 1, year + 1]:
         for result in search_results:
@@ -176,6 +177,8 @@ async def get_imdb_rating(imdb_id):
     if imdb_id:
         imdb_url = f"{BASE_URLS['imdb']}{imdb_id}"
         soup = await make_request(imdb_url, HEADERS)
+        if soup is None:
+            return None
 
         # Locate the class that contains the IMDb Rating
         rating = soup.find(
@@ -199,6 +202,9 @@ async def get_box_office_amounts(imdb_id):
     if imdb_id:
         url = f"{BASE_URLS['boxofficemojo']}{imdb_id}/"
         soup = await make_request(url, HEADERS)
+        if soup is None:
+            return None
+        
         # Locate the span element that contains the Box Office amounts
         span_elements = soup.find_all("span", class_="a-size-medium a-text-bold")
         dollar_amounts = [span.get_text(strip=True) for span in span_elements]
@@ -213,6 +219,8 @@ async def get_justwatch_page(justwatch_url):
     """Extract the JustWatch page url for 'US'"""
     if justwatch_url:
         soup = await make_request(justwatch_url, HEADERS)
+        if soup is None:
+            return None
 
         try:
             link = soup.find("div", class_="homepage")
@@ -229,8 +237,10 @@ async def get_rottentomatoes_scores(rottentomatoes_url):
 
     # Get the script element that contains the Tomatometer and Audience scores
     soup = await make_request(rottentomatoes_url, HEADERS)
+    if soup is None:
+        return None
+    
     script_tag = soup.find("script", {"id": "media-scorecard-json"})
-
     if not script_tag:
         return None
 
@@ -281,6 +291,8 @@ async def get_letterboxd_rating(letterboxd_url):
         return None
 
     soup = await make_request(letterboxd_url, HEADERS)
+    if soup is None:
+        return None
 
     # Locate the class that contains the Tomatometer and Audience scores
     try:

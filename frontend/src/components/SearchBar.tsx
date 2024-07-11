@@ -27,7 +27,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchValue.trim()) {
-      navigate(`/search?query=${encodeURIComponent(searchValue.trim())}`);
+      // Add a timestampe to force a new search
+      const timestamp = Date.now();
+      navigate(`/search?query=${encodeURIComponent(searchValue.trim())}&t=${timestamp}`);
     }
   };
 

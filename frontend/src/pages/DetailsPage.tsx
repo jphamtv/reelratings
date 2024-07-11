@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { useClientCache } from '../hooks/useClientCache';
 import { fetchTitleDetails } from '../services/api';
 import TitleDetailsCard from '../components/TitleDetailsCard';
 import RatingsDetails from '../components/RatingsDetails';
@@ -49,26 +50,42 @@ const DetailsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { tmdbId, mediaType } = useParams<{ tmdbId: string; mediaType: string }>();
+  const { getItem, setItem } = useClientCache();
 
-  const fetchDetails = useCallback(async () => {
+  const fetchDetails = useCallback(async (forceRefresh = false) => {
     if (!tmdbId || !mediaType) return;
+
+    const cacheKey = `details_${tmdbId}_${mediaType}`;
+    const cachedDetails = !forceRefresh ? getItem<TitleDetails>(cacheKey) : null;
+
+    if (cachedDetails) {
+      setDetails(cachedDetails);
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
       setError(false);
       const data = await fetchTitleDetails(tmdbId, mediaType);
+      console.log(data);
       setDetails(data);
+      setItem(cacheKey, data);
     } catch (err) {
       setError(true);
       console.error("Error fetching details:", err);
     } finally {
       setLoading(false);
     }
-  }, [tmdbId, mediaType]);
+  }, [tmdbId, mediaType, getItem, setItem]);
 
   useEffect(() => {
     fetchDetails();
-   }, [fetchDetails]);
+  }, [fetchDetails]);
+  
+  const handleRetry = () => {
+    fetchDetails(true); // Force refresh on retry
+   };
 
   if (loading) {
     return (
@@ -92,7 +109,7 @@ const DetailsPage: React.FC = () => {
     return (
       <div className={styles.errorContainer}>
         <img src={errorImage} className={styles.errorImage} alt='Error occured'/>
-        <button onClick={fetchDetails} className={styles.retryButton}>
+        <button onClick={handleRetry} className={styles.retryButton}>
           Try fetching again?
         </button>
       </div>

@@ -33,6 +33,7 @@ const HomePage: React.FC = () => {
 
       if (cachedMovies && Array.isArray(cachedMovies.results)) {
         setTrendingMovies(cachedMovies.results);
+        setLoading(false);
         return;
       }
 
@@ -40,6 +41,7 @@ const HomePage: React.FC = () => {
         setLoading(true);
         setError(false);
         const movies = await fetchTrendingMovies();
+        console.log(movies);
         if (movies && Array.isArray(movies.results)) {
         setTrendingMovies(movies.results);
         setItem(cacheKey, movies)
