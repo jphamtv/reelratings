@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import posterPlaceholder from '../assets/img/poster_empty.jpg'
 import styles from './SearchResultItem.module.css';
@@ -17,15 +18,25 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   media_type,
   poster_img
 }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <li className={styles.searchResultItem}>
       <Link to={`/details/${tmdb_id}/${media_type}`} className={styles.searchResultLink}>
         <div className={styles.searchResultWrapper}>
-          <img
-            src={poster_img ? poster_img : posterPlaceholder}
-            alt={title}
-            className={styles.posterImage}
-          />
+          <div className={styles.posterContainer}>
+            {!imageLoaded && <div className={styles.imagePlaceholder} />}
+            <img
+              src={poster_img || posterPlaceholder}
+              alt={title}
+              className={`${styles.posterImage} ${imageLoaded ? styles.loaded : ''}`}
+              onLoad={() => setImageLoaded(true)}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = posterPlaceholder;
+                setImageLoaded(true);
+              }}
+            />
+          </div>
           <div className={styles.titleDetailsWrapper}>
             <span className={styles.title}>{title}</span>
             {year && <span className={styles.year}> {year}</span>}
