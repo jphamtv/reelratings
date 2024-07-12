@@ -34,20 +34,20 @@
 
 /* EMPTY STATE */
 
-.emptyStateContainer {
+.loadingContainer {
   display: flex;
   align-items: flex-start;
   margin: 1rem;
 }
 
-.emptyStateWrapper {
+.loadingWrapper {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   margin-top: .25rem;
 }
 
-.poster {
+.posterLoading {
   width: 6.25rem;
   height: 9.375rem;
   background-color: #f3f3f3;
@@ -56,7 +56,7 @@
   flex-shrink: 0;
 }
 
-.info {
+.infoLoading {
   flex-grow: 1;
   height: 30px;
   background-color: #f3f3f3;
@@ -64,7 +64,7 @@
   box-sizing: border-box;
 }
 
-.card {
+.cardLoading {
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -77,17 +77,17 @@
   border-radius: 8px;
 }
 
-.poster,
-.info,
-.card {
+.posterLoading,
+.infoLoading,
+.cardLoading {
   position: relative;
   overflow: hidden;
   background-color: #f3f3f3;
 }
 
-.poster::after,
-.info::after,
-.card::after {
+.posterLoading::after,
+.infoLoading::after,
+.cardLoading::after {
   content: "";
   position: absolute;
   top: 0;

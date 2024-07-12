@@ -64,9 +64,16 @@ const SearchPage: React.FC = () => {
     }
   }, [location.search, getItem, setItem]);
   
-
   if (loading) {
-    return <div className={styles.loading}>Loading...</div>;
+    return (
+      <div className={styles.searchResultsContainer}>
+        <div className={styles.loading}></div>
+        <div className={styles.loading}></div>
+        <div className={styles.loading}></div>
+        <div className={styles.loading}></div>
+        <div className={styles.loading}></div>
+      </div>
+    );
   }
 
   if (error || searchResults.length === 0) {

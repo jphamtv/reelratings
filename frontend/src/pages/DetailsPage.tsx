@@ -91,17 +91,17 @@ const DetailsPage: React.FC = () => {
   if (loading) {
     return (
       <div>
-        <div className={styles.emptyStateContainer}>
-          <div className={styles.poster}></div>
-          <div className={styles.emptyStateWrapper}>
-            <div className={styles.info}></div>
-            <div className={styles.info}></div>
-            <div className={styles.info}></div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.posterLoading}></div>
+          <div className={styles.loadingWrapper}>
+            <div className={styles.infoLoading}></div>
+            <div className={styles.infoLoading}></div>
+            <div className={styles.infoLoading}></div>
           </div>
         </div>
-        <div className={styles.card}></div>
-        <div className={styles.card}></div>
-        <div className={styles.card}></div>
+        <div className={styles.cardLoading}></div>
+        <div className={styles.cardLoading}></div>
+        <div className={styles.cardLoading}></div>
       </div>
     ); 
   }
