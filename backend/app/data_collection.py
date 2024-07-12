@@ -3,9 +3,7 @@ import json
 import logging
 
 from bs4 import BeautifulSoup
-from fastapi import HTTPException
 from unidecode import unidecode
-from functools import lru_cache
 
 
 BASE_URLS = {
@@ -27,10 +25,6 @@ HEADERS = {
 }
 
 
-def get_cached_url(url):
-    return url
-
-
 async def make_request(url, headers=None):
     """
     Make an asynchronous HTTP GET request and parse the content with BeautifulSoup.
@@ -41,20 +35,15 @@ async def make_request(url, headers=None):
 
     Returns:
     - BeautifulSoup object: The HTML content of the response parsed by BeautifulSoup.
-
-    Raises:
-    - HTTPException: If the request fails or returns a non-2xx HTTP status code.
-
     """
-    cached_url = get_cached_url(url)
     try:
         # Create an asynchronous HTTP client
         async with httpx.AsyncClient(
-            timeout=10, limits=httpx.Limits(max_connections=10)
+            timeout=15, limits=httpx.Limits(max_connections=10)
         ) as client:
             # Make the HTTP GET request
             response = await client.get(
-                cached_url, headers=headers, timeout=5, follow_redirects=True
+                url, headers=headers, follow_redirects=True
             )
 
             # Check that the request was successful (status code 2xx)
