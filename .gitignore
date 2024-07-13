@@ -29,3 +29,4 @@ dist-ssr
 backend/app/debug_main.py
 backend/.pytest_cache
 tmdbapi_data.json
+director.json
