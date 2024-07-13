@@ -104,7 +104,7 @@ const HomePage: React.FC = () => {
           </div>
           <SearchBar className={styles.homePageSearchContainer} />
         </div>
-        <main>
+        <main className={styles.homepageMain}>
           <div className={styles.moviesContainer}>
             <h3 className={styles.title}>Popular Movies This Week</h3>
             {loading ? renderSkeletonGrid() : renderMovieGrid()}

@@ -1,3 +1,7 @@
+.homepageMain {
+  max-width: 50rem;
+}
+
 .homepageBody {
   background-color: #1a1a19;
 }
@@ -6,7 +10,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* width: 100%; */
 }
 
 .homePageSearchContainer {
@@ -37,13 +40,12 @@
 }
 
 .moviesContainer {
-  margin: 2rem 0;
+  margin-top: 4rem;
 }
 
 .movieGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
   margin: 1rem;
 }
@@ -103,10 +105,26 @@
   }
 }
 
+@media (max-width: 768px) {
+  .movieGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .moviesContainer {
+    margin-top: 2rem;
+  }
+
+  .logoWrapper {
+    margin-top: 2rem;
+  }
+}
+
 @media (max-width: 480px) {
   .movieGrid {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+  }
+  .moviesContainer {
+    margin-top: 2rem;
   }
   .logoWrapper {
     margin-top: 2rem;
