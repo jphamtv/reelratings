@@ -22,8 +22,9 @@ interface TrendingMoviesResponse {
 
 const HomePage: React.FC = () => {
   const [trendingMovies, setTrendingMovies] = useState<TrendingMovie[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [showPosters, setShowPosters] = useState(false);
   const { getItem, setItem } = useClientCache();
 
   useEffect(() => {
@@ -34,6 +35,7 @@ const HomePage: React.FC = () => {
       if (cachedMovies && Array.isArray(cachedMovies.results)) {
         setTrendingMovies(cachedMovies.results);
         setLoading(false);
+        setTimeout(() => setShowPosters(true), 100);
         return;
       }
 
@@ -53,14 +55,36 @@ const HomePage: React.FC = () => {
         setError(true);
       } finally {
         setLoading(false);
+        setTimeout(() => setShowPosters(true), 100);
       }
     };
 
     fetchMovies();
-   }, [getItem, setItem]);
+  }, [getItem, setItem]);
+  
+  const renderMovieGrid = () => (
+    <div className={styles.movieGrid}>
+      {trendingMovies.map((movie) => (
+        <Link to={`/details/${movie.tmdb_id}/${movie.media_type}`} key={movie.tmdb_id}>
+          <img
+            src={movie.poster_img}
+            alt={movie.title}
+            className={`${styles.posterImage} ${showPosters ? styles.visible : ''}`} />
+        </Link>
+      ))}
+    </div>
+  );
+  
+  const renderSkeletonGrid = () => (
+    <div className={styles.movieGrid}>
+      {Array.from({ length: 20 }).map((_, index) => (
+        <div key={index} className={styles.posterSkeleton} />
+      ))}
+    </div>
+   );
 
   if (loading) {
-    return <div className={styles.loading}>Loading...</div>;
+    return <div className={styles.loading}></div>;
   }
 
   if (error || trendingMovies.length === 0) {
@@ -83,13 +107,7 @@ const HomePage: React.FC = () => {
         <main>
           <div className={styles.moviesContainer}>
             <h3 className={styles.title}>Popular Movies This Week</h3>
-            <div className={styles.movieGrid}>
-            {trendingMovies.map((movie) => (
-              <Link to={`/details/${movie.tmdb_id}/${movie.media_type}`} key={movie.tmdb_id}>
-                <img src={movie.poster_img} alt={movie.title} className={styles.posterImage}/>
-              </Link>
-            ))}
-            </div>
+            {loading ? renderSkeletonGrid() : renderMovieGrid()}
           </div>
         </main>
         <Footer />
