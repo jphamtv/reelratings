@@ -1,4 +1,6 @@
 import requests
+import asyncio
+import httpx
 
 from environs import Env
 from app.format_runtime_utils import format_runtime
@@ -7,12 +9,29 @@ from app.format_runtime_utils import format_runtime
 # --------- HOMEPAGE - TRENDING MOVIES -------------- #
 
 
-def fetch_trending_movies(api_key):
-    """Fetch top 20 trending movies of the week using the TMDB API"""
-    url = f"https://api.themoviedb.org/3/trending/movie/week?language=en-US&api_key={api_key}"
-    movies = fetch_api_data(url)
+async def fetch_trending_movies(api_key):
+    """Fetch top 100 trending movies of the week using the TMDB API"""
+    base_url = f"https://api.themoviedb.org/3/trending/movie/week"
     poster_size = 'w500'
-    filtered_movies = filter_api_data(movies, poster_size)
+
+    async def fetch_page(page):
+        url = f"{base_url}?language=en-US&api_key={api_key}&page={page}"
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+            response.raise_for_status()
+            return response.json()['results']
+
+    # Fetch 5 pages concurrently
+    pages = await asyncio.gather(*[fetch_page(i) for i in range(1, 6)])
+
+    # Flatten the list of results
+    all_movies = [movie for page in pages for movie in page]
+
+    # Create a structure compatible with filter_api_data
+    compatible_data = {"results": all_movies}
+
+    # Filter and process the results
+    filtered_movies = filter_api_data(compatible_data, poster_size)
 
     return filtered_movies
 
@@ -52,7 +71,7 @@ def filter_api_data(api_data, poster_size):
     for result in api_data["results"]:
         tmdb_id = result.get("id")
         poster_path = result.get("poster_path")
-        media_type = result.get("media_type")
+        media_type = result.get("media_type") or "movie"
         poster_img = get_poster_image(poster_base_url, poster_path)
 
         # Check if TMDB id is already seen to avoid duplicates

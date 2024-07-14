@@ -34,7 +34,7 @@ app.add_middleware(
     allow_origins=["http://localhost:5173"], # TODO: Add frontend URL later
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],    
+    allow_headers=["*"],
 )
 
 # Error handling
@@ -52,9 +52,9 @@ async def internal_server_error(request: Request, exc: Exception):
 
 # API routes
 @app.get("/api/trending")
-def trending_movies():
+async def trending_movies():
     try:
-        movies = fetch_trending_movies(TMDB_API_KEY)
+        movies = await fetch_trending_movies(TMDB_API_KEY)
         return {"results": movies}
     except Exception as e:
         logging.error(f"Search error: {str(e)}")
