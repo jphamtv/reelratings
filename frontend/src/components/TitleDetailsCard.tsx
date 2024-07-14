@@ -1,3 +1,4 @@
+import posterPlaceholder from '../assets/img/poster_empty.jpg'
 import commonSenseIcon from '../assets/img/commonsense_checkmark.svg';
 import styles from './TitleDetailsCard.module.css';
 
@@ -48,7 +49,7 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
 
   return (
     <div className={styles.titleDetailsContainer}>
-      <img src={poster_img} alt={title} className={styles.posterImage} />
+      <img src={poster_img || posterPlaceholder} alt={title} className={styles.posterImage} />
       <div className={styles.titleDetailsWrapper}>
         <h3>{title}</h3>
         <div>
