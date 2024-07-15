@@ -17,7 +17,12 @@ from app.data_collection import (
     get_box_office_amounts,
     get_justwatch_page,
 )
-from app.tmdb_api import fetch_title_details, search_title, fetch_trending_movies
+from app.tmdb_api import (
+    fetch_title_details, 
+    search_title, 
+    fetch_trending_movies, 
+    fetch_director_movies
+)
 
 # Initialize environment variables
 env = Env()
@@ -71,13 +76,24 @@ def search(query: str):
         raise HTTPException(status_code=500, detail="Error performing search")
 
 
+@app.get("/api/director/{director_id}")
+def director_movies(director_id: str):
+    try:
+        movies = fetch_director_movies(director_id, TMDB_API_KEY)
+        return {"results": movies}
+    except Exception as e:
+        logging.error(f"Error fetching director's movies: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error fetching director's movies")
+
+
 @app.get("/api/details/{tmdb_id}/{media_type}")
 async def title_details(tmdb_id: str, media_type: str):
     try:
         # Fetch title details from TMDB API
         tmdb_data = fetch_title_details(tmdb_id, media_type, TMDB_API_KEY)
 
-        imdb_url = f"https://www.imdb.com/title/{tmdb_data['imdb_id']}"
+        # Only create imdb_url if imdb_id exists
+        imdb_url = f"https://www.imdb.com/title/{tmdb_data['imdb_id']}" if tmdb_data["imdb_id"] else None
 
         # Movie specific info
         if media_type == "Movie":

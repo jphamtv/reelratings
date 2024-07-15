@@ -1,7 +1,6 @@
 .card {
   padding: 1.5rem 1rem;
   background-color: #f7f7f7;
-  box-sizing: border-box;
   border: 1px solid rgba(14, 62, 124, 0.08);
   border-radius: 8px;
 }

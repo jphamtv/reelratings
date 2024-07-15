@@ -52,3 +52,7 @@
   justify-content: center;
   border-radius: 50%;
 }
+
+.clearButton:hover {
+  color: #FAAD00;
+}

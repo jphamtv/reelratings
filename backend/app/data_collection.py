@@ -71,9 +71,13 @@ async def get_rottentomatoes_url(title, year, media_type):
     soup = await make_request(search_url, HEADERS)
     if soup is None:
         return None
+    
+    print(soup)
+    print(search_url)
 
     # Loop through to check exact year, then -/+ 1 year for discrepencies
-    for check_year in [year, year - 1, year + 1]:
+    # for check_year in [year, year - 1, year + 1]:
+    for check_year in [year]:
         search_result = soup.find(
             "search-page-media-row",
             (

@@ -2,7 +2,7 @@ import requests
 import asyncio
 import httpx
 
-from environs import Env
+from datetime import datetime
 from app.format_runtime_utils import format_runtime
 
 
@@ -235,3 +235,44 @@ def fetch_title_details(tmdb_id, media_type, api_key):
         }
 
     return filtered_details
+
+
+# --------- FETCH DIRECTOR MOVIES -------------- #
+
+
+def fetch_director_movies(director_id, api_key):
+    url = f"https://api.themoviedb.org/3/person/{director_id}/movie_credits?api_key={api_key}&language=en-US"
+    data = fetch_api_data(url)
+
+    # Filter for movies where the person was a director
+    directed_movies = [movie for movie in data["crew"] if movie["job"] == "Director"]
+
+    # Sort movies by release date (newest first)
+    sorted_movies = sorted(
+        directed_movies,
+        key=lambda x: (
+            datetime.strptime(x["release_date"], "%Y-%m-%d")
+            if x["release_date"]
+            else datetime.min
+        ),
+        reverse=True,
+    )
+
+    # Format the results
+    formatted_movies = [
+        {
+            "tmdb_id": movie["id"],
+            "title": movie["title"],
+            "year": movie["release_date"][:4] if movie["release_date"] else None,
+            "media_type": "Movie",
+            "poster_img": (
+                f"https://image.tmdb.org/t/p/w185{movie['poster_path']}"
+                if movie["poster_path"]
+                else None
+            ),
+        }
+        for movie in sorted_movies
+        if movie["release_date"] and movie["release_date"][:4] 
+    ]
+
+    return formatted_movies

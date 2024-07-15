@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import posterPlaceholder from '../assets/img/poster_empty.jpg'
 import commonSenseIcon from '../assets/img/commonsense_checkmark.svg';
 import styles from './TitleDetailsCard.module.css';
@@ -35,13 +36,27 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
 
     const label = media_type === 'Movie' ? 'Director' : 'Creator';  
 
-    const getName = (person: string | Director) =>
-      typeof person === 'string' ? person : person.name;
+    const renderPerson = (person: string | Director) => {
+      if (typeof person === 'string') {
+        return person;
+      } else {
+        return (
+          <Link
+            to={`/search?director=${person.id}`}
+            key={person.id}
+            state={{ directorName: person.name }}
+            className={styles.directorLink}
+          >
+            {person.name}
+          </Link>
+        );
+      }
+    }
 
     return (
       <div>
-        {label}: {getName(people[0])}
-        {people[1] && <span>, {getName(people[1])}</span>}
+        {label}: {renderPerson(people[0])}
+        {people[1] && <span>, {renderPerson(people[1])}</span>}
       </div>
     );
   };
