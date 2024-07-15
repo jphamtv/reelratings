@@ -165,7 +165,7 @@ def get_director(media_details):
     """Get director(s) for movies"""
     movie_crew = media_details.get("credits", {}).get("crew", [])
 
-    return [item.get("name") for item in movie_crew if item["job"] == "Director"]
+    return [{"id": item.get("id"), "name": item.get("name")} for item in movie_crew if item["job"] == "Director"]
 
 
 def get_creator(media_details):

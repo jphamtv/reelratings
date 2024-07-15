@@ -10,6 +10,11 @@ import Button from '../components/Button';
 import errorImage from '../assets/img/error_500.png';
 import styles from './DetailsPage.module.css';
 
+interface Director {
+  id: number;
+  name: string;
+}
+
 interface TitleDetails {
   tmdb_data: {
     imdb_id: string;
@@ -18,7 +23,7 @@ interface TitleDetails {
     year: string;
     poster_img: string;
     justwatch_url: string;
-    director?: string[];
+    director?: Director[] | string[];
     runtime?: string;
     certification?: string;
     creator?: string[];
@@ -44,7 +49,6 @@ interface TitleDetails {
     justwatch_page: string | null;
   };
 }
-
 
 const DetailsPage: React.FC = () => {
   const [details, setDetails] = useState<TitleDetails | null>(null);

@@ -2,6 +2,11 @@ import posterPlaceholder from '../assets/img/poster_empty.jpg'
 import commonSenseIcon from '../assets/img/commonsense_checkmark.svg';
 import styles from './TitleDetailsCard.module.css';
 
+interface Director {
+  id: number;
+  name: string;
+}
+
 interface TitleDetailsCardProps {
   tmdbData: {
     imdb_id: string;
@@ -10,7 +15,7 @@ interface TitleDetailsCardProps {
     year: string;
     poster_img: string;
     justwatch_url: string;
-    director?: string[];
+    director?: Director[] | string[];
     runtime?: string;
     certification?: string;
     creator?: string[];
@@ -29,8 +34,15 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
     if (!people || people.length === 0) return null;
 
     const label = media_type === 'Movie' ? 'Director' : 'Creator';  
+
+    const getName = (person: string | Director) =>
+      typeof person === 'string' ? person : person.name;
+
     return (
-      <div>{label}: {people[0]}{people[1] && <span>, {people[1]}</span>}</div>
+      <div>
+        {label}: {getName(people[0])}
+        {people[1] && <span>, {getName(people[1])}</span>}
+      </div>
     );
   };
 
