@@ -97,7 +97,7 @@ def get_poster_image(poster_base_url, poster_path):
 
 def get_filtered_results(result, media_type, tmdb_id, poster_img):
     """Get the filtered result based on media type"""
-    if media_type == "movie":
+    if media_type == "movie" and result.get("release_date"):
         return {
             "tmdb_id": tmdb_id,
             "title": result.get("title"),
@@ -106,7 +106,7 @@ def get_filtered_results(result, media_type, tmdb_id, poster_img):
             "poster_img": poster_img,
         }
 
-    elif media_type == "tv":
+    elif media_type == "tv" and result.get("first_air_date"):
         return {
             "tmdb_id": tmdb_id,
             "title": result.get("name"),
