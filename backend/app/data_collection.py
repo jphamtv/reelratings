@@ -4,6 +4,7 @@ import logging
 
 from bs4 import BeautifulSoup
 from unidecode import unidecode
+from app.similar_utils import similar
 
 
 BASE_URLS = {
@@ -65,32 +66,45 @@ async def make_request(url, headers=None):
 
 async def get_rottentomatoes_url(title, year, media_type):
     """Extract the RottenTomatoes URL for the title"""
-    title = unidecode(title)
-    year = int(year)
     search_url = f"{BASE_URLS['rottentomatoes']}{title.replace(' ', '%20')}"
     soup = await make_request(search_url, HEADERS)
     if soup is None:
         return None
-    
-    print(soup)
-    print(search_url)
 
-    # Loop through to check exact year, then -/+ 1 year for discrepencies
+    title = unidecode(title)
+    attribute_name = "releaseyear" if media_type == 'Movie' else "startyear"
+    year = int(year)
+
+    for result in soup.find_all("search-page-media-row"):
+        rt_title = result.find("a", {"data-qa": "info-name"}).text.strip()
+        try:
+            rt_year = int(result.get(attribute_name, 0))
+        except ValueError:
+            continue
+
+        # Check year proximity
+        if abs(rt_year - year) <= 1:
+            # Check title similarity
+            if similar(title.lower(), rt_title.lower()) > 0.8:
+                url_tag = result.find("a", {"data-qa": "thumbnail-link"})
+                rottentomatoes_url = url_tag["href"]
+                return rottentomatoes_url
+
+    # # Loop through to check exact year, then -/+ 1 year for discrepencies
     # for check_year in [year, year - 1, year + 1]:
-    for check_year in [year]:
-        search_result = soup.find(
-            "search-page-media-row",
-            (
-                {"releaseyear": {str(check_year)}}
-                if media_type == "Movie"
-                else {"startyear": {str(check_year)}}
-            ),
-        )
+    #     search_result = soup.find(
+    #         "search-page-media-row",
+    #         (
+    #             {"releaseyear": {str(check_year)}}
+    #             if media_type == "Movie"
+    #             else {"startyear": {str(check_year)}}
+    #         ),
+    #     )
 
-        if search_result:
-            url_tag = search_result.find("a", {"data-qa": "thumbnail-link"})
-            rottentomatoes_url = url_tag["href"]
-            return rottentomatoes_url
+    #     if search_result:
+    #         url_tag = search_result.find("a", {"data-qa": "thumbnail-link"})
+    #         rottentomatoes_url = url_tag["href"]
+    #         return rottentomatoes_url
 
     return None
 
