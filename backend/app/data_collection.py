@@ -90,22 +90,6 @@ async def get_rottentomatoes_url(title, year, media_type):
                 rottentomatoes_url = url_tag["href"]
                 return rottentomatoes_url
 
-    # # Loop through to check exact year, then -/+ 1 year for discrepencies
-    # for check_year in [year, year - 1, year + 1]:
-    #     search_result = soup.find(
-    #         "search-page-media-row",
-    #         (
-    #             {"releaseyear": {str(check_year)}}
-    #             if media_type == "Movie"
-    #             else {"startyear": {str(check_year)}}
-    #         ),
-    #     )
-
-    #     if search_result:
-    #         url_tag = search_result.find("a", {"data-qa": "thumbnail-link"})
-    #         rottentomatoes_url = url_tag["href"]
-    #         return rottentomatoes_url
-
     return None
 
 
@@ -116,6 +100,7 @@ async def get_letterboxd_url(title, year):
     if soup is None:
         return None
     search_results = soup.find_all("span", {"class": "film-title-wrapper"})
+    print(search_results)
     year = int(year)
 
     # Loop through to check exact year, then -/+ 1 year for discrepencies
