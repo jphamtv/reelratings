@@ -47,7 +47,6 @@ const SearchPage: React.FC = () => {
         setLoading(true);
         setError(false);
         const response = await searchTitle(query);
-        console.log(response);
         if (response && Array.isArray(response.results)) {
           setSearchResults(response.results);
           setItem(cacheKey, response);
@@ -76,9 +75,7 @@ const SearchPage: React.FC = () => {
       try {
         setLoading(true);
         setError(false);
-        console.log('SearchPage 1 directorID:', typeof directorId)
         const response = await fetchDirectorMovies(directorId);
-        console.log(response);
         if (response && Array.isArray(response.results)) {
           setSearchResults(response.results);
           setItem(cacheKey, response);
@@ -100,7 +97,6 @@ const SearchPage: React.FC = () => {
     if (query) {
       fetchSearchResults(query);
     } else if (directorId) {
-      console.log('SearchPage 2 directorID:', typeof directorId)
       fetchDirectorMoviesData(directorId);
     } else {
       setSearchResults([]);

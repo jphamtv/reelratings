@@ -26,10 +26,13 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [showPosters, setShowPosters] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
   const { getItem, setItem } = useClientCache();
   const { setSearchValue } = useSearch();
 
   useEffect(() => {
+    if (hasFetched) return;
+
     // Clear search value when HomePage mounts
     setSearchValue('');
 
@@ -48,10 +51,9 @@ const HomePage: React.FC = () => {
         setLoading(true);
         setError(false);
         const movies = await fetchTrendingMovies();
-        console.log(movies);
         if (movies && Array.isArray(movies.results)) {
-        setTrendingMovies(movies.results);
-        setItem(cacheKey, movies)
+          setTrendingMovies(movies.results);
+          setItem(cacheKey, movies)
         } else {
           throw new Error('Invalid reponse format');
         }
@@ -65,7 +67,8 @@ const HomePage: React.FC = () => {
     };
 
     fetchMovies();
-  }, [getItem, setItem, setSearchValue]);
+    setHasFetched(true);
+  }, [getItem, setItem, setSearchValue, hasFetched]);
   
   const renderMovieGrid = () => (
     <div className={styles.movieGrid}>

@@ -73,7 +73,6 @@ const DetailsPage: React.FC = () => {
       setLoading(true);
       setError(false);
       const data = await fetchTitleDetails(tmdbId, mediaType);
-      console.log(data);
       setDetails(data);
       setItem(cacheKey, data);
     } catch (err) {

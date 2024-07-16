@@ -15,7 +15,6 @@ export const searchTitle = async (query: string) => {
 }
 
 export const fetchDirectorMovies = async (directorId: string) => {
-  console.log('api.ts directorID:', typeof directorId)
   const response = await fetch(`${API_BASE_URL}/director/${directorId}`);
   if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
   
