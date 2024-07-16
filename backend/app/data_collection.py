@@ -85,7 +85,7 @@ async def get_rottentomatoes_url(title, year, media_type):
         # Check year proximity
         if abs(rt_year - year) <= 1:
             # Check title similarity
-            if similar(title.lower(), rt_title.lower()) > 0.8:
+            if similar(title.lower(), rt_title.lower()) > 0.79:
                 url_tag = result.find("a", {"data-qa": "thumbnail-link"})
                 rottentomatoes_url = url_tag["href"]
                 return rottentomatoes_url
