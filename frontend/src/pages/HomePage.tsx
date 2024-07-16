@@ -89,7 +89,11 @@ const HomePage: React.FC = () => {
    );
 
   if (loading) {
-    return <div className={styles.loading}></div>;
+    return (
+      <div className={styles.loading}>
+        <img src={reelRatingsLogo} className={styles.loadingLogo}></img>
+      </div>
+    );
   }
 
   if (error || trendingMovies.length === 0) {

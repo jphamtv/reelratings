@@ -95,6 +95,19 @@
   background-size: 200% 100%;
 }
 
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a19;
+  width: 100vw;
+  height: 100vh;
+}
+
+.loadingLogo {
+  width: 260px;
+}
+
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
