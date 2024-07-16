@@ -122,7 +122,7 @@ const SearchPage: React.FC = () => {
   }
 
   if (error || searchResults.length === 0) {
-    return <p className={styles.errorMessage}>Bummer, no matches for that title. Check the spelling and try again.</p>;
+    return <p className={styles.errorMessage}>No results found for that title. Please check the spelling and try again.</p>;
   }
 
   return (
