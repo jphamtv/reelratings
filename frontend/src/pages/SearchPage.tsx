@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { useClientCache } from '../hooks/useClientCache';
+import { useSearch } from '../hooks/useSearch';
 import { searchTitle, fetchDirectorMovies } from '../services/api';
 import SearchResultItem from '../components/SearchResultItem';
 import styles from './SearchPage.module.css';
@@ -22,6 +23,7 @@ const SearchPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { searchValue } = useSearch();
   const location = useLocation();
   const { getItem, setItem } = useClientCache();
 
@@ -129,7 +131,9 @@ const SearchPage: React.FC = () => {
           <title>{directorName ? `Movies by ${directorName}` : 'Search Results'} | ReelRatings</title>
         </Helmet>
         <div className={styles.searchResultsContainer}>
-          {directorName && <h3 className={styles.directorName}>Movies directed by {directorName}</h3>}
+          <h3 className={styles.searchResultsTitle}>
+            {directorName ? `Movies directed by ${directorName}` : `Search results for "${searchValue}"`}
+          </h3>
           <ul>
             {searchResults.map((result) => (
               <SearchResultItem

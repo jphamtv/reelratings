@@ -126,8 +126,6 @@ async def get_commonsense_info(title, year, media_type):
     search_results = soup.find_all("div", {"class": "site-search-teaser"})
     year = int(year)
 
-    print(soup)
-
     # Loop through to check exact year, then -/+ 1 year for discrepencies
     for check_year in [year, year - 1, year + 1]:
         for result in search_results:

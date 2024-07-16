@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSearch } from '../hooks/useSearch';
 import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
@@ -11,7 +12,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   className = 'searchContainer',
   placeholder = 'Search Movies & TV'
 }) => {
-  const [searchValue, setSearchValue] = useState('');
+  const { searchValue, setSearchValue } = useSearch();
   const navigate = useNavigate();
   const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -22,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     if (query) {
       setSearchValue(query);
     }
-   }, [location.search]);
+   }, [location.search, setSearchValue]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

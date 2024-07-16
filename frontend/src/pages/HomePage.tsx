@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useClientCache } from '../hooks/useClientCache';
+import { useSearch } from '../hooks/useSearch';
 import { fetchTrendingMovies } from '../services/api';
 import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
@@ -26,8 +27,12 @@ const HomePage: React.FC = () => {
   const [error, setError] = useState(false);
   const [showPosters, setShowPosters] = useState(false);
   const { getItem, setItem } = useClientCache();
+  const { setSearchValue } = useSearch();
 
   useEffect(() => {
+    // Clear search value when HomePage mounts
+    setSearchValue('');
+
     const fetchMovies = async () => {
       const cacheKey = 'trending_movies';
       const cachedMovies = getItem<TrendingMoviesResponse>(cacheKey);
@@ -60,7 +65,7 @@ const HomePage: React.FC = () => {
     };
 
     fetchMovies();
-  }, [getItem, setItem]);
+  }, [getItem, setItem, setSearchValue]);
   
   const renderMovieGrid = () => (
     <div className={styles.movieGrid}>
