@@ -90,14 +90,19 @@ const HomePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className={styles.loading}>
-        <img src={reelRatingsLogo} className={styles.loadingLogo}></img>
+      <div className={styles.loadingBackground}>
+        <img src={reelRatingsLogo} className={styles.loadingAndErrorLogo}></img>
       </div>
     );
   }
 
   if (error || trendingMovies.length === 0) {
-    return <p className={styles.errorMessage}>Error fetching movies.</p>;
+    return (
+      <div className={styles.errorBackground}>
+        <img src={reelRatingsLogo} className={styles.loadingAndErrorLogo}></img>
+        <p className={styles.errorMessage}>Movie and TV show data is currently unavailable. Please try reloading the page.</p>
+      </div>
+    );
   }
 
   return (

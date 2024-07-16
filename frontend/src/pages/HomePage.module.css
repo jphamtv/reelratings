@@ -95,7 +95,7 @@
   background-size: 200% 100%;
 }
 
-.loading {
+.loadingBackground {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -104,8 +104,19 @@
   height: 100vh;
 }
 
-.loadingLogo {
+.errorBackground {
+  composes: loadingBackground;
+  flex-direction: column;
+}
+
+.loadingAndErrorLogo {
   width: 260px;
+}
+
+.errorMessage {
+  color: #FAAD00;
+  margin: 0.5rem 2rem;
+  text-align: center;
 }
 
 @keyframes shimmer {
