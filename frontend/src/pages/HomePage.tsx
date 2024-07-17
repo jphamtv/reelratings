@@ -111,7 +111,7 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>ReelRatingsDB | Movie and TV Ratings</title>
+        <title>ReelRatings | Movie and TV Ratings</title>
       </Helmet>
       <div className={styles.homepageBody}>
         <div className={styles.homepageContainer}>

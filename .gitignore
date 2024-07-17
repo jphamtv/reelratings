@@ -26,6 +26,7 @@ dist-ssr
 /backend/.venv/
 .env
 **/__pycache__/
+
 backend/app/debug_main.py
 backend/.pytest_cache
 tmdbapi_data.json

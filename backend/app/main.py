@@ -3,9 +3,11 @@ import logging
 import traceback
 
 from environs import Env
+from app.cache_manager import start_scheduler, update_trending_movies_cache
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from app.redis_client import set_key, get_key
 from app.data_collection import (
     get_imdb_rating,
     get_rottentomatoes_url,
@@ -23,6 +25,15 @@ from app.tmdb_api import (
     fetch_trending_movies, 
     fetch_director_movies
 )
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+logger = logging.getLogger(__name__)
 
 # Initialize environment variables
 env = Env()
@@ -42,28 +53,49 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Error handling
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request: Request, exc: HTTPException):
-    logging.error(f"An HTTP exception occurred: {exc}")
-    return {"error": str(exc), "status_code": exc.status_code}
+
+@app.on_event("startup")
+async def startup_event():
+    scheduler = start_scheduler()
+    app.state.scheduler = scheduler
+    # Run the cache update immediately on startup
+    await update_trending_movies_cache()
 
 
-@app.exception_handler(Exception)
-async def internal_server_error(request: Request, exc: Exception):
-    logging.error(f"An error occurred: {exc}")
-    return {"error": "Internal Server Error", "status_code": 500}
+@app.on_event("shutdown")
+def shutdown_event():
+    app.state.scheduler.shutdown()
 
 
-# API routes
 @app.get("/api/trending")
 async def trending_movies():
     try:
+        # Try to get cached movies first
+        cached_movies = get_key("trending_movies")
+        if cached_movies:
+            return {"results": cached_movies}
+        
+        # If not in cache, fetch from TMDB API
         movies = await fetch_trending_movies(TMDB_API_KEY)
+
+        # Cache the fetched movies
+        set_key("trending_movies", movies)
+
         return {"results": movies}
     except Exception as e:
         logging.error(f"Search error: {str(e)}")
         raise HTTPException(status_code=500, detail="Error fetching movies")
+
+
+@app.post("/api/refresh-trending")
+async def refresh_trending_movies():
+    try:
+        movies = await fetch_trending_movies(TMDB_API_KEY)
+        set_key("trending_movies", movies)
+        return {"message": "Trending movies cache refreshed"}
+    except Exception as e:
+        logging.error(f"Error refreshing trending movies cache: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error refreshing trending movies cache")
 
 
 @app.get("/api/search")
@@ -221,6 +253,19 @@ async def get_tv_info(
         "boxofficemojo_url": None,
         "box_office_amounts": None,
     }
+
+
+# Error handling
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    logging.error(f"An HTTP exception occurred: {exc}")
+    return {"error": str(exc), "status_code": exc.status_code}
+
+
+@app.exception_handler(Exception)
+async def internal_server_error(request: Request, exc: Exception):
+    logging.error(f"An error occurred: {exc}")
+    return {"error": "Internal Server Error", "status_code": 500}
 
 
 if __name__ == "__main__":
