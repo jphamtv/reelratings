@@ -1,6 +1,9 @@
 import json
+import logging
 import redis
 from environs import Env
+
+logger = logging.getLogger(__name__)
 
 env = Env()
 env.read_env()
@@ -13,8 +16,12 @@ def set_key(key, value, expiration=86400):
 
 def get_key(key):
     """Get a value from Redis by key"""
-    value = redis_client.get(key)
-    return json.loads(value) if value else None
+    try:
+        value = redis_client.get(key)
+        return json.loads(value) if value else None
+    except redis.exceptions.ConnectionError:
+        logger.error("Redis connection error. Falling bak to TMDB API")
+        return None
 
 def delete_key(key):
     """Delete a key from Redis"""

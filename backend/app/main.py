@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import redis
 import traceback
 
 from environs import Env
@@ -81,6 +82,10 @@ async def trending_movies():
         # Cache the fetched movies
         set_key("trending_movies", movies)
 
+        return {"results": movies}
+    except redis.exceptions.ConnectionError:
+        logging.error("Redis connection error. Falling back to TMDB API.")
+        movies = await fetch_trending_movies(TMDB_API_KEY)
         return {"results": movies}
     except Exception as e:
         logging.error(f"Search error: {str(e)}")
