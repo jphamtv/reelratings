@@ -95,6 +95,7 @@ async def trending_movies():
         raise HTTPException(status_code=500, detail="Error fetching movies")
 
 
+# Function to manually trigger fetching trending movies **Future use**
 @app.post("/api/refresh-trending")
 async def refresh_trending_movies():
     try:
@@ -124,6 +125,17 @@ def director_movies(director_id: str):
     except Exception as e:
         logging.error(f"Error fetching director's movies: {str(e)}")
         raise HTTPException(status_code=500, detail="Error fetching director's movies")
+
+
+@app.get("/api/cache/details/{tmdb_id}/{media_type}")
+async def cached_title_details(tmdb_id: str, media_type: str):
+    cached_key = f"details_{tmdb_id}_{media_type.lower()}"
+    cached_data = get_key(cached_key)
+
+    if cached_data:
+        return JSONResponse(content=cached_data)
+    else:
+        raise HTTPException(status_code=404, detail="Data not found in cache")
 
 
 @app.get("/api/details/{tmdb_id}/{media_type}")

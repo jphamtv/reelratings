@@ -22,8 +22,17 @@ export const fetchDirectorMovies = async (directorId: string) => {
 }
 
 export const fetchTitleDetails = async (tmdbId: string, mediaType: string) => {
-  const response = await fetch(`${API_BASE_URL}/details/${tmdbId}/${mediaType}`);
-  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  // First, try to fetch from cache
+  const cacheResponse = await fetch(`${API_BASE_URL}/cache/details/${tmdbId}/${mediaType}`)
+
+  if (cacheResponse.ok) {
+    return cacheResponse.json();
+  }
+
+  // If not in cache, fetch from the original API
+  const apiResponse = await fetch(`${API_BASE_URL}/details/${tmdbId}/${mediaType}`);
+
+  if (!apiResponse.ok) throw new Error(`HTTP error! status: ${apiResponse.status}`);
   
-  return response.json();
+  return apiResponse.json();
 }

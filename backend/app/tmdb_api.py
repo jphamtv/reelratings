@@ -1,9 +1,12 @@
 import requests
 import asyncio
 import httpx
+import logging
 
 from datetime import datetime
-from app.format_runtime_utils import format_runtime
+from app.utils.format_runtime_utils import format_runtime
+from app.utils.throttled_fetch_utils import throttled_fetch
+from app.redis_client import set_key, get_key
 
 
 # --------- HOMEPAGE - TRENDING MOVIES -------------- #
@@ -33,8 +36,34 @@ async def fetch_trending_movies(api_key):
     # Filter and process the results
     filtered_movies = filter_api_data(compatible_data, poster_size)
 
+    try:
+        # Fetch and cache details for each movie    
+        await cache_movie_details(filtered_movies, api_key)
+    except Exception as e:
+        logging.error(f"Error caching movie details: {str(e)}")
+
     return filtered_movies
 
+
+async def cache_movie_details(movies, api_key):
+    async def fetch_and_cache(movie):
+        tmdb_id = movie['tmdb_id']
+        media_type = movie['media_type'].lower()
+        cache_key = f"details_{tmdb_id}_{media_type}"
+
+        # Check if details are already in cache
+        cached_details = get_key(cache_key)
+        if cached_details:
+            return
+        
+        try:
+            # Fetch details if not in cache
+            details = await fetch_title_details(tmdb_id, media_type, api_key)
+            set_key(cache_key, details)
+        except Exception as e:
+            logging.error(f"Error fetching details for movie {tmdb_id}: {str(e)}")
+
+    await throttled_fetch(fetch_and_cache, movies)
 
 # --------- SEARCH FOR MOVIE OR TV SERIES -------------- #
 

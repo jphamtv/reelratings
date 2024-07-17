@@ -4,7 +4,7 @@ import logging
 
 from bs4 import BeautifulSoup
 from unidecode import unidecode
-from app.similar_utils import similar
+from app.utils.similar_utils import similar
 
 
 BASE_URLS = {
