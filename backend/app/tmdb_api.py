@@ -4,7 +4,7 @@ import httpx
 import logging
 
 from datetime import datetime
-from app.main import get_movie_info
+from app.external_data import get_movie_data
 from app.utils.format_runtime_utils import format_runtime
 from app.utils.throttled_fetch_utils import throttled_fetch
 from app.redis_client import set_key, get_key
@@ -62,7 +62,7 @@ async def cache_movie_details(movies, api_key):
             tmdb_data = await fetch_title_details(tmdb_id, media_type, api_key)
 
             # Fetch external data
-            external_data = await get_movie_info(
+            external_data = await get_movie_data(
                 tmdb_data["imdb_id"],
                 tmdb_data["title"],
                 tmdb_data["year"],
