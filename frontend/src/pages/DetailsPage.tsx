@@ -18,7 +18,7 @@ interface Director {
 interface TitleDetails {
   tmdb_data: {
     imdb_id: string;
-    media_type: "Movie" | "TV";
+    media_type: "movie" | "tv";
     title: string;
     year: string;
     poster_img: string;
@@ -62,6 +62,7 @@ const DetailsPage: React.FC = () => {
 
     const cacheKey = `details_${tmdbId}_${mediaType}`;
     const cachedDetails = !skipCache ? getItem<TitleDetails>(cacheKey) : null;
+    console.log('cachedDetails:', cachedDetails)
 
     if (cachedDetails) {
       setDetails(cachedDetails);
@@ -73,6 +74,7 @@ const DetailsPage: React.FC = () => {
       setLoading(true);
       setError(false);
       const data = await fetchTitleDetails(tmdbId, mediaType);
+      console.log('data:', data)
       setDetails(data);
       setItem(cacheKey, data);
     } catch (err) {
@@ -122,7 +124,7 @@ const DetailsPage: React.FC = () => {
 
   const defaultTmdbData: TitleDetails['tmdb_data'] = {
     imdb_id: '',
-    media_type: 'Movie',
+    media_type: 'movie',
     title: '',
     year: '',
     poster_img: '',
@@ -191,7 +193,7 @@ const DetailsPage: React.FC = () => {
           : undefined
         }
       />
-      {tmdb_data.media_type === 'Movie' && external_data.box_office_amounts && (
+      {tmdb_data.media_type === 'movie' && external_data.box_office_amounts && (
         <BoxOfficeAmounts
           boxOfficeMojoUrl={external_data.boxofficemojo_url}
           amounts={external_data.box_office_amounts}

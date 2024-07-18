@@ -97,9 +97,9 @@ async def refresh_trending_movies():
 
 
 @app.get("/api/search")
-def search(query: str):
+async def search(query: str):
     try:
-        search_results = search_title(query, TMDB_API_KEY)
+        search_results = await search_title(query, TMDB_API_KEY)
         return {"results": search_results}
     except Exception as e:
         logging.error(f"Search error: {str(e)}")
@@ -107,9 +107,9 @@ def search(query: str):
 
 
 @app.get("/api/director/{director_id}")
-def director_movies(director_id: str):
+async def director_movies(director_id: str):
     try:
-        movies = fetch_director_movies(director_id, TMDB_API_KEY)
+        movies = await fetch_director_movies(director_id, TMDB_API_KEY)
         return {"results": movies}
     except Exception as e:
         logging.error(f"Error fetching director's movies: {str(e)}")
@@ -118,26 +118,28 @@ def director_movies(director_id: str):
 
 @app.get("/api/cache/details/{tmdb_id}/{media_type}")
 async def cached_title_details(tmdb_id: str, media_type: str):
-    cached_key = f"details_{tmdb_id}_{media_type.lower()}"
+    cached_key = f"details_{tmdb_id}_{media_type}"
     cached_data = get_key(cached_key)
 
     if cached_data:
         return JSONResponse(content=cached_data)
     else:
-        raise HTTPException(status_code=404, detail="Data not found in cache")
+        raise HTTPException(
+            status_code=404, content={"detail": "Data not found in cache"}
+        )
 
 
 @app.get("/api/details/{tmdb_id}/{media_type}")
 async def title_details(tmdb_id: str, media_type: str):
     try:
         # Fetch title details from TMDB API
-        tmdb_data = fetch_title_details(tmdb_id, media_type, TMDB_API_KEY)
+        tmdb_data = await fetch_title_details(tmdb_id, media_type, TMDB_API_KEY)
 
         # Only create imdb_url if imdb_id exists
         imdb_url = f"https://www.imdb.com/title/{tmdb_data['imdb_id']}" if tmdb_data["imdb_id"] else None
 
         # Movie specific info
-        if media_type == "Movie":
+        if media_type == "movie":
             external_data = await get_movie_data(
                 tmdb_data["imdb_id"],
                 tmdb_data["title"],
@@ -146,7 +148,7 @@ async def title_details(tmdb_id: str, media_type: str):
                 tmdb_data["justwatch_url"],
             )
         # TV show specific info
-        elif media_type == "TV":
+        elif media_type == "tv":
             external_data = await get_tv_show_data(
                 tmdb_data["imdb_id"],
                 tmdb_data["title"],

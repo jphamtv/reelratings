@@ -11,7 +11,7 @@ interface Director {
 interface TitleDetailsCardProps {
   tmdbData: {
     imdb_id: string;
-    media_type: "Movie" | "TV";
+    media_type: "movie" | "tv";
     title: string;
     year: string;
     poster_img: string;
@@ -31,10 +31,10 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
   const { media_type, poster_img, title, certification, year, runtime, director, creator } = tmdbData;
 
   const renderDirectorsOrCreators = () => { 
-    const people = media_type === 'Movie' ? director : creator;
+    const people = media_type === "movie" ? director : creator;
     if (!people || people.length === 0) return null;
 
-    const label = media_type === 'Movie' ? 'Director' : 'Creator';  
+    const label = media_type === "movie" ? 'Director' : 'Creator';  
 
     const renderPerson = (person: string | Director) => {
       if (typeof person === 'string') {

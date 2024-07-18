@@ -11,7 +11,7 @@ interface SearchResult {
   tmdb_id: number;
   title: string;
   year: string;
-  media_type: "Movie" | "TV";
+  media_type: "movie" | "tv";
   poster_img: string;
 }
 

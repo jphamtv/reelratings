@@ -38,8 +38,9 @@ async def fetch_trending_movies(api_key):
     filtered_movies = filter_api_data(compatible_data, poster_size)
 
     try:
-        # Fetch and cache details for each movie    
+        # Fetch and cache details for each movie, limited to 5 for testing
         await cache_movie_details(filtered_movies, api_key)
+        logging.info("Completed caching process for trending movies")
     except Exception as e:
         logging.error(f"Error caching movie details: {str(e)}")
 
@@ -49,7 +50,7 @@ async def fetch_trending_movies(api_key):
 async def cache_movie_details(movies, api_key):
     async def fetch_and_cache(movie):
         tmdb_id = movie['tmdb_id']
-        media_type = movie['media_type'].lower()
+        media_type = movie['media_type']
         cache_key = f"details_{tmdb_id}_{media_type}"
 
         # Check if details are already in cache
@@ -60,68 +61,75 @@ async def cache_movie_details(movies, api_key):
         try:
             # Fetch TMDB details
             tmdb_data = await fetch_title_details(tmdb_id, media_type, api_key)
+            logging.info(f"Successfully fetched TMDB data for movie {tmdb_id}")
 
-            # Fetch external data
-            external_data = await get_movie_data(
-                tmdb_data["imdb_id"],
-                tmdb_data["title"],
-                tmdb_data["year"],
-                media_type,
-                tmdb_data["justwatch_url"],
-            )
+            try:
+                # Fetch external data
+                external_data = await get_movie_data(
+                    tmdb_data["imdb_id"],
+                    tmdb_data["title"],
+                    tmdb_data["year"],
+                    media_type,
+                    tmdb_data["justwatch_url"],
+                )
+                logging.info(f"Successfully fetched external data for movie {tmdb_id}")
 
-            imdb_url = (
-                f"https://www.imdb.com/title/{tmdb_data['imdb_id']}"
-                if tmdb_data["imdb_id"]
-                else None
-            )
+                # Add IMDB url to external_data
+                imdb_url = (
+                    f"https://www.imdb.com/title/{tmdb_data['imdb_id']}"
+                    if tmdb_data["imdb_id"]
+                    else None
+                )
+                external_data_model = {
+                    "imdb_url": imdb_url,
+                    **external_data,
+                }
 
-            # Add IMDB url to external_data
-            external_data_model = {
-                "imdb_url": imdb_url,
-                **external_data,
-            }
+                # Combine TMDB and external data
+                full_details = {
+                    "tmdb_data": tmdb_data,
+                    "external_data": external_data_model
+                }
 
-            # Combine TMDB and external data
-            full_details = {
-                "tmdb_data": tmdb_data,
-                "external_data": external_data_model
-            }
+                # Cache the combined data
+                set_key(cache_key, full_details)
+                logging.info(f"Cached full details for movie: {tmdb_data['title']} ({tmdb_data['year']})")
+            except Exception as e:
+                logging.error(
+                    f"Error processing external data for {tmdb_data['title']} - TMDB ID {tmdb_id}: {str(e)}",
+                    exc_info=True,
+                )
 
-            # Cache the combined data
-            set_key(cache_key, full_details)
-            logging.info(f"Cached full details for movie: {tmdb_data['title']} ({tmdb_data['year']})")
         except Exception as e:
             logging.error(
-                f"Error fetching details for {tmdb_data['title']} - TMDB ID {tmdb_id}: {str(e)}"
+                f"Error fetching TMDB data for movie {tmdb_id}: {str(e)}", exc_info=True
             )
 
-    await throttled_fetch(fetch_and_cache, movies)
+    # Process only the first 'limit' movies for testing
+    limited_movies = movies[30:35]
+    await throttled_fetch(fetch_and_cache, limited_movies)
+
+    logging.info(f"Processed {len(limited_movies)} movies for caching")
 
 # --------- SEARCH FOR MOVIE OR TV SERIES -------------- #
 
 
-def search_title(user_input, api_key):
+async def search_title(user_input, api_key):
     """Look up movie, TV shows, and people using the TMDB API"""
     title = user_input.replace(" ", "%20")
     url = f"https://api.themoviedb.org/3/search/multi?api_key={api_key}&query={title}&include_adult=false&language=en-US&page=1"
-    search_results = fetch_api_data(url)
+    search_results = await fetch_api_data(url)
     poster_size = 'w185'
     filtered_results = filter_api_data(search_results, poster_size)
 
     return filtered_results
 
 
-def fetch_api_data(url):
-    """Make an HTTP GET request to TMDB API and return JSON data"""
-
-    # Make the HTTP GET request
-    response = requests.get(url)
-
-    # Check that the request was successful (status code 2xx)
-    response.raise_for_status()
-
-    return response.json()
+async def fetch_api_data(url):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+        response.raise_for_status()
+        return response.json()
 
 
 def filter_api_data(api_data, poster_size):
@@ -164,7 +172,7 @@ def get_filtered_results(result, media_type, tmdb_id, poster_img):
             "tmdb_id": tmdb_id,
             "title": result.get("title"),
             "year": result.get("release_date")[0:4],
-            "media_type": media_type.title(),
+            "media_type": media_type,
             "poster_img": poster_img,
         }
 
@@ -173,7 +181,7 @@ def get_filtered_results(result, media_type, tmdb_id, poster_img):
             "tmdb_id": tmdb_id,
             "title": result.get("name"),
             "year": result.get("first_air_date")[0:4],
-            "media_type": media_type.upper(),
+            "media_type": media_type,
             "poster_img": poster_img,
         }
 
@@ -262,49 +270,55 @@ def get_justwatch_url(media_details):
     return justwatch_url
 
 
-def fetch_title_details(tmdb_id, media_type, api_key):
-    """Fetch the details for the selected title and filter the results"""
-    url = f"https://api.themoviedb.org/3/{media_type.lower()}/{tmdb_id}?api_key={api_key}&language=en-US&append_to_response=release_dates,watch/providers,external_ids,credits"
-    media_details = fetch_api_data(url)
-    poster_img, justwatch_url = get_common_details(media_details)
+async def fetch_title_details(tmdb_id, media_type, api_key):
+    try:
+        """Fetch the details for the selected title and filter the results"""
+        url = f"https://api.themoviedb.org/3/{media_type}/{tmdb_id}?api_key={api_key}&language=en-US&append_to_response=release_dates,watch/providers,external_ids,credits"
+        media_details = await fetch_api_data(url)
+        poster_img, justwatch_url = get_common_details(media_details)
 
-    if media_type == "Movie":
-        imdb_id, title, year, runtime, director, certification = get_movie_details(
-            media_details
-        )
-        filtered_details = {
-            "director": director,
-            "imdb_id": imdb_id,
-            "media_type": media_type,
-            "title": title,
-            "year": year,
-            "runtime": runtime,
-            "certification": certification,
-            "poster_img": poster_img,
-            "justwatch_url": justwatch_url,
-        }
+        if media_type == "movie":
+            imdb_id, title, year, runtime, director, certification = get_movie_details(
+                media_details
+            )
+            filtered_details = {
+                "director": director,
+                "imdb_id": imdb_id,
+                "media_type": media_type,
+                "title": title,
+                "year": year,
+                "runtime": runtime,
+                "certification": certification,
+                "poster_img": poster_img,
+                "justwatch_url": justwatch_url,
+            }
 
-    elif media_type == "TV":
-        imdb_id, title, year, creator = get_tv_details(media_details)
-        filtered_details = {
-            "creator": creator,
-            "imdb_id": imdb_id,
-            "media_type": media_type,
-            "title": title,
-            "year": year,
-            "poster_img": poster_img,
-            "justwatch_url": justwatch_url,
-        }
+        elif media_type == "tv":
+            imdb_id, title, year, creator = get_tv_details(media_details)
+            filtered_details = {
+                "creator": creator,
+                "imdb_id": imdb_id,
+                "media_type": media_type,
+                "title": title,
+                "year": year,
+                "poster_img": poster_img,
+                "justwatch_url": justwatch_url,
+            }
+        else:
+            raise ValueError(f"Invalid media type: {media_type}")
 
-    return filtered_details
+        return filtered_details
+    except Exception as e:
+        logging.error(f"Error in fetch_title_details for {tmdb_id}")
+        raise
 
 
 # --------- FETCH DIRECTOR MOVIES -------------- #
 
 
-def fetch_director_movies(director_id, api_key):
+async def fetch_director_movies(director_id, api_key):
     url = f"https://api.themoviedb.org/3/person/{director_id}/movie_credits?api_key={api_key}&language=en-US"
-    data = fetch_api_data(url)
+    data = await fetch_api_data(url)
 
     # Filter for movies where the person was a director
     directed_movies = [movie for movie in data["crew"] if movie["job"] == "Director"]
@@ -326,7 +340,7 @@ def fetch_director_movies(director_id, api_key):
             "tmdb_id": movie["id"],
             "title": movie["title"],
             "year": movie["release_date"][:4] if movie["release_date"] else None,
-            "media_type": "Movie",
+            "media_type": "movie",
             "poster_img": (
                 f"https://image.tmdb.org/t/p/w185{movie['poster_path']}"
                 if movie["poster_path"]

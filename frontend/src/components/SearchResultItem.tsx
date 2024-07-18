@@ -7,7 +7,7 @@ interface SearchResultItemProps {
   tmdb_id: number;
   title: string;
   year: string;
-  media_type: "Movie" | "TV";
+  media_type: "movie" | "tv";
   poster_img: string;
 }
 
@@ -19,6 +19,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   poster_img
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const displayMediaType = media_type === "movie" ? "Movie" : media_type.toUpperCase();
 
   return (
     <li className={styles.searchResultItem}>
@@ -40,7 +41,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
           <div className={styles.titleDetailsWrapper}>
             <span className={styles.title}>{title}</span>
             {year && <span className={styles.year}> {year}</span>}
-            <span className={styles.mediaType}> ({media_type})</span>
+            <span className={styles.mediaType}> ({displayMediaType})</span>
           </div>
         </div>
       </Link>
