@@ -174,7 +174,6 @@ async def title_details(tmdb_id: str, media_type: str):
         }
 
         return {
-            # "details": details,
             "tmdb_data": tmdb_data,
             "external_data": external_data_model
         }

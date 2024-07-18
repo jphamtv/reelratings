@@ -4,6 +4,7 @@ import httpx
 import logging
 
 from datetime import datetime
+from app.main import get_movie_info
 from app.utils.format_runtime_utils import format_runtime
 from app.utils.throttled_fetch_utils import throttled_fetch
 from app.redis_client import set_key, get_key
@@ -55,13 +56,45 @@ async def cache_movie_details(movies, api_key):
         cached_details = get_key(cache_key)
         if cached_details:
             return
-        
+
         try:
-            # Fetch details if not in cache
-            details = await fetch_title_details(tmdb_id, media_type, api_key)
-            set_key(cache_key, details)
+            # Fetch TMDB details
+            tmdb_data = await fetch_title_details(tmdb_id, media_type, api_key)
+
+            # Fetch external data
+            external_data = await get_movie_info(
+                tmdb_data["imdb_id"],
+                tmdb_data["title"],
+                tmdb_data["year"],
+                media_type,
+                tmdb_data["justwatch_url"],
+            )
+
+            imdb_url = (
+                f"https://www.imdb.com/title/{tmdb_data['imdb_id']}"
+                if tmdb_data["imdb_id"]
+                else None
+            )
+
+            # Add IMDB url to external_data
+            external_data_model = {
+                "imdb_url": imdb_url,
+                **external_data,
+            }
+
+            # Combine TMDB and external data
+            full_details = {
+                "tmdb_data": tmdb_data,
+                "external_data": external_data_model
+            }
+
+            # Cache the combined data
+            set_key(cache_key, full_details)
+            logging.info(f"Cached full details for movie: {tmdb_data['title']} ({tmdb_data['year']})")
         except Exception as e:
-            logging.error(f"Error fetching details for movie {tmdb_id}: {str(e)}")
+            logging.error(
+                f"Error fetching details for {tmdb_data['title']} - TMDB ID {tmdb_id}: {str(e)}"
+            )
 
     await throttled_fetch(fetch_and_cache, movies)
 
