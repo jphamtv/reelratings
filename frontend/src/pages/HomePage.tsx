@@ -105,7 +105,7 @@ const HomePage: React.FC = () => {
     return (
       <div className={styles.errorBackground}>
         <img src={reelRatingsLogo} className={styles.loadingAndErrorLogo}></img>
-        <p className={styles.errorMessage}>Movie and TV show data is currently unavailable. Please try reloading the page.</p>
+        <p className={styles.errorMessage}>Movie and TV show data is currently unavailable. Please try again later.</p>
       </div>
     );
   }

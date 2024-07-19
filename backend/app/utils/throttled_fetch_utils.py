@@ -4,7 +4,7 @@ import random
 
 
 async def throttled_fetch(
-    fetch_func, items, target_duration=30, max_concurrent=3
+    fetch_func, items, target_duration=300, max_concurrent=3
 ):
     semaphore = asyncio.Semaphore(max_concurrent)
     total_items = len(items)

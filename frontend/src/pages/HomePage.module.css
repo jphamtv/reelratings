@@ -3,7 +3,7 @@
 }
 
 .homepageBody {
-  background-color: #1a1a19;
+  background-color: #171a1c;
 }
 
 .homepageContainer {
@@ -99,7 +99,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #1a1a19;
+  background-color: #171a1c;
   width: 100vw;
   height: 100vh;
 }

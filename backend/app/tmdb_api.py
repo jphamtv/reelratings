@@ -105,11 +105,12 @@ async def cache_movie_details(movies, api_key):
                 f"Error fetching TMDB data for movie {tmdb_id}: {str(e)}", exc_info=True
             )
 
-    # Process only the first 'limit' movies for testing
-    limited_movies = movies[30:35]
-    await throttled_fetch(fetch_and_cache, limited_movies)
+    # # Process only the first 'limit' movies for testing
+    # limited_movies = movies[30:35]
+    # await throttled_fetch(fetch_and_cache, limited_movies)
+    await throttled_fetch(fetch_and_cache, movies)
 
-    logging.info(f"Processed {len(limited_movies)} movies for caching")
+    logging.info(f"Processed {len(movies)} movies for caching")
 
 # --------- SEARCH FOR MOVIE OR TV SERIES -------------- #
 
