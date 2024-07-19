@@ -16,14 +16,14 @@ from app.redis_client import set_key, get_key
 async def fetch_trending_movies(api_key):
     """Fetch top 100 trending movies of the week using the TMDB API"""
     base_url = f"https://api.themoviedb.org/3/trending/movie/week"
-    poster_size = 'w500'
+    poster_size = "w500"
 
     async def fetch_page(page):
         url = f"{base_url}?language=en-US&api_key={api_key}&page={page}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()
-            return response.json()['results']
+            return response.json()["results"]
 
     # Fetch 5 pages concurrently
     pages = await asyncio.gather(*[fetch_page(i) for i in range(1, 6)])
@@ -39,7 +39,7 @@ async def fetch_trending_movies(api_key):
 
     try:
         # Fetch and cache details for each movie, limited to 5 for testing
-        await cache_movie_details(filtered_movies, api_key)
+        await cache_trending_movie_details(filtered_movies, api_key)
         logging.info("Completed caching process for trending movies")
     except Exception as e:
         logging.error(f"Error caching movie details: {str(e)}")
@@ -47,10 +47,10 @@ async def fetch_trending_movies(api_key):
     return filtered_movies
 
 
-async def cache_movie_details(movies, api_key):
+async def cache_trending_movie_details(movies, api_key):
     async def fetch_and_cache(movie):
-        tmdb_id = movie['tmdb_id']
-        media_type = movie['media_type']
+        tmdb_id = movie["tmdb_id"]
+        media_type = movie["media_type"]
         cache_key = f"details_{tmdb_id}_{media_type}"
 
         # Check if details are already in cache
@@ -88,12 +88,14 @@ async def cache_movie_details(movies, api_key):
                 # Combine TMDB and external data
                 full_details = {
                     "tmdb_data": tmdb_data,
-                    "external_data": external_data_model
+                    "external_data": external_data_model,
                 }
 
                 # Cache the combined data
                 set_key(cache_key, full_details)
-                logging.info(f"Cached full details for movie: {tmdb_data['title']} ({tmdb_data['year']})")
+                logging.info(
+                    f"Cached full details for movie: {tmdb_data['title']} ({tmdb_data['year']})"
+                )
             except Exception as e:
                 logging.error(
                     f"Error processing external data for {tmdb_data['title']} - TMDB ID {tmdb_id}: {str(e)}",
@@ -112,6 +114,7 @@ async def cache_movie_details(movies, api_key):
 
     logging.info(f"Processed {len(movies)} movies for caching")
 
+
 # --------- SEARCH FOR MOVIE OR TV SERIES -------------- #
 
 
@@ -120,7 +123,7 @@ async def search_title(user_input, api_key):
     title = user_input.replace(" ", "%20")
     url = f"https://api.themoviedb.org/3/search/multi?api_key={api_key}&query={title}&include_adult=false&language=en-US&page=1"
     search_results = await fetch_api_data(url)
-    poster_size = 'w185'
+    poster_size = "w185"
     filtered_results = filter_api_data(search_results, poster_size)
 
     return filtered_results
@@ -193,11 +196,7 @@ def get_filtered_results(result, media_type, tmdb_id, poster_img):
 def get_common_details(media_details):
     """Extract common details for both Movie and TV series"""
     poster_path = media_details.get("poster_path")
-    poster_img = (
-        f"https://image.tmdb.org/t/p/w500{poster_path}"
-        if poster_path
-        else ""
-    )
+    poster_img = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else ""
     justwatch_url = get_justwatch_url(media_details)
 
     return poster_img, justwatch_url
@@ -236,7 +235,11 @@ def get_director(media_details):
     """Get director(s) for movies"""
     movie_crew = media_details.get("credits", {}).get("crew", [])
 
-    return [{"id": item.get("id"), "name": item.get("name")} for item in movie_crew if item["job"] == "Director"]
+    return [
+        {"id": item.get("id"), "name": item.get("name")}
+        for item in movie_crew
+        if item["job"] == "Director"
+    ]
 
 
 def get_creator(media_details):
@@ -349,7 +352,7 @@ async def fetch_director_movies(director_id, api_key):
             ),
         }
         for movie in sorted_movies
-        if movie["release_date"] and movie["release_date"][:4] 
+        if movie["release_date"] and movie["release_date"][:4]
     ]
 
     return formatted_movies

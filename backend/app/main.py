@@ -116,21 +116,15 @@ async def director_movies(director_id: str):
         raise HTTPException(status_code=500, detail="Error fetching director's movies")
 
 
-@app.get("/api/cache/details/{tmdb_id}/{media_type}")
-async def cached_title_details(tmdb_id: str, media_type: str):
+@app.get("/api/details/{tmdb_id}/{media_type}")
+async def title_details(tmdb_id: str, media_type: str):
     cached_key = f"details_{tmdb_id}_{media_type}"
     cached_data = get_key(cached_key)
 
     if cached_data:
-        return JSONResponse(content=cached_data)
-    else:
-        raise HTTPException(
-            status_code=404, content={"detail": "Data not found in cache"}
-        )
+        logging.info("Fetched from redis cache")
+        return cached_data
 
-
-@app.get("/api/details/{tmdb_id}/{media_type}")
-async def title_details(tmdb_id: str, media_type: str):
     try:
         # Fetch title details from TMDB API
         tmdb_data = await fetch_title_details(tmdb_id, media_type, TMDB_API_KEY)
@@ -164,16 +158,19 @@ async def title_details(tmdb_id: str, media_type: str):
             **external_data,    
         }
 
-        return {
+        result_data = {
             "tmdb_data": tmdb_data,
             "external_data": external_data_model
         }
+
+        set_key(cached_key, result_data)
+        logging.info("Fetched from external_data.py")
+        return result_data
     except Exception as e:
         logging.error(f"Error fetching details: {str(e)}")
         logging.error(f"Traceback: {traceback.format_exc()}")
-        return JSONResponse(
-            status_code=500,
-            content={"detail": f"Error fetching title details: {str(e)}"},
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching title details: {str(e)}"
         )
 
 
