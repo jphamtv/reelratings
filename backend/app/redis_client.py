@@ -10,7 +10,9 @@ env.read_env()
 
 redis_client = redis.from_url(env.str("REDIS_URL"), decode_responses=True)
 
-def set_key(key, value, expiration=86400):
+REDIS_EXPIRATION = 23 * 60 * 60 + 54 * 60 # 23 hours and 54 minutes in seconds
+
+def set_key(key, value, expiration=REDIS_EXPIRATION):
     """Set a key-value pair in Redis with expiration in seconds (default 1 day)"""
     return redis_client.set(key, json.dumps(value), ex=expiration)
 

@@ -33,7 +33,7 @@ export const ClientCacheProvider: React.FC<{ children: React.ReactNode }> = ({ c
     if (!item) return null;
 
     const now = Date.now();
-    const expirationTime = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+    const expirationTime = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
 
     if (now - item.timestamp > expirationTime) {
       // Remove expired item
