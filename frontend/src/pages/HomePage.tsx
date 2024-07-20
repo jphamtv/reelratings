@@ -74,23 +74,19 @@ const HomePage: React.FC = () => {
     <div className={styles.movieGrid}>
       {trendingMovies.map((movie) => (
         <Link to={`/details/${movie.tmdb_id}/${movie.media_type}`} key={movie.tmdb_id}>
-          <img
-            src={movie.poster_img}
-            alt={movie.title}
-            className={`${styles.posterImage} ${showPosters ? styles.visible : ''}`} />
+          <div className={styles.posterContainer}>
+            <img
+              src={movie.poster_img}
+              alt={movie.title}
+              className={`${styles.posterImage} ${showPosters ? styles.visible : ''}`}
+            />
+            {!showPosters && <div className={styles.posterSkeleton}></div>}
+          </div>
         </Link>
       ))}
     </div>
   );
   
-  const renderSkeletonGrid = () => (
-    <div className={styles.movieGrid}>
-      {Array.from({ length: 20 }).map((_, index) => (
-        <div key={index} className={styles.posterSkeleton} />
-      ))}
-    </div>
-   );
-
   if (loading) {
     return (
       <div className={styles.loadingBackground}>
@@ -124,7 +120,7 @@ const HomePage: React.FC = () => {
         <main className={styles.homepageMain}>
           <div className={styles.moviesContainer}>
             <h3 className={styles.title}>Trending Movies This Week</h3>
-            {loading ? renderSkeletonGrid() : renderMovieGrid()}
+            {renderMovieGrid()}
           </div>
         </main>
         <Footer />
