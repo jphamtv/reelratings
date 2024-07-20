@@ -17,6 +17,7 @@ LONG_RETRY_DELAY = 2 # 2 seconds
 redis_client = redis.from_url(env.str("REDIS_URL"), decode_responses=True)
 
 def ensure_connection():
+    """Ping Redis to ensure there is a connection, retry if connection error"""
     global redis_client
     try:
         redis_client.ping()

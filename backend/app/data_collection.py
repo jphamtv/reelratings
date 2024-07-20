@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from unidecode import unidecode
 from app.utils.similar_utils import similar
 
-
 BASE_URLS = {
     "rottentomatoes": "https://www.rottentomatoes.com/search?search=",
     "letterboxd": "https://letterboxd.com/search/",
@@ -24,7 +23,6 @@ HEADERS = {
     "Accept": "text/html",
     "Referer": "https://www.google.com",
 }
-
 
 async def make_request(url, headers=None):
     """
@@ -52,11 +50,9 @@ async def make_request(url, headers=None):
 
             # Parse the HTML content of the response with BeautifulSoup
             return BeautifulSoup(response.content, "html.parser")
-
     except httpx.RequestError as exc:
         # Log any exception specific to HTTPX
         logging.error(f"HTTPX Request Error: {exc}")
-
     except Exception as generic_exc:
         # Log any other generic exceptions
         logging.error(f"Generic Exception: {generic_exc}")
@@ -178,14 +174,12 @@ async def get_imdb_rating(imdb_id):
         )
 
         return rating.text[:-3] if rating else None
-
     else:
         return None
 
 
 async def get_boxofficemojo_url(imdb_id):
     boxofficemojo_url = f"{BASE_URLS['boxofficemojo']}{imdb_id}/"
-
     return boxofficemojo_url
 
 
@@ -200,9 +194,7 @@ async def get_box_office_amounts(imdb_id):
         # Locate the span element that contains the Box Office amounts
         span_elements = soup.find_all("span", class_="a-size-medium a-text-bold")
         dollar_amounts = [span.get_text(strip=True) for span in span_elements]
-
         return dollar_amounts
-
     else:
         return None
 

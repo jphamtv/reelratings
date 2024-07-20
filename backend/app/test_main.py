@@ -6,7 +6,6 @@ import re
 
 client = TestClient(app)
 
-
 def test_search():
     response = client.get("/api/search?query=Inception")
     assert response.status_code == 200

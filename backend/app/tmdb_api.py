@@ -8,9 +8,7 @@ from app.utils.format_runtime_utils import format_runtime
 from app.utils.throttled_fetch_utils import throttled_fetch
 from app.redis_client import set_key, get_key
 
-
 # --------- HOMEPAGE - TRENDING MOVIES -------------- #
-
 
 async def fetch_trending_movies(api_key):
     """Fetch top 100 trending movies of the week using the TMDB API"""
@@ -47,6 +45,7 @@ async def fetch_trending_movies(api_key):
 
 
 async def cache_trending_movie_details(movies, api_key):
+
     async def fetch_and_cache(movie):
         tmdb_id = movie["tmdb_id"]
         media_type = movie["media_type"]
@@ -113,9 +112,7 @@ async def cache_trending_movie_details(movies, api_key):
 
     logging.info(f"Processed {len(movies)} movies for caching")
 
-
 # --------- SEARCH FOR MOVIE OR TV SERIES -------------- #
-
 
 async def search_title(user_input, api_key):
     """Look up movie, TV shows, and people using the TMDB API"""
@@ -124,14 +121,13 @@ async def search_title(user_input, api_key):
     search_results = await fetch_api_data(url)
     poster_size = "w185"
     filtered_results = filter_api_data(search_results, poster_size)
-
     return filtered_results
 
 
 async def fetch_api_data(url):
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
-        response.raise_for_status()
+        response.raise_for_status()        
         return response.json()
 
 
@@ -188,23 +184,19 @@ def get_filtered_results(result, media_type, tmdb_id, poster_img):
             "poster_img": poster_img,
         }
 
-
 # --------- SEARCH TITLE DETAILS -------------- #
-
 
 def get_common_details(media_details):
     """Extract common details for both Movie and TV series"""
     poster_path = media_details.get("poster_path")
     poster_img = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else ""
     justwatch_url = get_justwatch_url(media_details)
-
     return poster_img, justwatch_url
 
 
 def get_runtime(media_details):
     """Get runtime and format it"""
     runtime = media_details.get("runtime")
-
     return format_runtime(runtime) if runtime else None
 
 
@@ -216,7 +208,6 @@ def get_movie_details(media_details):
     runtime = get_runtime(media_details) or None
     director = get_director(media_details) or None
     certification = get_certification(media_details) or None
-
     return imdb_id, title, year, runtime, director, certification
 
 
@@ -226,14 +217,12 @@ def get_tv_details(media_details):
     title = media_details.get("name")
     year = media_details.get("first_air_date")[0:4]
     creator = get_creator(media_details) or None
-
     return imdb_id, title, year, creator
 
 
 def get_director(media_details):
     """Get director(s) for movies"""
     movie_crew = media_details.get("credits", {}).get("crew", [])
-
     return [
         {"id": item.get("id"), "name": item.get("name")}
         for item in movie_crew
@@ -264,7 +253,6 @@ def get_certification(media_details):
 def get_justwatch_url(media_details):
     """Get the URL for the title's JustWatch TMDB page for 'US'"""
     providers = media_details.get("watch/providers", {}).get("results")
-
     try:
         justwatch_url = providers["US"]["link"]
     except KeyError:
@@ -315,9 +303,7 @@ async def fetch_title_details(tmdb_id, media_type, api_key):
         logging.error(f"Error in fetch_title_details for {tmdb_id}")
         raise
 
-
 # --------- FETCH DIRECTOR MOVIES -------------- #
-
 
 async def fetch_director_movies(director_id, api_key):
     url = f"https://api.themoviedb.org/3/person/{director_id}/movie_credits?api_key={api_key}&language=en-US"

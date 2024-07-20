@@ -13,7 +13,6 @@ env.read_env()
 
 TMDB_API_KEY = env.str("TMDB_API_KEY")
 
-
 async def update_trending_movies_cache():
     try:
         movies = await fetch_trending_movies(TMDB_API_KEY)
