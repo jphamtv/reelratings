@@ -62,7 +62,6 @@ const DetailsPage: React.FC = () => {
 
     const cacheKey = `details_${tmdbId}_${mediaType}`;
     const cachedDetails = !skipCache ? getItem<TitleDetails>(cacheKey) : null;
-    console.log('cachedDetails:', cachedDetails)
 
     if (cachedDetails) {
       setDetails(cachedDetails);
@@ -74,7 +73,6 @@ const DetailsPage: React.FC = () => {
       setLoading(true);
       setError(false);
       const data = await fetchTitleDetails(tmdbId, mediaType);
-      console.log('data:', data)
       setDetails(data);
       setItem(cacheKey, data);
     } catch (err) {

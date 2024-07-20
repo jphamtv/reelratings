@@ -41,7 +41,6 @@ const HomePage: React.FC = () => {
       const cachedMovies = getItem<TrendingMoviesResponse>(cacheKey);
 
       if (cachedMovies && Array.isArray(cachedMovies.results)) {
-        console.log('Data source: Local Storage');
         setTrendingMovies(cachedMovies.results);
         setLoading(false);
         setTimeout(() => setShowPosters(true), 100);
@@ -53,7 +52,6 @@ const HomePage: React.FC = () => {
         setError(false);
         const movies = await fetchTrendingMovies();
         if (movies && Array.isArray(movies.results)) {
-          console.log(`Data source: ${movies.source}`);
           setTrendingMovies(movies.results);
           setItem(cacheKey, movies)
         } else {
