@@ -23,7 +23,7 @@ const SearchPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { searchValue } = useSearch();
+  const { submittedQuery } = useSearch();
   const location = useLocation();
   const { getItem, setItem } = useClientCache();
 
@@ -128,7 +128,7 @@ const SearchPage: React.FC = () => {
         </Helmet>
         <div className={styles.searchResultsContainer}>
           <h3 className={styles.searchResultsTitle}>
-            {directorName ? `Movies directed by ${directorName}` : `Search results for "${searchValue}"`}
+            {directorName ? `Movies directed by ${directorName}` : `Search results for "${submittedQuery}"`}
           </h3>
           <ul>
             {searchResults.map((result) => (

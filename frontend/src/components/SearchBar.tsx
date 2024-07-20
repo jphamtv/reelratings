@@ -12,7 +12,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   className = 'searchContainer',
   placeholder = 'Search Movies & TV'
 }) => {
-  const { searchValue, setSearchValue } = useSearch();
+  const { searchValue, setSearchValue, setSubmittedQuery } = useSearch();
   const navigate = useNavigate();
   const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -22,12 +22,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const query = params.get('query');
     if (query) {
       setSearchValue(query);
+      setSubmittedQuery(query);
     }
-   }, [location.search, setSearchValue]);
+   }, [location.search, setSearchValue, setSubmittedQuery]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchValue.trim()) {
+      setSubmittedQuery(searchValue.trim());
       // Add a timestampe to force a new search
       const timestamp = Date.now();
       navigate(`/search?query=${encodeURIComponent(searchValue.trim())}&t=${timestamp}`);
