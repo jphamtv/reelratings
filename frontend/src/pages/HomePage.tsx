@@ -87,22 +87,19 @@ const HomePage: React.FC = () => {
     </div>
   );
   
-  if (loading) {
-    return (
-      <div className={styles.loadingBackground}>
-        <img src={reelRatingsLogo} className={styles.loadingAndErrorLogo}></img>
-      </div>
-    );
-  }
+  const renderLoading = () => (
+    <div className={styles.loadingBackground}>
+      <div className={styles.spinner}></div>
+      <p className={styles.errorMessage}>Fetching movies...</p>
+    </div>
+  );
 
-  if (error || trendingMovies.length === 0) {
-    return (
-      <div className={styles.errorBackground}>
-        <img src={reelRatingsLogo} className={styles.loadingAndErrorLogo}></img>
-        <p className={styles.errorMessage}>Movie and TV show data is currently unavailable. Please try again later.</p>
-      </div>
-    );
-  }
+  const renderError = () => (
+    <div className={styles.errorBackground}>
+      <img src={reelRatingsLogo} className={styles.errorLogo}></img>
+      <p className={styles.errorMessage}>Movie and TV show data is currently unavailable. Please try again later.</p>
+    </div>
+  );
 
   return (
     <>
@@ -110,20 +107,27 @@ const HomePage: React.FC = () => {
         <title>ReelRatings | Movie and TV Ratings</title>
       </Helmet>
       <div className={styles.homepageBody}>
-        <div className={styles.homepageContainer}>
-          <div className={styles.logoWrapper}>
-            <img src={reelRatingsLogo} className={styles.logo} alt="Reel Ratings" />
-            <div className={styles.tagline}>Get ratings for movies and TV shows</div>
-          </div>
-          <SearchBar className={styles.homePageSearchContainer} />
-        </div>
-        <main className={styles.homepageMain}>
-          <div className={styles.moviesContainer}>
-            <h3 className={styles.title}>Trending Movies This Week</h3>
-            {renderMovieGrid()}
-          </div>
-        </main>
-        <Footer />
+        {loading
+          ? renderLoading()
+          : error || trendingMovies.length === 0 ? renderError()
+          : (
+          <>
+            <div className={styles.homepageContainer}>
+              <div className={styles.logoWrapper}>
+                <img src={reelRatingsLogo} className={styles.logo} alt="Reel Ratings" />
+                <div className={styles.tagline}>Get ratings for movies and TV shows</div>
+              </div>
+              <SearchBar className={styles.homePageSearchContainer} />
+            </div>
+            <main className={styles.homepageMain}>
+              <div className={styles.moviesContainer}>
+                <h3 className={styles.title}>Trending Movies This Week</h3>
+                {renderMovieGrid()}
+              </div>
+            </main>
+            <Footer />
+          </>
+        )}
       </div>
     </>
   );

@@ -4,6 +4,9 @@
 
 .homepageBody {
   background-color: #171a1c;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .homepageContainer {
@@ -105,28 +108,48 @@
   background-size: 200% 100%;
 }
 
-.loadingBackground {
+.loadingBackground,
+.errorBackground {
+  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #171a1c;
-  width: 100vw;
-  height: 100vh;
-}
-
-.errorBackground {
-  composes: loadingBackground;
+  padding-bottom: 10vh;
   flex-direction: column;
 }
 
-.loadingAndErrorLogo {
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #FAAD00;
+  border-top: 5px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.errorLogo {
   width: 260px;
 }
 
+.loadingMessage,
 .errorMessage {
   color: #FAAD00;
-  margin: 0.5rem 2rem;
+  margin: 1rem 2rem;
   text-align: center;
+}
+
+.errorMessage {
+  margin: 0.5rem 2rem;
 }
 
 @keyframes shimmer {
