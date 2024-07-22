@@ -19,6 +19,7 @@ interface SearchResponse {
   results: SearchResult[];
 }
 
+// Fetch search results or director's movies, with caching
 const SearchPage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);

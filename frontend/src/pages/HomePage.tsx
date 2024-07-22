@@ -21,6 +21,7 @@ interface TrendingMoviesResponse {
   results: TrendingMovie[];
 }
 
+// Fetch trending movies, with caching
 const HomePage: React.FC = () => {
   const [trendingMovies, setTrendingMovies] = useState<TrendingMovie[]>([]);
   const [loading, setLoading] = useState(true);

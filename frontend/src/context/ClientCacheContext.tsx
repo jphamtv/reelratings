@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 
+// Define the structure of cached items
 export interface CacheItem<T> {
   data: T;
   timestamp: number;

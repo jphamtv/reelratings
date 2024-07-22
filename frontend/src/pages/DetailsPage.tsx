@@ -50,6 +50,7 @@ interface TitleDetails {
   };
 }
 
+// Fetch title details, with caching
 const DetailsPage: React.FC = () => {
   const [details, setDetails] = useState<TitleDetails | null>(null);
   const [loading, setLoading] = useState(true);
