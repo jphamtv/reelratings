@@ -83,7 +83,7 @@ async def trending_movies():
         raise HTTPException(status_code=500, detail="Error fetching movies")
 
 
-# Function to manually trigger fetching trending movies **Future use**
+# Function to manually trigger fetching trending movies 
 @app.post("/api/refresh-trending")
 async def refresh_trending_movies():
     try:
