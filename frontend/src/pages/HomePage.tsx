@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useClientCache } from '../hooks/useClientCache';
 import { useSearch } from '../hooks/useSearch';
