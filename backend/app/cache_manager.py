@@ -1,3 +1,7 @@
+"""
+This module manages the caching of trending movies data using a scheduler.
+It periodically updates the cache to ensure fresh data is available.
+"""
 import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -13,6 +17,10 @@ env.read_env()
 
 TMDB_API_KEY = env.str("TMDB_API_KEY")
 
+"""
+Fetches trending movies from TMDB API and updates the Redis cache.
+Logs success or failure of the operation.
+"""
 async def update_trending_movies_cache():
     try:
         movies = await fetch_trending_movies(TMDB_API_KEY)
@@ -21,7 +29,10 @@ async def update_trending_movies_cache():
     except Exception as e:
         logging.error(f"Error updating trending movies cache: {str(e)}")
 
-
+"""
+Initializes and starts the AsyncIOScheduler to periodically update the trending movies cache.
+Returns the initialized scheduler object.
+"""
 def start_scheduler():
     scheduler = AsyncIOScheduler()
     scheduler.add_job(

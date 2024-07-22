@@ -1,3 +1,8 @@
+"""
+This module handles data collection from various external sources such as
+RottenTomatoes, Letterboxd, CommonSenseMedia, IMDb, and BoxOfficeMojo.
+It provides functions to fetch and parse data from these sources.
+"""
 import httpx
 import json
 import logging
@@ -24,17 +29,15 @@ HEADERS = {
     "Referer": "https://www.google.com",
 }
 
+"""
+Makes an asynchronous HTTP GET request and parses the response with BeautifulSoup.
+Handles various exceptions and logs errors.
+
+:param url: The URL to request.
+:param headers: Optional HTTP headers for the request.
+:return: BeautifulSoup object of the parsed HTML content, or None if request fails.
+"""
 async def make_request(url, headers=None):
-    """
-    Make an asynchronous HTTP GET request and parse the content with BeautifulSoup.
-
-    Parameters:
-    - url (str): The URL to request.
-    - headers (dict, optional): Any HTTP headers to include in the request.
-
-    Returns:
-    - BeautifulSoup object: The HTML content of the response parsed by BeautifulSoup.
-    """
     try:
         # Create an asynchronous HTTP client
         async with httpx.AsyncClient(

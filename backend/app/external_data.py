@@ -14,7 +14,7 @@ from app.data_collection import (
 
 async def get_movie_data(
     imdb_id: str, title: str, year: str, media_type: str, justwatch_url: str
-):
+) -> dict:
     """Execute asynchronous tasks specifically for movies."""
     # Initialize tasks
     boxofficemojo_url = asyncio.create_task(get_boxofficemojo_url(imdb_id))
@@ -63,7 +63,7 @@ async def get_movie_data(
 
 async def get_tv_show_data(
     imdb_id: str, title: str, year: str, media_type: str, justwatch_url: str
-):
+) -> dict:
     """Execute asynchronous tasks specifically for TV shows."""
     # Initialize async tasks
     justwatch_page = asyncio.create_task(get_justwatch_page(justwatch_url))

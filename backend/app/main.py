@@ -57,12 +57,11 @@ def shutdown_event():
 
 
 @app.get("/api/trending")
-async def trending_movies():
+async def trending_movies() -> dict:
     try:
         # Try to get cached movies first
         cached_movies = get_key("trending_movies")
         if cached_movies:
-            # return {"results": cached_movies}
             return {"results": cached_movies}
 
         # If not in cache, fetch from TMDB API
@@ -71,21 +70,19 @@ async def trending_movies():
         # Cache the fetched movies
         set_key("trending_movies", movies)
 
-        # return {"results": movies}
         return {"results": movies}
     except redis.exceptions.ConnectionError:
         logging.error("Redis connection error. Falling back to TMDB API.")
         movies = await fetch_trending_movies(TMDB_API_KEY)
-        # return {"results": movies}
         return {"results": movies}
     except Exception as e:
         logging.error(f"Search error: {str(e)}")
         raise HTTPException(status_code=500, detail="Error fetching movies")
 
 
-# Function to manually trigger fetching trending movies 
+# Function to manually trigger fetching trending movies
 @app.post("/api/refresh-trending")
-async def refresh_trending_movies():
+async def refresh_trending_movies() -> dict:
     try:
         movies = await fetch_trending_movies(TMDB_API_KEY)
         set_key("trending_movies", movies)
@@ -96,7 +93,7 @@ async def refresh_trending_movies():
 
 
 @app.get("/api/search")
-async def search(query: str):
+async def search(query: str) -> dict:
     try:
         search_results = await search_title(query, TMDB_API_KEY)
         return {"results": search_results}
@@ -106,7 +103,7 @@ async def search(query: str):
 
 
 @app.get("/api/director/{director_id}")
-async def director_movies(director_id: str):
+async def director_movies(director_id: str) -> dict:
     try:
         movies = await fetch_director_movies(director_id, TMDB_API_KEY)
         return {"results": movies}
@@ -116,7 +113,7 @@ async def director_movies(director_id: str):
 
 
 @app.get("/api/details/{tmdb_id}/{media_type}")
-async def title_details(tmdb_id: str, media_type: str):
+async def title_details(tmdb_id: str, media_type: str) -> dict:
     cached_key = f"details_{tmdb_id}_{media_type}"
     cached_data = get_key(cached_key)
 
