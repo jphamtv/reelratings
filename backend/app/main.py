@@ -63,7 +63,7 @@ async def trending_movies():
         cached_movies = get_key("trending_movies")
         if cached_movies:
             # return {"results": cached_movies}
-            return {"results": cached_movies, "source": "redis"}
+            return {"results": cached_movies}
 
         # If not in cache, fetch from TMDB API
         movies = await fetch_trending_movies(TMDB_API_KEY)
@@ -72,12 +72,12 @@ async def trending_movies():
         set_key("trending_movies", movies)
 
         # return {"results": movies}
-        return {"results": movies, "source": "tmdb"}
+        return {"results": movies}
     except redis.exceptions.ConnectionError:
         logging.error("Redis connection error. Falling back to TMDB API.")
         movies = await fetch_trending_movies(TMDB_API_KEY)
         # return {"results": movies}
-        return {"results": movies, "source": "tmdb_fallback"}
+        return {"results": movies}
     except Exception as e:
         logging.error(f"Search error: {str(e)}")
         raise HTTPException(status_code=500, detail="Error fetching movies")
