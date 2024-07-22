@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { useClientCache } from '../hooks/useClientCache';
 import { useSearch } from '../hooks/useSearch';
 import { fetchTrendingMovies } from '../services/api';
+import MovieGrid from '../components/MovieGrid';
 import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
 import reelRatingsLogo from '../assets/img/reelratings_logo_yellow.svg';
@@ -71,23 +72,6 @@ const HomePage: React.FC = () => {
     setHasFetched(true);
   }, [getItem, setItem, setSearchValue, hasFetched]);
   
-  const renderMovieGrid = () => (
-    <div className={styles.movieGrid}>
-      {trendingMovies.map((movie) => (
-        <Link to={`/details/${movie.tmdb_id}/${movie.media_type}`} key={movie.tmdb_id}>
-          <div className={styles.posterContainer}>
-            <img
-              src={movie.poster_img}
-              alt={movie.title}
-              className={`${styles.posterImage} ${showPosters ? styles.visible : ''}`}
-            />
-            {!showPosters && <div className={styles.posterSkeleton}></div>}
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
-  
   const renderLoading = () => (
     <div className={styles.loadingBackground}>
       <div className={styles.spinner}></div>
@@ -123,7 +107,7 @@ const HomePage: React.FC = () => {
             <main className={styles.homepageMain}>
               <div className={styles.moviesContainer}>
                 <h3 className={styles.title}>Trending Movies This Week</h3>
-                {renderMovieGrid()}
+                <MovieGrid movies={trendingMovies} showPosters={showPosters} />
               </div>
             </main>
             <Footer />
