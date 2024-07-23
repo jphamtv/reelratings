@@ -6,11 +6,13 @@ import styles from './SearchBar.module.css';
 interface SearchBarProps {
   className?: string;
   placeholder?: string;
+  theme?: 'light' | 'dark';
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   className = 'searchContainer',
-  placeholder = 'Search Movies & TV'
+  placeholder = 'Search Movies & TV',
+  theme = 'light'
 }) => {
   const { searchValue, setSearchValue, setSubmittedQuery } = useSearch();
   const navigate = useNavigate();
@@ -51,13 +53,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder={placeholder}
-            className={styles.searchField}
+            className={`${styles.searchField} ${theme === 'dark' ? styles.darkTheme : ''}`}
             required
           />
           {searchValue && (
             <button
               type="button"
-              className={styles.clearButton}
+              className={`${styles.clearButton} ${theme === 'dark' ? styles.darkTheme : ''}`}
               onClick={handleClear}
               aria-label="Clear search"
             >
