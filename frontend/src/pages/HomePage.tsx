@@ -109,7 +109,7 @@ const HomePage: React.FC = () => {
                 <MovieGrid movies={trendingMovies} showPosters={showPosters} />
               </div>
             </main>
-            <Footer />
+            <Footer showToggle={false} />
           </>
         )}
       </div>
