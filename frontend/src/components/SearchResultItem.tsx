@@ -27,7 +27,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
 
   return (
     <li className={styles.searchResultItem}>
-      <Link to={`/details/${tmdb_id}/${media_type}`} className={styles.searchResultLink}>
+      <Link to={`/details/${tmdb_id}/${media_type}`}>
         <div className={styles.searchResultWrapper}>
           <div className={styles.posterContainer}>
             {!imageLoaded && <div className={styles.imagePlaceholder} />}
