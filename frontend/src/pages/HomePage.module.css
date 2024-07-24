@@ -3,7 +3,7 @@
 }
 
 .homepageBody {
-  background-color: #171a1c;
+  background-color: var(--primary-dark-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -39,7 +39,7 @@
   letter-spacing: .05rem;
   text-align: center;
   margin-bottom: 1.75rem;
-  color: #FAAD00;
+  color: var(--primary-color);
 }
 
 .moviesContainer {
@@ -47,7 +47,7 @@
 }
 
 .title {
-  color: #FAAD00;
+  color: var(--primary-color);
   margin: 1rem;
 }
 
@@ -64,7 +64,7 @@
 .spinner {
   width: 50px;
   height: 50px;
-  border: 5px solid #FAAD00;
+  border: 5px solid var(--primary-color);
   border-top: 5px solid transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -86,7 +86,7 @@
 
 .loadingMessage,
 .errorMessage {
-  color: #FAAD00;
+  color: var(--primary-color);
   margin: 1rem 2rem;
   text-align: center;
 }

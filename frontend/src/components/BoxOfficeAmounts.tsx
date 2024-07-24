@@ -1,5 +1,4 @@
 import styles from './BoxOfficeAmounts.module.css';
-import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface BoxOfficeAmountsProps {
   boxOfficeMojoUrl: string | undefined;
@@ -12,7 +11,7 @@ const BoxOfficeAmounts: React.FC<BoxOfficeAmountsProps> = ({ boxOfficeMojoUrl, a
   return (
     <div className={styles.boxOfficeContainer}>
       <a href={boxOfficeMojoUrl} target="_blank" rel="noopener noreferrer">
-        <div className={`${styles.boxOfficeWrapper} ${sharedStyles.card}`}>
+        <div className={`${styles.boxOfficeWrapper} card`}>
           {amounts[0] !== '–' && (
             <div>
               <p className={styles.boxOfficeRating}>{amounts[0]}</p>

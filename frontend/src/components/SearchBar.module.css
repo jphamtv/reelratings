@@ -20,13 +20,14 @@
   background-repeat: no-repeat;
   background-position: left 10px center; 
   background-size: 20px; 
-  caret-color: #FAAD00;
+  caret-color: var(--primary-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .searchField:hover,
 .searchField:focus-visible {
   outline: none;
-  border: 1px solid #FAAD00;
+  border: 1px solid var(--primary-color);
   box-shadow:
   0 0 0 1px rgba(14, 63, 126, 0.04),
   0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
@@ -36,14 +37,15 @@
 }
 
 .searchField.darkTheme {
-  background-color: rgb(37, 40, 43);
+  background-color: rgb(255, 255, 255, 0.08);
   color: hsl(0, 0%, 85%);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
 .searchField.darkTheme:hover,
 .searchField.darkTheme:focus-visible {
-  border-color: rgb(250, 173, 0, 0.50);
+  border-color: rgba(var(--primary-color-base), 0.6);
+  box-shadow: var(--card-hover-shadow);
 }
 
 .clearButton {
@@ -66,7 +68,7 @@
 }
 
 .clearButton:hover {
-  color: #FAAD00;
+  color: var(--primary-color);
 }
 
 .clearButton.darkTheme {
@@ -74,5 +76,5 @@
 }
 
 .clearButton.darkTheme:hover {
-  color: #FAAD00;
+  color: var(--primary-color);
 }

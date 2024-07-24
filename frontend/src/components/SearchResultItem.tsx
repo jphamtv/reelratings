@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import posterPlaceholder from '../assets/img/poster_empty.jpg'
+import { useTheme } from '../hooks/useTheme';
+import posterEmptyLight from '../assets/img/poster_empty_light.jpg';
+import posterEmptyDark from '../assets/img/poster_empty_dark.jpg';
 import styles from './SearchResultItem.module.css';
 
 interface SearchResultItemProps {
@@ -19,6 +21,8 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   poster_img
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const { theme } = useTheme();
+  const posterPlaceholder = theme === 'dark' ? posterEmptyDark : posterEmptyLight;
   const displayMediaType = media_type === "movie" ? "Movie" : media_type.toUpperCase();
 
   return (

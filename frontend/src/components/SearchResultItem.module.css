@@ -1,24 +1,22 @@
 .searchResultItem {
   height: 120px;
-  border: 1px solid rgba(14, 62, 124, 0.16);
+  background-color: var(--card-background);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   margin: 0.5rem 0;
   overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease,
+    transform 0.3s ease;
 }
 
 .searchResultItem:hover {
-  border: 1px solid #FAAD00;
-  box-shadow:
-      0 0 0 1px rgba(14, 63, 126, 0.04),
-      0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
-      0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
-      0 6px 6px -3px rgba(42, 51, 69, 0.04),
-      0 12px 12px -6px rgba(14, 63, 126, 0.04);
-  }
+  border: 1px solid var(--card-hover-border);
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-1px);
+}
 
 .searchResultWrapper {
   display: flex;
-  /* height: 100%; */
   align-items: center;
   gap: 1rem;
 }
@@ -43,7 +41,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #f0f0f0;
+  background-color: var(--placeholder-background);
 }
 
 .posterImage {
@@ -79,6 +77,6 @@
 
 .year,
 .mediaType {
-  color: #5c5c5c;
+  color: var(--text-muted);
   font-size: 0.875rem;
 }

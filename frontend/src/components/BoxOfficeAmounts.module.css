@@ -24,4 +24,5 @@
   margin-bottom: .5rem;
   text-transform: uppercase;
   text-align: center;
+  color: var(--text-muted);
 }

@@ -1,4 +1,3 @@
-// import { useNavigate } from 'react-router-dom';
 import justWatchLogo from '../assets/img/justwatch_logo.svg'
 import styles from './Button.module.css';
 
@@ -14,12 +13,12 @@ const Button: React.FC<ButtonProps> = ({ justWatchUrl, justWatchPage }) => {
         <a href={justWatchPage || justWatchUrl} target="_blank" rel="noopener noreferrer">
           <div className={styles.justWatchButton}>
             <img src={justWatchLogo} alt="JustWatch" />
-            <span>Where to Stream</span>
+            <span>Where to watch this title</span>
           </div>
         </a>
       ) : (
         <div className={styles.disableButton}>
-          <span>Not Available to Stream</span>
+          <span>Not available to stream</span>
         </div>
       )}
     </div>

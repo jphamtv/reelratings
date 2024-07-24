@@ -30,7 +30,7 @@
 }
 
 .directorLink:hover {
-  color: #faad00;
+  color: var(--primary-color);
   text-decoration: underline;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .certifiedRating {
-  border: 1px solid #BCBDBE;
+  border: 1px solid var(--text-muted);
   border-radius: 3px;
   padding: 0 5px;
   margin-right: 7px;

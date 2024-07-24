@@ -10,38 +10,40 @@
   align-items: center;
   justify-content: center;
   padding: 1rem 1.25rem;
-  color: #100D04;
+  color: var(--text-primary);
   font-size: 1rem;
   font-weight: 700;
   text-align: center;
   text-decoration: none;
   border-radius: 8px;
   border: 1px solid rgba(42, 51, 69, 0.16);
+  transition: box-shadow 0.3s ease, border 0.3s ease, transform 0.3s ease;
 }
 
 .button:hover {
-  box-shadow:
-    0 0 0 1px rgba(14, 63, 126, 0.04),
-    0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
-    0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
-    0 6px 6px -3px rgba(42, 51, 69, 0.04),
-    0 12px 12px -6px rgba(14, 63, 126, 0.04);
+  box-shadow: var(--button-hover-shadow);
+  border: 1px solid var(--button-hover-border);
+  transform: translateY(-1px);
 }
 
 .disableButton {
   composes: button;
-  color: #BCBDBE;
+  color: var(--text-muted);
+  border: 1px dashed rgba(255, 255, 255, 0.10);
 }
 
 .disableButton:hover {
   box-shadow: none;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  transform: none;
 }
 
 .justWatchButton {
   composes: button;
-  background-color: #faad00;
-  border: 1px solid rgba(74, 60, 27, 0.12);
+  background-color: var(--primary-color);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   margin-bottom: 1rem;
+  color: #100D04;
 }
 
 .justWatchButton img {

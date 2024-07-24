@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
-import posterPlaceholder from '../assets/img/poster_empty.jpg'
-import commonSenseIcon from '../assets/img/commonsense_checkmark.svg';
+import { useTheme } from '../hooks/useTheme';
+import posterEmptyLight from '../assets/img/poster_empty_light.jpg';
+import posterEmptyDark from '../assets/img/poster_empty_dark.jpg';
+import commonSenseIconLight from '../assets/img/commonsense_checkmark_light.svg';
+import commonSenseIconDark from '../assets/img/commonsense_checkmark_dark.svg';
 import styles from './TitleDetailsCard.module.css';
 
 interface Director {
@@ -29,6 +32,8 @@ interface TitleDetailsCardProps {
 
 const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsenseData }) => { 
   const { media_type, poster_img, title, certification, year, runtime, director, creator } = tmdbData;
+  const { theme } = useTheme();
+  const posterPlaceholder = theme === 'dark' ? posterEmptyDark : posterEmptyLight;
 
   const renderDirectorsOrCreators = () => { 
     const people = media_type === "movie" ? director : creator;
@@ -63,6 +68,8 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({ tmdbData, commonsen
 
   const renderCommonSenseInfo = () => {
     if (!commonsenseData) return null;
+
+    const commonSenseIcon = theme === 'dark' ? commonSenseIconDark : commonSenseIconLight;
 
     return (
       <a href={commonsenseData.url} target="_blank" rel="noopener noreferrer">

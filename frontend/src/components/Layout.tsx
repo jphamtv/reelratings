@@ -4,12 +4,14 @@ import Header from './Header';
 import SearchBar from './SearchBar';
 import Footer from './Footer';
 import { useSearch } from '../hooks/useSearch';
+import { useTheme } from '../hooks/useTheme';
 import styles from './Layout.module.css'
 
 const Layout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { setSearchValue } = useSearch();
+  const { theme } = useTheme();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -29,7 +31,7 @@ const Layout: React.FC = () => {
   return (
     <div>
       <Header onLogoClick={handleLogoClick} />
-      <SearchBar className={styles.searchContainer}/>
+      <SearchBar className={`${styles.searchContainer} ${theme === 'dark' ? styles.darkTheme : ''}`} />
       <main><Outlet /></main>
       <Footer />
     </div>

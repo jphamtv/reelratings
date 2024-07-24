@@ -10,7 +10,6 @@ import audienceFresh from '../assets/img/rt_aud_score_fresh.svg';
 import audienceRotten from '../assets/img/rt_aud_score_rotten.svg';
 import audienceEmpty from '../assets/img/rt_aud_score_empty.svg';
 import styles from './RatingsDetails.module.css';
-import sharedStyles from '../assets/css/sharedStyles.module.css';
 
 interface RatingsDetailsProps {
   imdbData?: {
@@ -42,7 +41,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
 
     return (
       <a href={rottenTomatoesData.url} target="_blank" rel="noopener noreferrer">
-        <div className={`${styles.rottenTomatoesContainer} ${sharedStyles.card}`}>
+        <div className={`${styles.rottenTomatoesContainer} card`}>
           <RatingScore
             score={rottenTomatoesData.scores.tomatometer}
             state={rottenTomatoesData.scores.tomatometer_state}
@@ -65,7 +64,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
 
     return (
       <a href={imdbData.url} target="_blank" rel="noopener noreferrer" className={styles.ratingLink}>
-        <div className={`${styles.ratingContainer} ${sharedStyles.card}`}>
+        <div className={`${styles.ratingContainer} card`}>
           <div className={styles.ratingBoxWrapper}>
             <img 
               src={imdbData.rating ? imdbStar : imdbStarEmpty} 
@@ -88,7 +87,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
 
     return (
       <a href={letterboxdData.url} target="_blank" rel="noopener noreferrer" className={styles.ratingLink}>
-        <div className={`${styles.ratingContainer} ${sharedStyles.card}`}>
+        <div className={`${styles.ratingContainer} card`}>
           <div className={styles.ratingBoxWrapper}>
             <img 
               src={letterboxdData.rating ? letterboxdStar : letterboxdStarEmpty} 

@@ -4,3 +4,7 @@
   background-color: #F5F5F5;
   padding: 1rem 0;
 }
+
+.searchContainer.darkTheme {
+  background-color: #1F2226;
+}

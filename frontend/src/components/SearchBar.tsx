@@ -1,23 +1,27 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSearch } from '../hooks/useSearch';
+import { useTheme } from '../hooks/useTheme';
 import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
   className?: string;
   placeholder?: string;
-  theme?: 'light' | 'dark';
+  forceDarkTheme?: boolean;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   className = 'searchContainer',
   placeholder = 'Search Movies & TV',
-  theme = 'light'
+  forceDarkTheme = false
 }) => {
   const { searchValue, setSearchValue, setSubmittedQuery } = useSearch();
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isDarkTheme = forceDarkTheme || theme === 'dark';
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -53,13 +57,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder={placeholder}
-            className={`${styles.searchField} ${theme === 'dark' ? styles.darkTheme : ''}`}
+            className={`${styles.searchField} ${isDarkTheme ? styles.darkTheme : ''}`}
             required
           />
           {searchValue && (
             <button
               type="button"
-              className={`${styles.clearButton} ${theme === 'dark' ? styles.darkTheme : ''}`}
+              className={`${styles.clearButton} ${isDarkTheme ? styles.darkTheme : ''}`}
               onClick={handleClear}
               aria-label="Clear search"
             >
