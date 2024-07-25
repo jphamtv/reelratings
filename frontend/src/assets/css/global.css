@@ -60,7 +60,7 @@ h6 {
 
   --background-color: #fff;
   --text-primary: #333;
-  --text-muted: #686868;
+  --text-muted: rgba(0, 0, 0, 0.6);
   --primary-color: rgba(var(--primary-color-base), 1);
   --primary-dark-color: #181A1C;
 
@@ -75,6 +75,7 @@ h6 {
       0 12px 12px -6px rgba(14, 63, 126, 0.04);
 
   --button-color-secondary: var(--background-color);
+  --button-disable-border: rgba(0, 0, 0, 0.16);
   --button-hover-border: rgba(42, 51, 69, 0.16);
   --button-hover-shadow: 
       0 0 0 1px rgba(14, 63, 126, 0.04),
@@ -84,7 +85,7 @@ h6 {
       0 12px 12px -6px rgba(14, 63, 126, 0.04);
 
   --skeleton-background-color: #f3f3f3;
-  --placeholder-background: rgb(0, 0, 0, 0.12);
+  --placeholder-background: rgb(0, 0, 0, 0.06);
   --shimmer-effect: linear-gradient(90deg,
       rgba(255, 255, 255, 0) 0%,
       rgba(255, 255, 255, 0.6) 50%,
@@ -94,7 +95,7 @@ h6 {
 :root.darkTheme {
   --background-color: #282A2D;
   --text-primary: rgb(255, 255, 255, .9);
-  --text-muted: rgb(255, 255, 255, .54);
+  --text-muted: rgb(255, 255, 255, .56);
 
   --card-background: #2F3133;
   --card-border: rgba(255, 255, 255, 0.08);
@@ -107,6 +108,7 @@ h6 {
       0 12px 12px -6px rgba(250, 173, 0, 0.05);
 
   --button-color-secondary: var(--background-color);
+  --button-disable-border: rgba(255, 255, 255, 0.10);
   --button-hover-border: rgba(255, 255, 255, 0.4);
   --button-hover-shadow:
       0 0 0 1px rgba(250, 173, 0, 0.1),
@@ -114,9 +116,9 @@ h6 {
         0 3px 3px -1.5px rgba(250, 173, 0, 0.06),
         0 6px 6px -3px rgba(250, 173, 0, 0.06),
         0 12px 12px -6px rgba(250, 173, 0, 0.1);
-        
+
   --skeleton-background-color: #2E3133;
-  --placeholder-background: rgb(255, 255, 255, 0.12);
+  --placeholder-background: rgb(255, 255, 255, 0.08);
   --shimmer-effect: linear-gradient(90deg,
       rgba(39, 42, 45, 0) 0%,
       rgba(39, 42, 45, 0.6) 50%,

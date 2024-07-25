@@ -23,12 +23,13 @@
 .disableButton {
   composes: button;
   color: var(--text-muted);
-  border: 1px dashed rgba(255, 255, 255, 0.10);
+  border: 1px dashed var(--button-disable-border);
+  margin-bottom: 1rem;
 }
 
 .disableButton:hover {
   box-shadow: none;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border: 1px dashed var(--button-disable-border);
   transform: none;
 }
 
