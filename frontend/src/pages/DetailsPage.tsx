@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useClientCache } from '../hooks/useClientCache';
 import { fetchTitleDetails } from '../services/api';
@@ -57,6 +57,7 @@ const DetailsPage: React.FC = () => {
   const [error, setError] = useState(false);
   const { tmdbId, mediaType } = useParams<{ tmdbId: string; mediaType: string }>();
   const { getItem, setItem } = useClientCache();
+  const navigate = useNavigate();
 
   const fetchDetails = useCallback(async (skipCache = false) => {
     if (!tmdbId || !mediaType) return;
@@ -90,6 +91,10 @@ const DetailsPage: React.FC = () => {
 
   const handleRetry = () => {
     fetchDetails(true); // Skip cache on retry
+  };
+
+  const handleBackClick = () => {
+    navigate(-1);
   };
 
   if (loading) {
@@ -198,10 +203,15 @@ const DetailsPage: React.FC = () => {
           amounts={external_data.box_office_amounts}
         />
       )}
-      <Button
-        justWatchUrl={tmdb_data.justwatch_url}
-        justWatchPage={external_data.justwatch_page ?? undefined}
-      />
+      <div className={styles.buttonContainer}>
+        <Button
+          justWatchUrl={tmdb_data.justwatch_url}
+          justWatchPage={external_data.justwatch_page ?? undefined}
+        />
+        <button onClick={handleBackClick} className={styles.backButton}>
+          Back to Previous Page
+        </button>
+      </div>
     </>
   );
 };

@@ -8,12 +8,12 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ justWatchUrl, justWatchPage }) => {
   return (
-    <div className={styles.buttonContainer}>
+    <>
       {justWatchUrl ? (
         <a href={justWatchPage || justWatchUrl} target="_blank" rel="noopener noreferrer">
           <div className={styles.justWatchButton}>
             <img src={justWatchLogo} alt="JustWatch" />
-            <span>Where to watch this title</span>
+            <span>Where to Rent or Stream</span>
           </div>
         </a>
       ) : (
@@ -21,7 +21,7 @@ const Button: React.FC<ButtonProps> = ({ justWatchUrl, justWatchPage }) => {
           <span>Not available to stream</span>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

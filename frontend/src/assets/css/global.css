@@ -63,6 +63,7 @@ h6 {
   --text-muted: #686868;
   --primary-color: rgba(var(--primary-color-base), 1);
   --primary-dark-color: #181A1C;
+
   --card-background: #f7f7f7;
   --card-border: rgba(14, 62, 124, 0.08);
   --card-hover-border: var(--primary-color);
@@ -72,6 +73,8 @@ h6 {
       0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
       0 6px 6px -3px rgba(42, 51, 69, 0.04),
       0 12px 12px -6px rgba(14, 63, 126, 0.04);
+
+  --button-color-secondary: var(--background-color);
   --button-hover-border: rgba(42, 51, 69, 0.16);
   --button-hover-shadow: 
       0 0 0 1px rgba(14, 63, 126, 0.04),
@@ -79,6 +82,7 @@ h6 {
       0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
       0 6px 6px -3px rgba(42, 51, 69, 0.04),
       0 12px 12px -6px rgba(14, 63, 126, 0.04);
+
   --skeleton-background-color: #f3f3f3;
   --placeholder-background: rgb(0, 0, 0, 0.12);
   --shimmer-effect: linear-gradient(90deg,
@@ -91,6 +95,7 @@ h6 {
   --background-color: #282A2D;
   --text-primary: rgb(255, 255, 255, .9);
   --text-muted: rgb(255, 255, 255, .54);
+
   --card-background: #2F3133;
   --card-border: rgba(255, 255, 255, 0.08);
   --card-hover-border: rgba(var(--primary-color-base), 0.7);
@@ -100,6 +105,8 @@ h6 {
       0 3px 3px -1.5px rgba(250, 173, 0, 0.05),
       0 6px 6px -3px rgba(250, 173, 0, 0.05),
       0 12px 12px -6px rgba(250, 173, 0, 0.05);
+
+  --button-color-secondary: var(--background-color);
   --button-hover-border: rgba(255, 255, 255, 0.4);
   --button-hover-shadow:
       0 0 0 1px rgba(250, 173, 0, 0.1),
@@ -107,6 +114,7 @@ h6 {
         0 3px 3px -1.5px rgba(250, 173, 0, 0.06),
         0 6px 6px -3px rgba(250, 173, 0, 0.06),
         0 12px 12px -6px rgba(250, 173, 0, 0.1);
+        
   --skeleton-background-color: #2E3133;
   --placeholder-background: rgb(255, 255, 255, 0.12);
   --shimmer-effect: linear-gradient(90deg,
