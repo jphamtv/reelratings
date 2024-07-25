@@ -23,7 +23,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const { theme } = useTheme();
   const posterPlaceholder = theme === 'dark' ? posterEmptyDark : posterEmptyLight;
-  const displayMediaType = media_type === "movie" ? "Movie" : media_type.toUpperCase();
+  const displayMediaType = media_type === "movie" ? "Movie" : media_type?.toUpperCase() || "TV";
 
   return (
     <li className={styles.searchResultItem}>
