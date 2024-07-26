@@ -1,4 +1,17 @@
-node_modules
-npm-debug.log
-.git
-.env
+# Ignore everything
+*
+
+# Allow specific files and directories
+!src/
+!public/
+!index.html
+!package.json
+!package-lock.json
+!tsconfig.json
+!tsconfig.app.json
+!tsconfig.node.json
+!vite.config.ts
+!.env.production
+
+# Ignore node_modules even if it's in one of the allowed directories
+**/node_modules

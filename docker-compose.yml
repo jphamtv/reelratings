@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    image: https://sjc.vultrcr.com/reelratings/reelratingsdb-backend:${APP_VERSION:-latest}
+    image: https://sjc.vultrcr.com/reelratings/reelratings-backend:${APP_VERSION:-latest}
     build: 
       context: ./backend
       dockerfile: Dockerfile
@@ -12,12 +12,12 @@ services:
       - .env
 
   frontend:
-    image: https://sjc.vultrcr.com/reelratings/reelratingsdb-frontend:${APP_VERSION:-latest}
+    image: https://sjc.vultrcr.com/reelratings/reelratings-frontend:${APP_VERSION:-latest}
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - backend
 

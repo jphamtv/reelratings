@@ -1,8 +1,8 @@
-/.venv/
-/.vscode/
-/.pytest_cache/
-/tests/
+# Ignore everything
+*
+
+# Allow specific files and directories
+!app/
+
+# Ignore node_modules even if it's in one of the allowed directories
 **/__pycache__/
-.git
-.env
-README.md

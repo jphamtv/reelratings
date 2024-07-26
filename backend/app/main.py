@@ -37,7 +37,10 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], # TODO: Add frontend URL later
+    allow_origins=[
+        "http://localhost:5173",
+        "https://reelratingsdb.com"
+    ], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
