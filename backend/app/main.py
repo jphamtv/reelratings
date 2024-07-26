@@ -30,6 +30,7 @@ env = Env()
 env.read_env()
 
 TMDB_API_KEY = env.str("TMDB_API_KEY")
+REFRESH_API_KEY = env.str("REFRESH_API_KEY")
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -50,8 +51,8 @@ app.add_middleware(
 async def startup_event():
     scheduler = start_scheduler()
     app.state.scheduler = scheduler
-    # Run the cache update immediately on startup
-    await update_trending_movies_cache()
+    # Uncomment below to run the cache update immediately on startup
+    # await update_trending_movies_cache()
 
 
 @app.on_event("shutdown")
@@ -84,8 +85,10 @@ async def trending_movies() -> dict:
 
 
 # Function to manually trigger fetching trending movies
-@app.post("/api/refresh-trending")
-async def refresh_trending_movies() -> dict:
+@app.get("/api/refresh-trending/{api_key}")
+async def refresh_trending_movies(api_key: str) -> dict:
+    if api_key != REFRESH_API_KEY:
+        raise HTTPException(status_code=403, detail="Invalid API Key")
     try:
         movies = await fetch_trending_movies(TMDB_API_KEY)
         set_key("trending_movies", movies)

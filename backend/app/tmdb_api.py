@@ -35,7 +35,7 @@ async def fetch_trending_movies(api_key):
     filtered_movies = filter_api_data(compatible_data, poster_size)
 
     try:
-        # Fetch and cache details for each movie, limited to 5 for testing
+        # Fetch and cache details for each movie
         await cache_trending_movie_details(filtered_movies, api_key)
         logging.info("Completed caching process for trending movies")
     except Exception as e:

@@ -2,15 +2,19 @@
 This module manages the caching of trending movies data using a scheduler.
 It periodically updates the cache to ensure fresh data is available.
 """
-import asyncio
+import logging
+import redis
+import redis.exceptions
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
-from app.redis_client import set_key
+from app.redis_client import set_key, ensure_connection, redis_client
 from app.tmdb_api import fetch_trending_movies
 from environs import Env
-import logging
+from redis.exceptions import LockError
 
 logger = logging.getLogger(__name__)
+
+# redis_client = redis.from_url(env.str("REDIS_URL"), decode_responses=True)
 
 env = Env()
 env.read_env()
@@ -22,12 +26,27 @@ Fetches trending movies from TMDB API and updates the Redis cache.
 Logs success or failure of the operation.
 """
 async def update_trending_movies_cache():
+    ensure_connection()
+    lock = redis_client.lock("trending_movies_update_lock", timeout=600) # 10 minutes timeout, matching uvicorn workers timeout
     try:
-        movies = await fetch_trending_movies(TMDB_API_KEY)
-        set_key("trending_movies", movies)
-        logging.info("Trending movies cache updated successfully")
-    except Exception as e:
-        logging.error(f"Error updating trending movies cache: {str(e)}")
+        have_lock = lock.acquire(blocking=False)
+        if have_lock:
+            logging.info("Acquired lock for trending movies update")
+            try:
+                movies = await fetch_trending_movies(TMDB_API_KEY)
+                set_key("trending_movies", movies)
+                logging.info("Trending movies cache updated successfully")
+            except Exception as e:
+                logging.error(f"Error updating trending movies cache: {str(e)}")
+            finally:
+                lock.release()
+                logging.info("Released lock for trending movies update")
+        else:
+            logging.info("Update already in progress, skipping this run")
+    except LockError as e:
+        logging.error(f"Error acquiring lock: {str(e)}")
+    except redis.exceptions.ConnectionError as e:
+        logging.error(f"Redis connection error: {str(e)}")
 
 """
 Initializes and starts the AsyncIOScheduler to periodically update the trending movies cache.
