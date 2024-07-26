@@ -3,6 +3,7 @@
 
 # Allow specific files and directories
 !app/
+requirements.txt
 
 # Ignore node_modules even if it's in one of the allowed directories
 **/__pycache__/
