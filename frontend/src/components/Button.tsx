@@ -18,7 +18,7 @@ const Button: React.FC<ButtonProps> = ({ justWatchUrl, justWatchPage }) => {
         </a>
       ) : (
         <div className={styles.disableButton}>
-          <span>Not available to stream</span>
+          <span>Not available to Rent or Stream</span>
         </div>
       )}
     </>
