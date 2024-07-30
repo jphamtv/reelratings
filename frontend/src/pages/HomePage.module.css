@@ -97,19 +97,15 @@
 
 @media (max-width: 768px) {
   .moviesContainer {
-    margin-top: 2rem;
+    margin-top: 3rem;
   }
-
   .logoWrapper {
-    margin-top: 2rem;
+    margin-top: 3rem;
   }
 }
 
 @media (max-width: 480px) {
   .moviesContainer {
-    margin-top: 2rem;
-  }
-  .logoWrapper {
     margin-top: 2rem;
   }
 }
