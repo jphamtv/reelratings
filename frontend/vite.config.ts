@@ -14,6 +14,7 @@ const vitestConfig: VitestUserConfig = {
 export default mergeConfig(
   defineConfig({
     plugins: [react()],
+    base: '/',
   }),
   vitestConfig
 )

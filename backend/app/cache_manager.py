@@ -27,7 +27,10 @@ Logs success or failure of the operation.
 """
 async def update_trending_movies_cache():
     ensure_connection()
+
+    # Redis lock used to prevent multiple workers processing trending movies update
     lock = redis_client.lock("trending_movies_update_lock", timeout=600) # 10 minutes timeout, matching uvicorn workers timeout
+    
     try:
         have_lock = lock.acquire(blocking=False)
         if have_lock:

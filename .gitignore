@@ -29,3 +29,6 @@ dist-ssr
 backend/app/debug_main.py
 backend/.pytest_cache
 nginx.conf
+docker-compose.dev.yml
+docker-compose.prod.yml
+/frontend/Dockerfile.dev
