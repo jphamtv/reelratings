@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from "react";
 
 // Define the structure of cached items
 export interface CacheItem<T> {
@@ -8,25 +8,29 @@ export interface CacheItem<T> {
 
 export interface ClientCacheContextType {
   getItem: <T>(key: string) => T | null;
-  setItem: <T>(key: string, data: T) => void; 
+  setItem: <T>(key: string, data: T) => void;
 }
 
-export const ClientCacheContext = createContext<ClientCacheContextType | undefined>(undefined);
+export const ClientCacheContext = createContext<
+  ClientCacheContextType | undefined
+>(undefined);
 
-export const ClientCacheProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ClientCacheProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cache, setCache] = useState<{ [key: string]: CacheItem<unknown> }>({});
 
   useEffect(() => {
     // Load cache from localStorage on mount
-    const storedCache = localStorage.getItem('clientCache');
+    const storedCache = localStorage.getItem("clientCache");
     if (storedCache) {
       setCache(JSON.parse(storedCache));
     }
   }, []);
-  
-  useEffect(() => { 
+
+  useEffect(() => {
     // Save cache to localStorage whenever it changes
-    localStorage.setItem('clientCache', JSON.stringify(cache));
+    localStorage.setItem("clientCache", JSON.stringify(cache));
   }, [cache]);
 
   const getItem = <T,>(key: string): T | null => {
@@ -38,7 +42,7 @@ export const ClientCacheProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     if (now - item.timestamp > expirationTime) {
       // Remove expired item
-      setCache(prevCache => {
+      setCache((prevCache) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { [key]: _removedItem, ...rest } = prevCache;
         return rest;
@@ -48,16 +52,16 @@ export const ClientCacheProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     return item.data;
   };
-  
+
   const setItem = <T,>(key: string, data: T) => {
-    setCache(prevCache => ({
+    setCache((prevCache) => ({
       ...prevCache,
-      [key]: { data, timestamp: Date.now()}
+      [key]: { data, timestamp: Date.now() },
     }));
   };
-  
+
   return (
-    <ClientCacheContext.Provider value={{ getItem, setItem}}>
+    <ClientCacheContext.Provider value={{ getItem, setItem }}>
       {children}
     </ClientCacheContext.Provider>
   );

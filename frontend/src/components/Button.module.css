@@ -11,7 +11,10 @@
   text-decoration: none;
   border-radius: 8px;
   border: 1px solid rgba(42, 51, 69, 0.16);
-  transition: box-shadow 0.3s ease, border 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    border 0.3s ease,
+    transform 0.3s ease;
 }
 
 .button:hover {
@@ -38,7 +41,7 @@
   background-color: var(--primary-color);
   border: 1px solid rgba(0, 0, 0, 0.12);
   margin-bottom: 1rem;
-  color: #100D04;
+  color: #100d04;
 }
 
 .justWatchButton img {

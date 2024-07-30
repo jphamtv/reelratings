@@ -50,7 +50,7 @@ h6 {
 /* Global Styles */
 
 :root {
-  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  font-family: "DM Sans", Helvetica, Arial, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -62,67 +62,67 @@ h6 {
   --text-primary: #333;
   --text-muted: rgba(0, 0, 0, 0.6);
   --primary-color: rgba(var(--primary-color-base), 1);
-  --primary-dark-color: #181A1C;
+  --primary-dark-color: #181a1c;
 
   --card-background: #f7f7f7;
   --card-border: rgba(14, 62, 124, 0.08);
   --card-hover-border: var(--primary-color);
-  --card-hover-shadow:
-      0 0 0 1px rgba(14, 63, 126, 0.04),
-      0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
-      0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
-      0 6px 6px -3px rgba(42, 51, 69, 0.04),
-      0 12px 12px -6px rgba(14, 63, 126, 0.04);
+  --card-hover-shadow: 0 0 0 1px rgba(14, 63, 126, 0.04),
+    0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
+    0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
+    0 6px 6px -3px rgba(42, 51, 69, 0.04),
+    0 12px 12px -6px rgba(14, 63, 126, 0.04);
 
   --button-color-secondary: var(--background-color);
   --button-disable-border: rgba(0, 0, 0, 0.16);
   --button-hover-border: rgba(42, 51, 69, 0.16);
-  --button-hover-shadow: 
-      0 0 0 1px rgba(14, 63, 126, 0.04),
-      0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
-      0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
-      0 6px 6px -3px rgba(42, 51, 69, 0.04),
-      0 12px 12px -6px rgba(14, 63, 126, 0.04);
+  --button-hover-shadow: 0 0 0 1px rgba(14, 63, 126, 0.04),
+    0 1px 1px -0.5px rgba(42, 51, 69, 0.04),
+    0 3px 3px -1.5px rgba(42, 51, 69, 0.04),
+    0 6px 6px -3px rgba(42, 51, 69, 0.04),
+    0 12px 12px -6px rgba(14, 63, 126, 0.04);
 
   --skeleton-background-color: #f3f3f3;
   --placeholder-background: rgb(0, 0, 0, 0.06);
-  --shimmer-effect: linear-gradient(90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.6) 50%,
-      rgba(255, 255, 255, 0) 100%);
+  --shimmer-effect: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
 :root.darkTheme {
-  --background-color: #282A2D;
-  --text-primary: rgb(255, 255, 255, .9);
-  --text-muted: rgb(255, 255, 255, .56);
+  --background-color: #282a2d;
+  --text-primary: rgb(255, 255, 255, 0.9);
+  --text-muted: rgb(255, 255, 255, 0.56);
 
-  --card-background: #2F3133;
+  --card-background: #2f3133;
   --card-border: rgba(255, 255, 255, 0.08);
   --card-hover-border: rgba(var(--primary-color-base), 0.7);
-  --card-hover-shadow:
-      0 0 0 1px rgba(250, 173, 0, 0.05),
-      0 1px 1px -0.5px rgba(250, 173, 0, 0.05),
-      0 3px 3px -1.5px rgba(250, 173, 0, 0.05),
-      0 6px 6px -3px rgba(250, 173, 0, 0.05),
-      0 12px 12px -6px rgba(250, 173, 0, 0.05);
+  --card-hover-shadow: 0 0 0 1px rgba(250, 173, 0, 0.05),
+    0 1px 1px -0.5px rgba(250, 173, 0, 0.05),
+    0 3px 3px -1.5px rgba(250, 173, 0, 0.05),
+    0 6px 6px -3px rgba(250, 173, 0, 0.05),
+    0 12px 12px -6px rgba(250, 173, 0, 0.05);
 
   --button-color-secondary: var(--background-color);
-  --button-disable-border: rgba(255, 255, 255, 0.10);
+  --button-disable-border: rgba(255, 255, 255, 0.1);
   --button-hover-border: rgba(255, 255, 255, 0.4);
-  --button-hover-shadow:
-      0 0 0 1px rgba(250, 173, 0, 0.1),
-        0 1px 1px -0.5px rgba(250, 173, 0, 0.06),
-        0 3px 3px -1.5px rgba(250, 173, 0, 0.06),
-        0 6px 6px -3px rgba(250, 173, 0, 0.06),
-        0 12px 12px -6px rgba(250, 173, 0, 0.1);
+  --button-hover-shadow: 0 0 0 1px rgba(250, 173, 0, 0.1),
+    0 1px 1px -0.5px rgba(250, 173, 0, 0.06),
+    0 3px 3px -1.5px rgba(250, 173, 0, 0.06),
+    0 6px 6px -3px rgba(250, 173, 0, 0.06),
+    0 12px 12px -6px rgba(250, 173, 0, 0.1);
 
-  --skeleton-background-color: #2E3133;
+  --skeleton-background-color: #2e3133;
   --placeholder-background: rgb(255, 255, 255, 0.08);
-  --shimmer-effect: linear-gradient(90deg,
-      rgba(39, 42, 45, 0) 0%,
-      rgba(39, 42, 45, 0.6) 50%,
-      rgba(39, 42, 45, 0) 100%);
+  --shimmer-effect: linear-gradient(
+    90deg,
+    rgba(39, 42, 45, 0) 0%,
+    rgba(39, 42, 45, 0.6) 50%,
+    rgba(39, 42, 45, 0) 100%
+  );
 }
 
 body {
@@ -147,7 +147,9 @@ main {
   border-radius: 8px;
   background-color: var(--card-background);
   border: 1px solid var(--card-border);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease,
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
     transform 0.3s ease;
 }
 
@@ -162,7 +164,7 @@ a,
 a:hover,
 a:visited {
   text-decoration: none;
-  color: var(--text-primary)
+  color: var(--text-primary);
 }
 
 ul {

@@ -10,10 +10,10 @@ from app.cache_manager import start_scheduler, update_trending_movies_cache
 from app.external_data import get_movie_data, get_tv_show_data
 from app.redis_client import set_key, get_key
 from app.tmdb_api import (
-    fetch_title_details, 
-    search_title, 
-    fetch_trending_movies, 
-    fetch_director_movies
+    fetch_title_details,
+    search_title,
+    fetch_trending_movies,
+    fetch_director_movies,
 )
 
 # Set up logging
@@ -41,12 +41,13 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
-        "https://reelratingsdb.com"
-    ], 
+        "https://reelratingsdb.com",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -96,7 +97,9 @@ async def refresh_trending_movies(api_key: str) -> dict:
         return {"message": "Trending movies cache refreshed"}
     except Exception as e:
         logging.error(f"Error refreshing trending movies cache: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error refreshing trending movies cache")
+        raise HTTPException(
+            status_code=500, detail="Error refreshing trending movies cache"
+        )
 
 
 @app.get("/api/search")
@@ -133,7 +136,11 @@ async def title_details(tmdb_id: str, media_type: str) -> dict:
         tmdb_data = await fetch_title_details(tmdb_id, media_type, TMDB_API_KEY)
 
         # Only create imdb_url if imdb_id exists
-        imdb_url = f"https://www.imdb.com/title/{tmdb_data['imdb_id']}" if tmdb_data["imdb_id"] else None
+        imdb_url = (
+            f"https://www.imdb.com/title/{tmdb_data['imdb_id']}"
+            if tmdb_data["imdb_id"]
+            else None
+        )
 
         # Movie specific info
         if media_type == "movie":
@@ -158,13 +165,10 @@ async def title_details(tmdb_id: str, media_type: str) -> dict:
 
         external_data_model = {
             "imdb_url": imdb_url,
-            **external_data,    
+            **external_data,
         }
 
-        result_data = {
-            "tmdb_data": tmdb_data,
-            "external_data": external_data_model
-        }
+        result_data = {"tmdb_data": tmdb_data, "external_data": external_data_model}
 
         set_key(cached_key, result_data)
         logging.info("Fetched from external_data.py")
@@ -192,4 +196,5 @@ async def internal_server_error(request: Request, exc: Exception):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

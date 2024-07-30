@@ -1,8 +1,8 @@
-import { useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useSearch } from '../hooks/useSearch';
-import { useTheme } from '../hooks/useTheme';
-import styles from './SearchBar.module.css';
+import { useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSearch } from "../hooks/useSearch";
+import { useTheme } from "../hooks/useTheme";
+import styles from "./SearchBar.module.css";
 
 interface SearchBarProps {
   className?: string;
@@ -11,9 +11,9 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
-  className = 'searchContainer',
-  placeholder = 'Search Movies & TV',
-  forceDarkTheme = false
+  className = "searchContainer",
+  placeholder = "Search Movies & TV",
+  forceDarkTheme = false,
 }) => {
   const { searchValue, setSearchValue, setSubmittedQuery } = useSearch();
   const { theme } = useTheme();
@@ -21,16 +21,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isDarkTheme = forceDarkTheme || theme === 'dark';
+  const isDarkTheme = forceDarkTheme || theme === "dark";
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const query = params.get('query');
+    const query = params.get("query");
     if (query) {
       setSearchValue(query);
       setSubmittedQuery(query);
     }
-   }, [location.search, setSearchValue, setSubmittedQuery]);
+  }, [location.search, setSearchValue, setSubmittedQuery]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,12 +38,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
       setSubmittedQuery(searchValue.trim());
       // Add a timestampe to force a new search
       const timestamp = Date.now();
-      navigate(`/search?query=${encodeURIComponent(searchValue.trim())}&t=${timestamp}`);
+      navigate(
+        `/search?query=${encodeURIComponent(searchValue.trim())}&t=${timestamp}`,
+      );
     }
   };
 
   const handleClear = () => {
-    setSearchValue('');
+    setSearchValue("");
     inputRef.current?.focus();
   };
 
@@ -57,13 +59,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder={placeholder}
-            className={`${styles.searchField} ${isDarkTheme ? styles.darkTheme : ''}`}
+            className={`${styles.searchField} ${isDarkTheme ? styles.darkTheme : ""}`}
             required
           />
           {searchValue && (
             <button
               type="button"
-              className={`${styles.clearButton} ${isDarkTheme ? styles.darkTheme : ''}`}
+              className={`${styles.clearButton} ${isDarkTheme ? styles.darkTheme : ""}`}
               onClick={handleClear}
               aria-label="Clear search"
             >

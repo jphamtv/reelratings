@@ -25,12 +25,16 @@ TMDB_API_KEY = env.str("TMDB_API_KEY")
 Fetches trending movies from TMDB API and updates the Redis cache.
 Logs success or failure of the operation.
 """
+
+
 async def update_trending_movies_cache():
     ensure_connection()
 
     # Redis lock used to prevent multiple workers processing trending movies update
-    lock = redis_client.lock("trending_movies_update_lock", timeout=600) # 10 minutes timeout, matching uvicorn workers timeout
-    
+    lock = redis_client.lock(
+        "trending_movies_update_lock", timeout=600
+    )  # 10 minutes timeout, matching uvicorn workers timeout
+
     try:
         have_lock = lock.acquire(blocking=False)
         if have_lock:
@@ -51,10 +55,13 @@ async def update_trending_movies_cache():
     except redis.exceptions.ConnectionError as e:
         logging.error(f"Redis connection error: {str(e)}")
 
+
 """
 Initializes and starts the AsyncIOScheduler to periodically update the trending movies cache.
 Returns the initialized scheduler object.
 """
+
+
 def start_scheduler():
     scheduler = AsyncIOScheduler()
     scheduler.add_job(

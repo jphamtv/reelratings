@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useTheme } from '../hooks/useTheme';
-import posterEmptyLight from '../assets/img/poster_empty_light.jpg';
-import posterEmptyDark from '../assets/img/poster_empty_dark.jpg';
-import styles from './SearchResultItem.module.css';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useTheme } from "../hooks/useTheme";
+import posterEmptyLight from "../assets/img/poster_empty_light.jpg";
+import posterEmptyDark from "../assets/img/poster_empty_dark.jpg";
+import styles from "./SearchResultItem.module.css";
 
 interface SearchResultItemProps {
   tmdb_id: number;
@@ -18,12 +18,14 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   title,
   year,
   media_type,
-  poster_img
+  poster_img,
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const { theme } = useTheme();
-  const posterPlaceholder = theme === 'dark' ? posterEmptyDark : posterEmptyLight;
-  const displayMediaType = media_type === "movie" ? "Movie" : media_type?.toUpperCase() || "TV";
+  const posterPlaceholder =
+    theme === "dark" ? posterEmptyDark : posterEmptyLight;
+  const displayMediaType =
+    media_type === "movie" ? "Movie" : media_type?.toUpperCase() || "TV";
 
   return (
     <li className={styles.searchResultItem}>
@@ -34,7 +36,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
             <img
               src={poster_img || posterPlaceholder}
               alt={title}
-              className={`${styles.posterImage} ${imageLoaded ? styles.loaded : ''}`}
+              className={`${styles.posterImage} ${imageLoaded ? styles.loaded : ""}`}
               onLoad={() => setImageLoaded(true)}
               onError={(e) => {
                 (e.target as HTMLImageElement).src = posterPlaceholder;

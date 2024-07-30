@@ -37,6 +37,8 @@ Handles various exceptions and logs errors.
 :param headers: Optional HTTP headers for the request.
 :return: BeautifulSoup object of the parsed HTML content, or None if request fails.
 """
+
+
 async def make_request(url, headers=None):
     try:
         # Create an asynchronous HTTP client
@@ -44,9 +46,7 @@ async def make_request(url, headers=None):
             timeout=15, limits=httpx.Limits(max_connections=10)
         ) as client:
             # Make the HTTP GET request
-            response = await client.get(
-                url, headers=headers, follow_redirects=True
-            )
+            response = await client.get(url, headers=headers, follow_redirects=True)
 
             # Check that the request was successful (status code 2xx)
             response.raise_for_status()
@@ -59,7 +59,7 @@ async def make_request(url, headers=None):
     except Exception as generic_exc:
         # Log any other generic exceptions
         logging.error(f"Generic Exception: {generic_exc}")
-        
+
     return None
 
 
@@ -71,7 +71,7 @@ async def get_rottentomatoes_url(title, year, media_type):
         return None
 
     title = unidecode(title)
-    attribute_name = "releaseyear" if media_type == 'movie' else "startyear"
+    attribute_name = "releaseyear" if media_type == "movie" else "startyear"
     year = int(year)
 
     for result in soup.find_all("search-page-media-row"):
@@ -104,7 +104,6 @@ async def get_letterboxd_url(title, year):
     # Loop through to check exact year, then -/+ 1 year for discrepencies
     for check_year in [year, year - 1, year + 1]:
         for result in search_results:
-
             # Extract the text content
             year_element = result.find("small", class_="metadata")
 
@@ -128,7 +127,9 @@ async def get_commonsense_info(title, year, media_type):
     # Loop through to check exact year, then -/+ 1 year for discrepencies
     for check_year in [year, year - 1, year + 1]:
         for result in search_results:
-            product_type_element = result.find("div", class_="review-product-type caption")
+            product_type_element = result.find(
+                "div", class_="review-product-type caption"
+            )
             product_type = (
                 product_type_element.text.strip()
                 if product_type_element is not None
@@ -145,7 +146,9 @@ async def get_commonsense_info(title, year, media_type):
 
             rating_age_element = result.find("span", {"class": "rating__age"})
             rating_age = (
-                rating_age_element.text.strip() if rating_age_element is not None else None
+                rating_age_element.text.strip()
+                if rating_age_element is not None
+                else None
             )
             if not rating_age:
                 continue
@@ -193,7 +196,7 @@ async def get_box_office_amounts(imdb_id):
         soup = await make_request(url, HEADERS)
         if soup is None:
             return None
-        
+
         # Locate the span element that contains the Box Office amounts
         span_elements = soup.find_all("span", class_="a-size-medium a-text-bold")
         dollar_amounts = [span.get_text(strip=True) for span in span_elements]
@@ -226,7 +229,7 @@ async def get_rottentomatoes_scores(rottentomatoes_url):
     soup = await make_request(rottentomatoes_url, HEADERS)
     if soup is None:
         return None
-    
+
     script_tag = soup.find("script", {"id": "media-scorecard-json"})
     if not script_tag:
         return None

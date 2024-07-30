@@ -10,11 +10,12 @@ logger = logging.getLogger(__name__)
 env = Env()
 env.read_env()
 
-REDIS_EXPIRATION = 23 * 60 * 60 + 54 * 60 # 23 hours and 54 minutes in seconds
+REDIS_EXPIRATION = 23 * 60 * 60 + 54 * 60  # 23 hours and 54 minutes in seconds
 QUICK_RETRY_DELAY = 0.1  # 100 milliseconds
-LONG_RETRY_DELAY = 2 # 2 seconds
+LONG_RETRY_DELAY = 2  # 2 seconds
 
 redis_client = redis.from_url(env.str("REDIS_URL"), decode_responses=True)
+
 
 def ensure_connection():
     """Ping Redis to ensure there is a connection, retry if connection error"""
@@ -22,11 +23,13 @@ def ensure_connection():
     try:
         redis_client.ping()
     except redis.exceptions.ConnectionError:
-        logger.warning(f"Redis connection was lost. Attempting immediate reconnection...")
+        logger.warning(
+            f"Redis connection was lost. Attempting immediate reconnection..."
+        )
         try:
             time.sleep(QUICK_RETRY_DELAY)
             redis_client = redis.from_url(env.str("REDIS_URL"), decode_responses=True)
-            redis_client.ping()  
+            redis_client.ping()
             logger.info("Reconnected to Redis successfully.")
         except redis.exceptions.ConnectionError:
             logger.warning(

@@ -10,6 +10,7 @@ from app.redis_client import set_key, get_key
 
 # --------- HOMEPAGE - TRENDING MOVIES -------------- #
 
+
 async def fetch_trending_movies(api_key):
     """Fetch top 100 trending movies of the week using the TMDB API"""
     base_url = f"https://api.themoviedb.org/3/trending/movie/week"
@@ -45,7 +46,6 @@ async def fetch_trending_movies(api_key):
 
 
 async def cache_trending_movie_details(movies, api_key):
-
     async def fetch_and_cache(movie):
         tmdb_id = movie["tmdb_id"]
         media_type = movie["media_type"]
@@ -112,7 +112,9 @@ async def cache_trending_movie_details(movies, api_key):
 
     logging.info(f"Processed {len(movies)} movies for caching")
 
+
 # --------- SEARCH FOR MOVIE OR TV SERIES -------------- #
+
 
 async def search_title(user_input, api_key):
     """Look up movie, TV shows, and people using the TMDB API"""
@@ -127,7 +129,7 @@ async def search_title(user_input, api_key):
 async def fetch_api_data(url):
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
-        response.raise_for_status()        
+        response.raise_for_status()
         return response.json()
 
 
@@ -184,7 +186,9 @@ def get_filtered_results(result, media_type, tmdb_id, poster_img):
             "poster_img": poster_img,
         }
 
+
 # --------- SEARCH TITLE DETAILS -------------- #
+
 
 def get_common_details(media_details):
     """Extract common details for both Movie and TV series"""
@@ -303,7 +307,9 @@ async def fetch_title_details(tmdb_id, media_type, api_key):
         logging.error(f"Error in fetch_title_details for {tmdb_id}")
         raise
 
+
 # --------- FETCH DIRECTOR MOVIES -------------- #
+
 
 async def fetch_director_movies(director_id, api_key):
     url = f"https://api.themoviedb.org/3/person/{director_id}/movie_credits?api_key={api_key}&language=en-US"

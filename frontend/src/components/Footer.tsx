@@ -1,7 +1,7 @@
-import { useTheme } from '../hooks/useTheme';
-import lightModeIcon from '../assets/img/light_mode.svg';
-import darkModeIcon from '../assets/img/dark_mode.svg';
-import styles from './Footer.module.css';
+import { useTheme } from "../hooks/useTheme";
+import lightModeIcon from "../assets/img/light_mode.svg";
+import darkModeIcon from "../assets/img/dark_mode.svg";
+import styles from "./Footer.module.css";
 
 interface FooterProps {
   showToggle?: boolean;
@@ -9,7 +9,7 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ showToggle = true }) => {
   const { theme, toggleTheme } = useTheme();
-  const themeIcon = theme === 'light' ? darkModeIcon : lightModeIcon;
+  const themeIcon = theme === "light" ? darkModeIcon : lightModeIcon;
   return (
     <footer>
       <div className={styles.footerContainer}>

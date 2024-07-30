@@ -5,12 +5,12 @@
 }
 
 .titleDetailsWrapper {
-  margin-top: .25rem;
+  margin-top: 0.25rem;
 }
 
-.titleDetailsWrapper>h3,
-.titleDetailsWrapper>div,
-.titleDetailsWrapper>p {
+.titleDetailsWrapper > h3,
+.titleDetailsWrapper > div,
+.titleDetailsWrapper > p {
   padding-bottom: 5px;
 }
 

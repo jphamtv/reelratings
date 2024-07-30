@@ -12,6 +12,7 @@ from app.data_collection import (
     get_justwatch_page,
 )
 
+
 async def get_movie_data(
     imdb_id: str, title: str, year: str, media_type: str, justwatch_url: str
 ) -> dict:

@@ -3,9 +3,7 @@ import logging
 import random
 
 
-async def throttled_fetch(
-    fetch_func, items, target_duration=300, max_concurrent=3
-):
+async def throttled_fetch(fetch_func, items, target_duration=300, max_concurrent=3):
     semaphore = asyncio.Semaphore(max_concurrent)
     total_items = len(items)
     average_delay = (target_duration / total_items) * max_concurrent

@@ -80,7 +80,7 @@
 
 .label {
   font-size: 0.75rem;
-  padding-top: .25rem;
+  padding-top: 0.25rem;
   text-transform: uppercase;
   color: var(--text-muted);
 }
