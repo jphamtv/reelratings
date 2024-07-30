@@ -17,12 +17,6 @@
     transform 0.3s ease;
 }
 
-.button:hover {
-  box-shadow: var(--button-hover-shadow);
-  border: 1px solid var(--button-hover-border);
-  transform: translateY(-1px);
-}
-
 .disableButton {
   composes: button;
   color: var(--text-muted);
@@ -48,4 +42,20 @@
   margin-right: 10px;
   height: 1.5rem;
   width: auto;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    box-shadow: var(--button-hover-shadow);
+    border: 1px solid var(--button-hover-border);
+    transform: translateY(-1px);
+  }
+}
+
+@media (hover: none) {
+  .button:active {
+    box-shadow: var(--button-hover-shadow);
+    border: 1px solid var(--button-hover-border);
+    transform: translateY(-1px);
+  }
 }

@@ -153,12 +153,6 @@ main {
     transform 0.3s ease;
 }
 
-.card:hover {
-  border: 1px solid var(--card-hover-border);
-  box-shadow: var(--card-hover-shadow);
-  transform: translateY(-1px);
-}
-
 /* Includes elements wrapped in <Link> */
 a,
 a:hover,
@@ -173,4 +167,20 @@ ul {
 
 h3 {
   font-size: 1.125rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    border: 1px solid var(--card-hover-border);
+    box-shadow: var(--card-hover-shadow);
+    transform: translateY(-1px);
+  }
+}
+
+@media (hover: none) {
+  .card:active {
+    border: 1px solid var(--card-hover-border);
+    box-shadow: var(--card-hover-shadow);
+    transform: translateY(-1px);
+  }
 }

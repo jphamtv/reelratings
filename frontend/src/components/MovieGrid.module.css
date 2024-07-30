@@ -33,10 +33,6 @@
   opacity: 1;
 }
 
-.posterImage:hover {
-  border-color: var(--primary-color);
-}
-
 .posterSkeleton {
   position: absolute;
   top: 0;
@@ -66,5 +62,17 @@
 @media (max-width: 480px) {
   .movieGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .posterImage:hover {
+    border-color: var(--primary-color);
+  }
+}
+
+@media (hover: none) {
+  .posterImage:active {
+    border-color: var(--primary-color);
   }
 }

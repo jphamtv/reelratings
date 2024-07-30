@@ -15,9 +15,12 @@
 
 .toggleButton {
   padding: 0.75rem;
-  border: none;
+  border: 1px solid rgb(0,0,0,0);
   border-radius: 8px;
   background-color: #262626;
+  transition:
+      border 0.3s ease,
+      transform 0.3s ease;
 }
 
 .themeIcon {
@@ -27,5 +30,17 @@
 @media (max-width: 480px) {
   .footerContainer {
     padding: 2rem 1rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .toggleButton:hover {
+    border: 1px solid var(--primary-color);
+  }
+}
+
+@media (hover: none) {
+  .toggleButton:active {
+    border: 1px solid var(--primary-color);
   }
 }

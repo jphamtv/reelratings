@@ -11,12 +11,6 @@
     transform 0.3s ease;
 }
 
-.searchResultItem:hover {
-  border: 1px solid var(--card-hover-border);
-  box-shadow: var(--card-hover-shadow);
-  transform: translateY(-1px);
-}
-
 .searchResultWrapper {
   display: flex;
   align-items: center;
@@ -81,4 +75,20 @@
 .mediaType {
   color: var(--text-muted);
   font-size: 0.875rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .searchResultItem:hover {
+    border: 1px solid var(--card-hover-border);
+    box-shadow: var(--card-hover-shadow);
+    transform: translateY(-1px);
+  }
+}
+
+@media (hover: none) {
+  .searchResultItem:active {
+    border: 1px solid var(--card-hover-border);
+    box-shadow: var(--card-hover-shadow);
+    transform: translateY(-1px);
+  }
 }
