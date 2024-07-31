@@ -44,16 +44,18 @@ async def update_trending_movies_cache():
                 set_key("trending_movies", movies)
                 logging.info("Trending movies cache updated successfully")
             except Exception as e:
-                logging.error(f"Error updating trending movies cache: {str(e)}")
+                logging.error(
+                    f"Error updating trending movies cache: {type(e).__name__}: {str(e)}."
+                )
             finally:
                 lock.release()
                 logging.info("Released lock for trending movies update")
         else:
             logging.info("Update already in progress, skipping this run")
     except LockError as e:
-        logging.error(f"Error acquiring lock: {str(e)}")
+        logging.error(f"Error acquiring lock: {type(e).__name__}: {str(e)}.")
     except redis.exceptions.ConnectionError as e:
-        logging.error(f"Redis connection error: {str(e)}")
+        logging.error(f"Redis connection error: {type(e).__name__}: {str(e)}.")
 
 
 """

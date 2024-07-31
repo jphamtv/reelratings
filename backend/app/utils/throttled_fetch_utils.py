@@ -22,7 +22,7 @@ async def throttled_fetch(fetch_func, items, target_duration=300, max_concurrent
                 return result
             except Exception as e:
                 logging.error(
-                    f"Error processing item {item_index + 1}/{total_items} - {item}: {str(e)}"
+                    f"Error processing item {item_index + 1}/{total_items} - {item}: {type(e).__name__}: {str(e)}."
                 )
                 return None
 

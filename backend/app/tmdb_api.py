@@ -40,7 +40,7 @@ async def fetch_trending_movies(api_key):
         await cache_trending_movie_details(filtered_movies, api_key)
         logging.info("Completed caching process for trending movies")
     except Exception as e:
-        logging.error(f"Error caching movie details: {str(e)}")
+        logging.error(f"Error caching movie details: {type(e).__name__}: {str(e)}.")
 
     return filtered_movies
 
@@ -96,13 +96,14 @@ async def cache_trending_movie_details(movies, api_key):
                 )
             except Exception as e:
                 logging.error(
-                    f"Error processing external data for {tmdb_data['title']} - TMDB ID {tmdb_id}: {str(e)}",
+                    f"Error processing external data for {tmdb_data['title']} - TMDB ID {tmdb_id}: {type(e).__name__}: {str(e)}.",
                     exc_info=True,
                 )
 
         except Exception as e:
             logging.error(
-                f"Error fetching TMDB data for movie {tmdb_id}: {str(e)}", exc_info=True
+                f"Error fetching TMDB data for movie {tmdb_id}: {type(e).__name__}: {str(e)}.",
+                exc_info=True,
             )
 
     # # Process only the first 'limit' movies for testing

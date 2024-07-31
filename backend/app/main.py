@@ -82,7 +82,7 @@ async def trending_movies() -> dict:
         movies = await fetch_trending_movies(TMDB_API_KEY)
         return {"results": movies}
     except Exception as e:
-        logging.error(f"Search error: {str(e)}")
+        logging.error(f"Search error: {type(e).__name__}: {str(e)}.")
         raise HTTPException(status_code=500, detail="Error fetching movies")
 
 
@@ -96,7 +96,9 @@ async def refresh_trending_movies(api_key: str) -> dict:
         set_key("trending_movies", movies)
         return {"message": "Trending movies cache refreshed"}
     except Exception as e:
-        logging.error(f"Error refreshing trending movies cache: {str(e)}")
+        logging.error(
+            f"Error refreshing trending movies cache: {type(e).__name__}: {str(e)}."
+        )
         raise HTTPException(
             status_code=500, detail="Error refreshing trending movies cache"
         )
@@ -108,7 +110,7 @@ async def search(query: str) -> dict:
         search_results = await search_title(query, TMDB_API_KEY)
         return {"results": search_results}
     except Exception as e:
-        logging.error(f"Search error: {str(e)}")
+        logging.error(f"Search error: {type(e).__name__}: {str(e)}.")
         raise HTTPException(status_code=500, detail="Error performing search")
 
 
@@ -118,7 +120,9 @@ async def director_movies(director_id: str) -> dict:
         movies = await fetch_director_movies(director_id, TMDB_API_KEY)
         return {"results": movies}
     except Exception as e:
-        logging.error(f"Error fetching director's movies: {str(e)}")
+        logging.error(
+            f"Error fetching director's movies: {type(e).__name__}: {str(e)}."
+        )
         raise HTTPException(status_code=500, detail="Error fetching director's movies")
 
 
@@ -174,10 +178,11 @@ async def title_details(tmdb_id: str, media_type: str) -> dict:
         logging.info("Fetched from external_data.py")
         return result_data
     except Exception as e:
-        logging.error(f"Error fetching details: {str(e)}")
+        logging.error(f"Error fetching details: {type(e).__name__}: {str(e)}.")
         logging.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(
-            status_code=500, detail=f"Error fetching title details: {str(e)}"
+            status_code=500,
+            detail=f"Error fetching title details: {type(e).__name__}: {str(e)}.",
         )
 
 
