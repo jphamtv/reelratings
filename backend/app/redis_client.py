@@ -70,7 +70,7 @@ def set_key(key, value, ex=SHORT_TERM_CACHE_SECONDS):
 def determine_cache_duration(data):
     """Determine the appropriate cache duration based on the movie's age and data completeness."""
     try:
-        release_year = int(data["tmdb"]["year"])
+        release_year = int(data["tmdb_data"]["year"])
         current_year = datetime.now().year
         years_since_release = current_year - release_year
 
@@ -91,11 +91,11 @@ def is_eligible_for_extended_cache(data):
     """Check if the movie data is eligible for medium-term or long-term caching."""
     try:
         return (
-            data["tmdb"]["media_type"] == "movie" and
-            data["external_data"].get("letterboxd_url") and
-            data["external_data"].get("rottentomatoes_url") and
-            data["external_data"].get("imdb_url")
-            )
+            data["tmdb_data"]["media_type"] == "movie"
+            and data["external_data"].get("letterboxd_url")
+            and data["external_data"].get("rottentomatoes_url")
+            and data["external_data"].get("imdb_url")
+        )
     except Exception as e:
         logging.warning(
             f"Error in is_eligible_for_extended_cache: {type(e).__name__}: {str(e)}. Defaulting to not eligible."
