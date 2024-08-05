@@ -91,14 +91,14 @@ describe("App", () => {
   it("renders homepage with search bar", async () => {
     renderApp();
     const searchInput =
-      await screen.findByPlaceholderText("Search Movies & TV");
+      await screen.findByPlaceholderText("Search Movies & TV Shows");
     expect(searchInput).toBeInTheDocument();
   });
 
   it("can navigate to search page", async () => {
     renderApp();
     const searchInput =
-      await screen.findByPlaceholderText("Search Movies & TV");
+      await screen.findByPlaceholderText("Search Movies & TV Shows");
     fireEvent.change(searchInput, { target: { value: "Inception" } });
     fireEvent.submit(searchInput);
 
@@ -113,7 +113,7 @@ describe("App", () => {
 
     // First, perform a search
     const searchInput =
-      await screen.findByPlaceholderText("Search Movies & TV");
+      await screen.findByPlaceholderText("Search Movies & TV Shows");
     fireEvent.change(searchInput, { target: { value: "Inception" } });
     fireEvent.submit(searchInput);
 

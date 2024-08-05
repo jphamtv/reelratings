@@ -12,7 +12,7 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({
   className = "searchContainer",
-  placeholder = "Search Movies & TV",
+  placeholder = "Search Movies & TV Shows",
   forceDarkTheme = false,
 }) => {
   const { searchValue, setSearchValue, setSubmittedQuery } = useSearch();
