@@ -4,7 +4,7 @@ RottenTomatoes, Letterboxd, CommonSenseMedia, IMDb, and BoxOfficeMojo.
 It provides functions to fetch and parse data from these sources.
 """
 import httpx
-import json
+import json 
 import logging
 
 from bs4 import BeautifulSoup
@@ -13,7 +13,7 @@ from app.utils.similar_utils import similar
 
 BASE_URLS = {
     "rottentomatoes": "https://www.rottentomatoes.com/search?search=",
-    "letterboxd": "https://letterboxd.com/search/",
+    "letterboxd": "https://letterboxd.com/s/search/",
     "commonsensemedia": "https://www.commonsensemedia.org/search/",
     "imdb": "https://www.imdb.com/title/",
     "boxofficemojo": "https://www.boxofficemojo.com/title/",
@@ -98,6 +98,7 @@ async def get_letterboxd_url(title, year):
     soup = await make_request(search_url, HEADERS)
     if soup is None:
         return None
+    
     search_results = soup.find_all("span", {"class": "film-title-wrapper"})
     year = int(year)
 
@@ -259,9 +260,15 @@ async def get_rottentomatoes_scores(rottentomatoes_url):
             tomatometer_state = "rotten"
 
     if audience_score:
-        if audience_score["sentiment"] == "POSITIVE":
+        if audience_score["certified"] == True and audience_score["sentiment"] == "POSITIVE":
+            audience_state = "verified-hot"
+        elif (
+            audience_score["certified"] == False and audience_score["sentiment"] == "POSITIVE"
+        ):
             audience_state = "upright"
-        elif audience_score["sentiment"] == "NEGATIVE":
+        elif (
+            audience_score["certified"] == False and audience_score["sentiment"] == "NEGATIVE"
+        ):
             audience_state = "spilled"
 
     if tomatometer is None and audience_score is None:
