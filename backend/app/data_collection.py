@@ -4,7 +4,7 @@ RottenTomatoes, Letterboxd, CommonSenseMedia, IMDb, and BoxOfficeMojo.
 It provides functions to fetch and parse data from these sources.
 """
 import httpx
-import json 
+import json
 import logging
 
 from bs4 import BeautifulSoup
@@ -98,7 +98,7 @@ async def get_letterboxd_url(title, year):
     soup = await make_request(search_url, HEADERS)
     if soup is None:
         return None
-    
+
     search_results = soup.find_all("span", {"class": "film-title-wrapper"})
     year = int(year)
 
@@ -260,14 +260,21 @@ async def get_rottentomatoes_scores(rottentomatoes_url):
             tomatometer_state = "rotten"
 
     if audience_score:
-        if audience_score["certified"] == True and audience_score["sentiment"] == "POSITIVE":
+        if "sentiment" not in audience_score or "score" not in audience_score:
+            audience_state = None
+        elif (
+            audience_score["certified"] == True
+            and audience_score["sentiment"] == "POSITIVE"
+        ):
             audience_state = "verified-hot"
         elif (
-            audience_score["certified"] == False and audience_score["sentiment"] == "POSITIVE"
+            audience_score["certified"] == False
+            and audience_score["sentiment"] == "POSITIVE"
         ):
             audience_state = "upright"
         elif (
-            audience_score["certified"] == False and audience_score["sentiment"] == "NEGATIVE"
+            audience_score["certified"] == False
+            and audience_score["sentiment"] == "NEGATIVE"
         ):
             audience_state = "spilled"
 
@@ -277,7 +284,11 @@ async def get_rottentomatoes_scores(rottentomatoes_url):
     return {
         "tomatometer": tomatometer["score"] if tomatometer else None,
         "tomatometer_state": tomatometer_state,
-        "audience_score": audience_score["score"] if audience_score else None,
+        "audience_score": (
+            audience_score["score"]
+            if audience_score and "score" in audience_score
+            else None
+        ),
         "audience_state": audience_state,
     }
 

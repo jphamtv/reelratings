@@ -30,3 +30,4 @@ backend/app/debug_main.py
 backend/.pytest_cache
 nginx.conf
 deploy.sh
+deploy_server_only.sh
