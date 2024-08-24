@@ -6,6 +6,7 @@ import tomatometerCertfiedFresh from "../assets/img/rt_tomatometer_certified_fre
 import tomatometerFresh from "../assets/img/rt_tomatometer_fresh.svg";
 import tomatometerRotten from "../assets/img/rt_tomatometer_rotten.svg";
 import tomatometerEmpty from "../assets/img/rt_tomatometer_empty.svg";
+import audienceVerifiedHot from "../assets/img/rt_aud_score_verified_hot.svg"
 import audienceFresh from "../assets/img/rt_aud_score_fresh.svg";
 import audienceRotten from "../assets/img/rt_aud_score_rotten.svg";
 import audienceEmpty from "../assets/img/rt_aud_score_empty.svg";
@@ -55,7 +56,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
           <RatingScore
             score={rottenTomatoesData.scores.audience_score}
             state={rottenTomatoesData.scores.audience_state}
-            label="Audience Score"
+            label="Popcornmeter"
             getImage={getAudienceScoreImage}
           />
         </div>
@@ -182,6 +183,8 @@ function getTomatoMeterImage(state: string | null): string {
 
 function getAudienceScoreImage(state: string | null): string {
   switch (state) {
+    case "verified-hot":
+      return audienceVerifiedHot;
     case "upright":
       return audienceFresh;
     case "spilled":
