@@ -248,7 +248,12 @@ async def get_rottentomatoes_scores(rottentomatoes_url):
     audience_state = None
 
     if tomatometer:
-        if tomatometer["certified"] == True and tomatometer["sentiment"] == "POSITIVE":
+        if "sentiment" not in tomatometer or "score" not in tomatometer:
+            tomatometer_state = None
+        elif (
+            tomatometer["certified"] == True 
+            and tomatometer["sentiment"] == "POSITIVE"
+        ):
             tomatometer_state = "certified-fresh"
         elif (
             tomatometer["certified"] == False and tomatometer["sentiment"] == "POSITIVE"
@@ -282,7 +287,11 @@ async def get_rottentomatoes_scores(rottentomatoes_url):
         return None
 
     return {
-        "tomatometer": tomatometer["score"] if tomatometer else None,
+        "tomatometer": (
+            tomatometer["score"] 
+            if tomatometer and "score" in tomatometer
+            else None
+        ),
         "tomatometer_state": tomatometer_state,
         "audience_score": (
             audience_score["score"]
