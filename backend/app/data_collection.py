@@ -129,7 +129,7 @@ async def get_commonsense_info(title, year, media_type):
     for check_year in [year, year - 1, year + 1]:
         for result in search_results:
             product_type_element = result.find(
-                "div", class_="review-product-type caption"
+                "div", class_="review-teaser-type caption"
             )
             product_type = (
                 product_type_element.text.strip()
