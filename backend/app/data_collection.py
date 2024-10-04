@@ -125,44 +125,53 @@ async def get_commonsense_info(title, year, media_type):
     search_results = soup.find_all("div", {"class": "site-search-teaser"})
     year = int(year)
 
-    # Loop through to check exact year, then -/+ 1 year for discrepencies
-    for check_year in [year, year - 1, year + 1]:
-        for result in search_results:
-            product_type_element = result.find(
-                "div", class_="review-teaser-type caption"
-            )
-            product_type = (
-                product_type_element.text.strip()
-                if product_type_element is not None
-                else None
-            )
-            if product_type != media_type.upper():
-                continue
+    for result in search_results:
+        # Check media type
+        product_type_element = result.find(
+            "div", class_="review-teaser-type caption"
+        )
+        product_type = (
+            product_type_element.text.strip()
+            if product_type_element is not None
+            else None
+        )
+        if product_type != media_type.upper():
+            continue
 
-            # If year matches, get the href and age ratiing
+        # Check title similarity
+        commonsense_title_element = result.find("h3", class_="review-teaser-title")
+        commonsense_title = (
+            commonsense_title_element.text.strip()
+            if commonsense_title_element is not None
+            else None
+        )
+        if not commonsense_title or similar(title.lower(), commonsense_title.lower()) < 0.79:
+            continue
+
+        # Check years
+        for check_year in [year, year - 1, year + 1]:
             year_element = result.find("div", class_="review-product-summary")
             year_text = year_element.text.strip()[-5:-1]
-            if year_text != str(check_year):
-                continue
+            if year_text == str(check_year):
+                # If there is a match, get rating and URL
+                rating_age_element = result.find("span", {"class": "rating__age"})
+                rating_age = (
+                    rating_age_element.text.strip()
+                    if rating_age_element is not None
+                    else None
+                )
+                if not rating_age:
+                    continue
 
-            rating_age_element = result.find("span", {"class": "rating__age"})
-            rating_age = (
-                rating_age_element.text.strip()
-                if rating_age_element is not None
-                else None
-            )
-            if not rating_age:
-                continue
+                a_element = result.find("a")
+                href = a_element["href"] if a_element is not None else None
+                if not href:
+                    continue
 
-            a_element = result.find("a")
-            href = a_element["href"] if a_element is not None else None
-            if not href:
-                continue
-
-            return {
-                "url": f"https://www.commonsensemedia.org{href}",
-                "rating": rating_age,
-            }
+                return {
+                    "url": f"https://www.commonsensemedia.org{href}",
+                    "rating": rating_age,
+                }
 
     return None
 
