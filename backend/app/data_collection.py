@@ -71,14 +71,25 @@ async def get_rottentomatoes_url(title, year, media_type):
         return None
 
     title = unidecode(title)
-    attribute_name = "releaseyear" if media_type == "movie" else "startyear"
+    # Try multiple possible attribute names for year as fallback
+    # Rotten Tomatoes may have standardized or changed their HTML structure
+    possible_year_attrs = ["releaseyear", "startyear", "year"]
     year = int(year)
 
     for result in soup.find_all("search-page-media-row"):
         rt_title = result.find("a", {"data-qa": "info-name"}).text.strip()
-        try:
-            rt_year = int(result.get(attribute_name, 0))
-        except ValueError:
+
+        # Try to get year from any of the possible attributes
+        rt_year = None
+        for attr in possible_year_attrs:
+            try:
+                rt_year = int(result.get(attr, 0))
+                if rt_year > 0:  # Valid year found
+                    break
+            except ValueError:
+                continue
+
+        if rt_year is None or rt_year == 0:
             continue
 
         # Check year proximity
