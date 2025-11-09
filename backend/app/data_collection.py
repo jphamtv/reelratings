@@ -71,7 +71,7 @@ async def get_rottentomatoes_url(title, year, media_type):
         return None
 
     title = unidecode(title)
-    attribute_name = "releaseyear" if media_type == "movie" else "startyear"
+    attribute_name = "release-year" if media_type == "movie" else "startyear"
     year = int(year)
 
     for result in soup.find_all("search-page-media-row"):
