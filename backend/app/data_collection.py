@@ -177,7 +177,7 @@ async def get_commonsense_info(title, year, media_type):
 
 
 async def get_imdb_rating(imdb_id):
-    """Extract the average user rating"""
+    """Extract the average user rating and Metascore"""
     if imdb_id:
         imdb_url = f"{BASE_URLS['imdb']}{imdb_id}"
         soup = await make_request(imdb_url, HEADERS)
@@ -188,8 +188,16 @@ async def get_imdb_rating(imdb_id):
         rating = soup.find(
             "div", {"data-testid": "hero-rating-bar__aggregate-rating__score"}
         )
+        imdb_rating = rating.text[:-3] if rating else None
 
-        return rating.text[:-3] if rating else None
+        # Locate the Metascore
+        metascore_element = soup.find("span", class_="metacritic-score-box")
+        metascore = metascore_element.text.strip() if metascore_element else None
+
+        return {
+            "imdb_rating": imdb_rating,
+            "metascore": metascore
+        }
     else:
         return None
 
