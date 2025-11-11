@@ -41,7 +41,7 @@ async def get_movie_data(
     letterboxd_rating = asyncio.create_task(get_letterboxd_rating(letterboxd_url))
 
     # Await tasks
-    imdb_rating = await imdb_rating
+    imdb_data = await imdb_rating
     boxofficemojo_url = await boxofficemojo_url
     box_office_amounts = await box_office_amounts
     commonsense_info = await commonsense_info
@@ -50,7 +50,8 @@ async def get_movie_data(
     letterboxd_rating = await letterboxd_rating
 
     return {
-        "imdb_rating": imdb_rating,
+        "imdb_rating": imdb_data["imdb_rating"] if imdb_data else None,
+        "metascore": imdb_data["metascore"] if imdb_data else None,
         "rottentomatoes_url": rottentomatoes_url,
         "rottentomatoes_scores": rottentomatoes_scores,
         "letterboxd_url": letterboxd_url,
@@ -83,13 +84,14 @@ async def get_tv_show_data(
     )
 
     # Await tasks
-    imdb_rating = await imdb_rating
+    imdb_data = await imdb_rating
     commonsense_info = await commonsense_info
     justwatch_page = await justwatch_page if justwatch_url else None
     rottentomatoes_scores = await rottentomatoes_scores
 
     return {
-        "imdb_rating": imdb_rating,
+        "imdb_rating": imdb_data["imdb_rating"] if imdb_data else None,
+        "metascore": imdb_data["metascore"] if imdb_data else None,
         "rottentomatoes_url": rottentomatoes_url,
         "rottentomatoes_scores": rottentomatoes_scores,
         "commonsense_info": commonsense_info,
