@@ -85,3 +85,31 @@
   text-transform: uppercase;
   color: var(--text-muted);
 }
+
+/* Metascore Box */
+
+.metascoreBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.375rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.metascoreGreen {
+  background-color: #00CE7A;
+  color: #262626;
+}
+
+.metascoreYellow {
+  background-color: #FFBD3F;
+  color: #262626;
+}
+
+.metascoreRed {
+  background-color: #FF6874;
+  color: #FFFFFF;
+}

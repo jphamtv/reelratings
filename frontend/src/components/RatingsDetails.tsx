@@ -17,6 +17,10 @@ interface RatingsDetailsProps {
     url: string;
     rating: string | null;
   };
+  metascoreData?: {
+    url: string;
+    score: string;
+  };
   rottenTomatoesData?: {
     url: string;
     scores: {
@@ -34,6 +38,7 @@ interface RatingsDetailsProps {
 
 const RatingsDetails: React.FC<RatingsDetailsProps> = ({
   imdbData,
+  metascoreData,
   rottenTomatoesData,
   letterboxdData,
 }) => {
@@ -128,13 +133,50 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
+  const renderMetascore = () => {
+    if (!metascoreData?.url) return null;
+
+    const score = parseInt(metascoreData.score);
+    const colorClass = getMetascoreColorClass(score);
+
+    return (
+      <a
+        href={metascoreData.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.ratingLink}
+      >
+        <div className={`${styles.ratingContainer} card`}>
+          <div className={styles.ratingBoxWrapper}>
+            <div className={`${styles.metascoreBox} ${styles[colorClass]}`}>
+              {metascoreData.score}
+            </div>
+          </div>
+          <p className={styles.label}>Metascore</p>
+        </div>
+      </a>
+    );
+  };
+
   return (
     <>
       {renderRottenTomatoes()}
-      <div className={styles.ratingsContainer}>
-        {renderIMDb()}
-        {renderLetterboxd()}
-      </div>
+      {metascoreData ? (
+        <>
+          <div className={styles.ratingsContainer}>
+            {renderIMDb()}
+            {renderMetascore()}
+          </div>
+          <div className={styles.ratingsContainer}>
+            {renderLetterboxd()}
+          </div>
+        </>
+      ) : (
+        <div className={styles.ratingsContainer}>
+          {renderIMDb()}
+          {renderLetterboxd()}
+        </div>
+      )}
     </>
   );
 };
@@ -191,6 +233,16 @@ function getAudienceScoreImage(state: string | null): string {
       return audienceRotten;
     default:
       return audienceEmpty;
+  }
+}
+
+function getMetascoreColorClass(score: number): string {
+  if (score >= 61) {
+    return "metascoreGreen";
+  } else if (score >= 40) {
+    return "metascoreYellow";
+  } else {
+    return "metascoreRed";
   }
 }
 
