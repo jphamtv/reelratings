@@ -31,6 +31,7 @@ interface TitleDetails {
   external_data: {
     imdb_url: string;
     imdb_rating: string | null;
+    metascore: string | null;
     rottentomatoes_url: string;
     rottentomatoes_scores: {
       tomatometer: string | null;
@@ -152,6 +153,7 @@ const DetailsPage: React.FC = () => {
   const defaultExternalData: TitleDetails["external_data"] = {
     imdb_url: "",
     imdb_rating: null,
+    metascore: null,
     rottentomatoes_url: "",
     rottentomatoes_scores: {
       tomatometer: null,
@@ -185,6 +187,14 @@ const DetailsPage: React.FC = () => {
             ? {
                 url: external_data.imdb_url,
                 rating: external_data.imdb_rating ?? null,
+              }
+            : undefined
+        }
+        metascoreData={
+          external_data.imdb_url && external_data.metascore
+            ? {
+                url: external_data.imdb_url,
+                score: external_data.metascore,
               }
             : undefined
         }

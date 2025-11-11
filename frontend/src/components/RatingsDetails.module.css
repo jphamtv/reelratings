@@ -65,6 +65,19 @@
   margin-right: 3px;
 }
 
+/* Metascore */
+
+.metascoreBox {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
 /* All */
 
 .rating {
