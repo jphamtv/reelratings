@@ -17,6 +17,10 @@ interface RatingsDetailsProps {
     url: string;
     rating: string | null;
   };
+  metascoreData?: {
+    url: string;
+    score: string;
+  };
   rottenTomatoesData?: {
     url: string;
     scores: {
@@ -34,6 +38,7 @@ interface RatingsDetailsProps {
 
 const RatingsDetails: React.FC<RatingsDetailsProps> = ({
   imdbData,
+  metascoreData,
   rottenTomatoesData,
   letterboxdData,
 }) => {
@@ -128,13 +133,64 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
+  const getMetascoreColor = (score: number) => {
+    if (score >= 61) {
+      return { backgroundColor: "#00CE7A", color: "#262626" };
+    } else if (score >= 40) {
+      return { backgroundColor: "#FFBD3F", color: "#262626" };
+    } else {
+      return { backgroundColor: "#FF6874", color: "#FFFFFF" };
+    }
+  };
+
+  const renderMetascore = () => {
+    if (!metascoreData?.url || !metascoreData?.score) return null;
+
+    const scoreValue = parseInt(metascoreData.score, 10);
+    const colors = getMetascoreColor(scoreValue);
+
+    return (
+      <a
+        href={metascoreData.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.ratingLink}
+      >
+        <div className={`${styles.ratingContainer} card`}>
+          <div
+            className={styles.metascoreBox}
+            style={{
+              backgroundColor: colors.backgroundColor,
+              color: colors.color,
+            }}
+          >
+            {metascoreData.score}
+          </div>
+          <p className={styles.label}>Metascore</p>
+        </div>
+      </a>
+    );
+  };
+
   return (
     <>
       {renderRottenTomatoes()}
-      <div className={styles.ratingsContainer}>
-        {renderIMDb()}
-        {renderLetterboxd()}
-      </div>
+      {metascoreData ? (
+        <>
+          <div className={styles.ratingsContainer}>
+            {renderIMDb()}
+            {renderMetascore()}
+          </div>
+          <div className={styles.ratingsContainer}>
+            {renderLetterboxd()}
+          </div>
+        </>
+      ) : (
+        <div className={styles.ratingsContainer}>
+          {renderIMDb()}
+          {renderLetterboxd()}
+        </div>
+      )}
     </>
   );
 };
