@@ -6,7 +6,6 @@ from environs import Env
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from app.cache_manager import start_scheduler, update_trending_movies_cache
 from app.external_data import get_movie_data, get_tv_show_data
 from app.redis_client import set_key, get_key
 from app.tmdb_api import (
@@ -34,17 +33,29 @@ env.read_env()
 
 TMDB_API_KEY = env.str("TMDB_API_KEY")
 REFRESH_API_KEY = env.str("REFRESH_API_KEY")
+ENVIRONMENT = env.str("ENVIRONMENT", "production")  # Default to production
 
 # Initialize FastAPI app
 app = FastAPI()
 
+# Configure CORS origins based on environment
+allowed_origins = [
+    "https://getreelratings.com",
+    "https://www.getreelratings.com",
+]
+
+# Add localhost for development
+if ENVIRONMENT == "development":
+    allowed_origins.extend([
+        "http://localhost:5173",  # Vite dev server
+        "http://localhost:3000",  # Alternative port
+    ])
+    logger.info("Development mode: CORS enabled for localhost")
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://getreelratings.com",
-        "https://www.getreelratings.com",
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,15 +64,21 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    scheduler = start_scheduler()
-    app.state.scheduler = scheduler
-    # Uncomment below to run the cache update immediately on startup
-    # await update_trending_movies_cache()
+    if ENVIRONMENT == "production":
+        # Only import scheduler in production to avoid dependency issues in development
+        from app.cache_manager import start_scheduler
+        scheduler = start_scheduler()
+        app.state.scheduler = scheduler
+        logger.info("Scheduler started for production environment")
+    else:
+        app.state.scheduler = None
+        logger.info("Scheduler disabled in development mode - use /api/refresh-trending endpoint to manually update cache")
 
 
 @app.on_event("shutdown")
 def shutdown_event():
-    app.state.scheduler.shutdown()
+    if app.state.scheduler:
+        app.state.scheduler.shutdown()
 
 
 @app.get("/api/trending")
