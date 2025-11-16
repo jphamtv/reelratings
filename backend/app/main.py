@@ -16,6 +16,9 @@ from app.tmdb_api import (
     fetch_director_movies,
 )
 
+# Version declaration
+__version__ = "2.0.3"
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
@@ -40,7 +43,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://getreelratings.com",
-        "https://www.getreelratings.com"
+        "https://www.getreelratings.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],

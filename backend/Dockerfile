@@ -1,5 +1,12 @@
 # Use an official Python runtime as a parent image
-FROM python:3.11
+FROM python:3.11-slim
+
+# Set environment variables for better Python behavior in containers
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Create a non-root user to run the application
+RUN adduser --disabled-password --gecos "" appuser
 
 # Set the working directory in the container
 WORKDIR /code
@@ -12,6 +19,12 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # Copy the current directory contents into the container at /code/app
 COPY ./app /code/app
+
+# Change ownership of the application files to appuser
+RUN chown -R appuser:appuser /code
+
+# Switch to the non-root user
+USER appuser
 
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
