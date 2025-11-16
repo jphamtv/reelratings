@@ -13,7 +13,7 @@ const Footer: React.FC<FooterProps> = ({ showToggle = true }) => {
   return (
     <footer>
       <div className={styles.footerContainer}>
-        <p className={styles.copyright}>© 2024 ReelRatings</p>
+        <p className={styles.copyright}>© 2025 ReelRatings</p>
         {showToggle && (
           <button onClick={toggleTheme} className={styles.toggleButton}>
             <img src={themeIcon} className={styles.themeIcon} />

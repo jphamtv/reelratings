@@ -144,7 +144,7 @@ main {
 
 .card {
   padding: 1.5rem 1rem;
-  border-radius: 8px;
+  border-radius: 16px;
   background-color: var(--card-background);
   border: 1px solid var(--card-border);
   transition:

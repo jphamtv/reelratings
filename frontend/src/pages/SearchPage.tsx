@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { useClientCache } from "../hooks/useClientCache";
 import { useSearch } from "../hooks/useSearch";
-import { searchTitle, fetchDirectorMovies } from "../services/api";
+import { searchTitle, fetchDirectorMovies, fetchActorMovies } from "../services/api";
 import SearchResultItem from "../components/SearchResultItem";
 import styles from "./SearchPage.module.css";
 
@@ -28,8 +28,9 @@ const SearchPage: React.FC = () => {
   const location = useLocation();
   const { getItem, setItem } = useClientCache();
 
-  // Get directorName from location state
+  // Get directorName and actorName from location state
   const directorName = location.state?.directorName || null;
+  const actorName = location.state?.actorName || null;
 
   useEffect(() => {
     // Search for title
@@ -90,14 +91,46 @@ const SearchPage: React.FC = () => {
       }
     };
 
+    // Search for actor movies
+    const fetchActorMoviesData = async (actorId: string) => {
+      const cacheKey = `actor_${actorId}`;
+      const cachedResults = getItem<SearchResponse>(cacheKey);
+
+      if (cachedResults && Array.isArray(cachedResults.results)) {
+        setSearchResults(cachedResults.results);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(false);
+        const response = await fetchActorMovies(actorId);
+        if (response && Array.isArray(response.results)) {
+          setSearchResults(response.results);
+          setItem(cacheKey, response);
+        } else {
+          throw new Error("Invalid actor movies format");
+        }
+      } catch (err) {
+        console.error("Error fetching actor's movies:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     const searchParams = new URLSearchParams(location.search);
     const query = searchParams.get("query");
     const directorId = searchParams.get("director");
+    const actorId = searchParams.get("actor");
 
     if (query) {
       fetchSearchResults(query);
     } else if (directorId) {
       fetchDirectorMoviesData(directorId);
+    } else if (actorId) {
+      fetchActorMoviesData(actorId);
     } else {
       setSearchResults([]);
       setLoading(false);
@@ -129,15 +162,21 @@ const SearchPage: React.FC = () => {
     <>
       <Helmet>
         <title>
-          {directorName ? `Movies by ${directorName}` : "Search Results"} |
-          ReelRatings
+          {directorName
+            ? `Movies by ${directorName}`
+            : actorName
+              ? `Movies featuring ${actorName}`
+              : "Search Results"}{" "}
+          | ReelRatings
         </title>
       </Helmet>
       <div className={styles.searchResultsContainer}>
         <h3 className={styles.searchResultsTitle}>
           {directorName
             ? `Movies directed by ${directorName}`
-            : `Search results for "${submittedQuery}"`}
+            : actorName
+              ? `Movies featuring ${actorName}`
+              : `Search results for "${submittedQuery}"`}
         </h3>
         <ul>
           {searchResults.map((result) => (

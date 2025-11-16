@@ -361,3 +361,45 @@ async def fetch_director_movies(director_id, api_key):
     ]
 
     return formatted_movies
+
+
+# --------- FETCH ACTOR MOVIES -------------- #
+
+
+async def fetch_actor_movies(actor_id, api_key):
+    """Fetch movies featuring a specific actor"""
+    url = f"https://api.themoviedb.org/3/person/{actor_id}/movie_credits?api_key={api_key}&language=en-US"
+    data = await fetch_api_data(url)
+
+    # Get movies where the person was in the cast (not crew)
+    actor_movies = data.get("cast", [])
+
+    # Sort movies by release date (newest first)
+    sorted_movies = sorted(
+        actor_movies,
+        key=lambda x: (
+            datetime.strptime(x["release_date"], "%Y-%m-%d")
+            if x["release_date"]
+            else datetime.min
+        ),
+        reverse=True,
+    )
+
+    # Format the results
+    formatted_movies = [
+        {
+            "tmdb_id": movie["id"],
+            "title": movie["title"],
+            "year": movie["release_date"][:4] if movie["release_date"] else None,
+            "media_type": "movie",
+            "poster_img": (
+                f"https://image.tmdb.org/t/p/w185{movie['poster_path']}"
+                if movie["poster_path"]
+                else None
+            ),
+        }
+        for movie in sorted_movies
+        if movie.get("release_date") and movie["release_date"][:4]
+    ]
+
+    return formatted_movies

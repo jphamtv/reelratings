@@ -9,6 +9,11 @@ interface Director {
   name: string;
 }
 
+interface Actor {
+  id: number;
+  name: string;
+}
+
 interface TitleDetailsCardProps {
   tmdbData: {
     imdb_id: string;
@@ -18,7 +23,7 @@ interface TitleDetailsCardProps {
     poster_img: string;
     justwatch_url: string;
     director?: Director[] | string[];
-    cast?: string[];
+    cast?: Actor[];
     runtime?: string;
     certification?: string;
     creator?: string[];
@@ -58,7 +63,7 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({
             to={`/search?director=${person.id}`}
             key={person.id}
             state={{ directorName: person.name }}
-            className={styles.directorLink}
+            className={styles.castCrewLink}
           >
             {person.name}
           </Link>
@@ -78,11 +83,24 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({
     // Only show actors for movies
     if (media_type !== "movie" || !cast || cast.length === 0) return null;
 
+    const renderActor = (actor: Actor) => {
+      return (
+        <Link
+          to={`/search?actor=${actor.id}`}
+          key={actor.id}
+          state={{ actorName: actor.name }}
+          className={styles.castCrewLink}
+        >
+          {actor.name}
+        </Link>
+      );
+    };
+
     return (
       <div>
-        Actors: {cast[0]}
-        {cast[1] && <span>, {cast[1]}</span>}
-        {cast[2] && <span>, {cast[2]}</span>}
+        Actors: {renderActor(cast[0])}
+        {cast[1] && <span key={`comma-${cast[1].id}`}>, {renderActor(cast[1])}</span>}
+        {cast[2] && <span key={`comma-${cast[2].id}`}>, {renderActor(cast[2])}</span>}
       </div>
     );
   };

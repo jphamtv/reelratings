@@ -30,6 +30,15 @@ export const fetchDirectorMovies = async (directorId: string) => {
   return await response.json();
 };
 
+export const fetchActorMovies = async (actorId: string) => {
+  const response = await fetch(`${API_BASE_URL}/actor/${actorId}`);
+  if (!response.ok)
+    throw new Error(
+      `Failed to fetch actor movies. Status: ${response.status}`,
+    );
+  return await response.json();
+};
+
 export const fetchTitleDetails = async (tmdbId: string, mediaType: string) => {
   try {
     const response = await fetch(

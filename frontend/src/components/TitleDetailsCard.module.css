@@ -21,10 +21,11 @@
   border-radius: 4px;
 }
 
-.directorLink {
+.castCrewLink {
   text-decoration: underline;
-  text-underline-offset: 5px;
-  font-weight: 700;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  font-weight: 600;
   padding: 16px 2px;
   border-radius: 4px;
 }
@@ -49,14 +50,14 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .directorLink:hover {
+  .castCrewLink:hover {
     color: var(--primary-color);
     text-decoration: underline;
   }
 }
 
 @media (hover: none) {
-  .directorLink:active {
+  .castCrewLink:active {
     color: var(--primary-color);
     text-decoration: underline;
   }

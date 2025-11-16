@@ -15,6 +15,11 @@ interface Director {
   name: string;
 }
 
+interface Actor {
+  id: number;
+  name: string;
+}
+
 interface TitleDetails {
   tmdb_data: {
     imdb_id: string;
@@ -24,7 +29,7 @@ interface TitleDetails {
     poster_img: string;
     justwatch_url: string;
     director?: Director[] | string[];
-    cast?: string[];
+    cast?: Actor[];
     runtime?: string;
     certification?: string;
     creator?: string[];

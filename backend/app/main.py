@@ -13,6 +13,7 @@ from app.tmdb_api import (
     search_title,
     fetch_trending_movies,
     fetch_director_movies,
+    fetch_actor_movies,
 )
 
 # Version declaration
@@ -143,6 +144,18 @@ async def director_movies(director_id: str) -> dict:
             f"Error fetching director's movies: {type(e).__name__}: {str(e)}."
         )
         raise HTTPException(status_code=500, detail="Error fetching director's movies")
+
+
+@app.get("/api/actor/{actor_id}")
+async def actor_movies(actor_id: str) -> dict:
+    try:
+        movies = await fetch_actor_movies(actor_id, TMDB_API_KEY)
+        return {"results": movies}
+    except Exception as e:
+        logging.error(
+            f"Error fetching actor's movies: {type(e).__name__}: {str(e)}."
+        )
+        raise HTTPException(status_code=500, detail="Error fetching actor's movies")
 
 
 @app.get("/api/details/{tmdb_id}/{media_type}")
