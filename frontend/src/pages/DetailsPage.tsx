@@ -24,6 +24,7 @@ interface TitleDetails {
     poster_img: string;
     justwatch_url: string;
     director?: Director[] | string[];
+    cast?: string[];
     runtime?: string;
     certification?: string;
     creator?: string[];

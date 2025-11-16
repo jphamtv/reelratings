@@ -18,6 +18,7 @@ interface TitleDetailsCardProps {
     poster_img: string;
     justwatch_url: string;
     director?: Director[] | string[];
+    cast?: string[];
     runtime?: string;
     certification?: string;
     creator?: string[];
@@ -35,6 +36,7 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({
     year,
     runtime,
     director,
+    cast,
     creator,
   } = tmdbData;
   const { theme } = useTheme();
@@ -72,12 +74,41 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({
     );
   };
 
+  const renderActors = () => {
+    // Only show actors for movies
+    if (media_type !== "movie" || !cast || cast.length === 0) return null;
+
+    return (
+      <div>
+        Actors: {cast[0]}
+        {cast[1] && <span>, {cast[1]}</span>}
+        {cast[2] && <span>, {cast[2]}</span>}
+      </div>
+    );
+  };
+
+  const getFullResPosterUrl = (posterUrl: string) => {
+    // Replace size parameter with 'original' for full resolution
+    // URL format: https://image.tmdb.org/t/p/w500/poster.jpg
+    // Target: https://image.tmdb.org/t/p/original/poster.jpg
+    return posterUrl.replace(/\/w\d+\//, "/original/");
+  };
+
+  const handlePosterClick = () => {
+    if (poster_img) {
+      const fullResUrl = getFullResPosterUrl(poster_img);
+      window.open(fullResUrl, "_blank");
+    }
+  };
+
   return (
     <div className={styles.titleDetailsContainer}>
       <img
         src={poster_img || posterPlaceholder}
         alt={title}
         className={styles.posterImage}
+        onClick={poster_img ? handlePosterClick : undefined}
+        style={{ cursor: poster_img ? "pointer" : "default" }}
       />
       <div className={styles.titleDetailsWrapper}>
         <h3>{title}</h3>
@@ -89,6 +120,7 @@ const TitleDetailsCard: React.FC<TitleDetailsCardProps> = ({
           {runtime && ` • ${runtime}`}
         </div>
         {renderDirectorsOrCreators()}
+        {renderActors()}
       </div>
     </div>
   );

@@ -212,8 +212,9 @@ def get_movie_details(media_details):
     year = media_details.get("release_date")[0:4]
     runtime = get_runtime(media_details) or None
     director = get_director(media_details) or None
+    cast = get_cast(media_details) or None
     certification = get_certification(media_details) or None
-    return imdb_id, title, year, runtime, director, certification
+    return imdb_id, title, year, runtime, director, cast, certification
 
 
 def get_tv_details(media_details):
@@ -232,6 +233,17 @@ def get_director(media_details):
         {"id": item.get("id"), "name": item.get("name")}
         for item in movie_crew
         if item["job"] == "Director"
+    ]
+
+
+def get_cast(media_details):
+    """Get top 3 cast members for movies"""
+    movie_cast = media_details.get("credits", {}).get("cast", [])
+    # Return top 3 actors with IDs (TMDB orders by billing/popularity)
+    return [
+        {"id": item.get("id"), "name": item.get("name")}
+        for item in movie_cast[:3]
+        if item.get("name") and item.get("id")
     ]
 
 
@@ -274,11 +286,12 @@ async def fetch_title_details(tmdb_id, media_type, api_key):
         poster_img, justwatch_url = get_common_details(media_details)
 
         if media_type == "movie":
-            imdb_id, title, year, runtime, director, certification = get_movie_details(
+            imdb_id, title, year, runtime, director, cast, certification = get_movie_details(
                 media_details
             )
             filtered_details = {
                 "director": director,
+                "cast": cast,
                 "imdb_id": imdb_id,
                 "media_type": media_type,
                 "title": title,
