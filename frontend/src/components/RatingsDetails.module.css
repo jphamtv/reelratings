@@ -68,14 +68,15 @@
 /* Metascore */
 
 .metascoreBox {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.25rem;
-  font-weight: 700;
-  font-size: 1.25rem;
+  border-radius: 2px;
+  font-weight: 1000;
+  font-size: 1.375rem;
+  letter-spacing: -0.05rem;
 }
 
 /* All */
@@ -93,7 +94,7 @@
 
 .label {
   font-size: 0.75rem;
-  letter-spacing: 0.05rem;
+  letter-spacing: 0.075rem;
   padding-top: 0.25rem;
   text-transform: uppercase;
   color: var(--text-muted);
