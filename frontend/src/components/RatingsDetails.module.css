@@ -65,6 +65,12 @@
   margin-right: 3px;
 }
 
+.commonSenseIcon {
+  height: 2rem;
+  width: auto;
+  margin-right: 3px;
+}
+
 /* Metascore */
 
 .metascoreBox {

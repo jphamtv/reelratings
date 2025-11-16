@@ -10,6 +10,9 @@ import audienceVerifiedHot from "../assets/img/rt_aud_score_verified_hot.svg"
 import audienceFresh from "../assets/img/rt_aud_score_fresh.svg";
 import audienceRotten from "../assets/img/rt_aud_score_rotten.svg";
 import audienceEmpty from "../assets/img/rt_aud_score_empty.svg";
+import commonSenseIconLight from "../assets/img/commonsense_checkmark_light.svg";
+import commonSenseIconDark from "../assets/img/commonsense_checkmark_dark.svg";
+import { useTheme } from "../hooks/useTheme";
 import styles from "./RatingsDetails.module.css";
 
 interface RatingsDetailsProps {
@@ -34,6 +37,10 @@ interface RatingsDetailsProps {
     url: string;
     rating: string | null;
   };
+  commonSenseData?: {
+    url: string;
+    rating: string | null;
+  };
 }
 
 const RatingsDetails: React.FC<RatingsDetailsProps> = ({
@@ -41,7 +48,10 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
   metascoreData,
   rottenTomatoesData,
   letterboxdData,
+  commonSenseData,
 }) => {
+  const { theme } = useTheme();
+
   const renderRottenTomatoes = () => {
     if (!rottenTomatoesData?.url) return null;
 
@@ -172,6 +182,40 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
+  const renderCommonSense = () => {
+    if (!commonSenseData?.url) return null;
+
+    const commonSenseIcon =
+      theme === "dark" ? commonSenseIconDark : commonSenseIconLight;
+
+    return (
+      <a
+        href={commonSenseData.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.ratingLink}
+      >
+        <div className={`${styles.ratingContainer} card`}>
+          <div className={styles.ratingBoxWrapper}>
+            <img
+              src={commonSenseIcon}
+              className={styles.commonSenseIcon}
+              alt="Common Sense Media"
+            />
+            <p
+              className={
+                commonSenseData.rating ? styles.rating : styles.noRating
+              }
+            >
+              {commonSenseData.rating || "--"}
+            </p>
+          </div>
+          <p className={styles.label}>CSM</p>
+        </div>
+      </a>
+    );
+  };
+
   return (
     <>
       {renderRottenTomatoes()}
@@ -183,12 +227,14 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
           </div>
           <div className={styles.ratingsContainer}>
             {renderLetterboxd()}
+            {renderCommonSense()}
           </div>
         </>
       ) : (
         <div className={styles.ratingsContainer}>
           {renderIMDb()}
           {renderLetterboxd()}
+          {renderCommonSense()}
         </div>
       )}
     </>

@@ -179,7 +179,6 @@ const DetailsPage: React.FC = () => {
       </Helmet>
       <TitleDetailsCard
         tmdbData={tmdb_data}
-        commonsenseData={external_data.commonsense_info ?? undefined}
       />
       <RatingsDetails
         imdbData={
@@ -216,6 +215,14 @@ const DetailsPage: React.FC = () => {
             ? {
                 url: external_data.letterboxd_url,
                 rating: external_data.letterboxd_rating ?? null,
+              }
+            : undefined
+        }
+        commonSenseData={
+          external_data.commonsense_info
+            ? {
+                url: external_data.commonsense_info.url,
+                rating: external_data.commonsense_info.rating ?? null,
               }
             : undefined
         }
