@@ -96,6 +96,7 @@ def is_eligible_for_extended_cache(data):
             and data["external_data"].get("rottentomatoes_url")
             and data["external_data"].get("imdb_url")
             and data["external_data"].get("commonsense_info")
+            and data["external_data"].get("metascore")
         )
     except Exception as e:
         logging.warning(
