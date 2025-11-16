@@ -32,3 +32,4 @@ nginx.conf
 deploy.sh
 deploy_server_only.sh
 CLAUDE.md
+.claude/*

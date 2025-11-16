@@ -6,6 +6,7 @@ It provides functions to fetch and parse data from these sources.
 import httpx
 import json
 import logging
+import re
 
 from bs4 import BeautifulSoup
 from unidecode import unidecode
@@ -117,61 +118,57 @@ async def get_letterboxd_url(title, year):
 
 
 async def get_commonsense_info(title, year, media_type):
-    """Extract the title's specific URL page and age rating"""
-    search_url = f"{BASE_URLS['commonsensemedia']}{title.replace(' ', '%20')}"
-    soup = await make_request(search_url, HEADERS)
+    """Extract the title's specific URL page and age rating using direct URL approach"""
+
+    # Create URL slug from title
+    slug = title.lower()
+    # Remove apostrophes (don't replace with hyphens)
+    slug = slug.replace("'", "")
+    # Replace spaces and other special characters with hyphens
+    slug = re.sub(r'[^a-z0-9]+', '-', slug)
+    # Remove leading/trailing hyphens
+    slug = slug.strip('-')
+
+    # Construct direct URL based on media type
+    if media_type.lower() == "movie":
+        url = f"https://www.commonsensemedia.org/movie-reviews/{slug}"
+    elif media_type.lower() == "tv":
+        url = f"https://www.commonsensemedia.org/tv-reviews/{slug}"
+    else:
+        return None
+
+    # Fetch the page
+    soup = await make_request(url, HEADERS)
     if soup is None:
         return None
-    search_results = soup.find_all("div", {"class": "site-search-teaser"})
-    year = int(year)
 
-    for result in search_results:
-        # Check media type
-        product_type_element = result.find(
-            "div", class_="review-teaser-type caption"
-        )
-        product_type = (
-            product_type_element.text.strip()
-            if product_type_element is not None
-            else None
-        )
-        if product_type != media_type.upper():
+    # Extract rating from JSON-LD structured data
+    rating = None
+    script_tags = soup.find_all("script", {"type": "application/ld+json"})
+    for script_tag in script_tags:
+        try:
+            data = json.loads(script_tag.string)
+            if isinstance(data, dict) and 'typicalAgeRange' in data:
+                rating = data['typicalAgeRange']
+                break
+        except (json.JSONDecodeError, TypeError):
             continue
 
-        # Check title similarity
-        commonsense_title_element = result.find("h3", class_="review-teaser-title")
-        commonsense_title = (
-            commonsense_title_element.text.strip()
-            if commonsense_title_element is not None
-            else None
-        )
-        if not commonsense_title or similar(title.lower(), commonsense_title.lower()) < 0.79:
-            continue
+    # Fallback: Extract rating from HTML span element
+    if not rating:
+        rating_element = soup.find("span", {"class": "rating__age"})
+        if rating_element:
+            rating_text = rating_element.text.strip()
+            # Extract just the age number (e.g., "age 14+" -> "14+")
+            age_match = re.search(r'(\d+\+?)', rating_text)
+            if age_match:
+                rating = age_match.group(1)
 
-        # Check years
-        for check_year in [year, year - 1, year + 1]:
-            year_element = result.find("div", class_="review-product-summary")
-            year_text = year_element.text.strip()[-5:-1]
-            if year_text == str(check_year):
-                # If there is a match, get rating and URL
-                rating_age_element = result.find("span", {"class": "rating__age"})
-                rating_age = (
-                    rating_age_element.text.strip()
-                    if rating_age_element is not None
-                    else None
-                )
-                if not rating_age:
-                    continue
-
-                a_element = result.find("a")
-                href = a_element["href"] if a_element is not None else None
-                if not href:
-                    continue
-
-                return {
-                    "url": f"https://www.commonsensemedia.org{href}",
-                    "rating": rating_age,
-                }
+    if rating:
+        return {
+            "url": url,
+            "rating": rating,
+        }
 
     return None
 
