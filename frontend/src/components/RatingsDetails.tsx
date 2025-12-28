@@ -1,3 +1,4 @@
+import React from "react";
 import imdbStar from "../assets/img/imdb_star.svg";
 import imdbStarEmpty from "../assets/img/imdb_star_empty.svg";
 import letterboxdStar from "../assets/img/letterboxd_star.svg";
@@ -79,7 +80,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
-  const renderIMDb = () => {
+  const renderIMDb = (isFullWidth: boolean = false) => {
     if (!imdbData?.url) return null;
 
     return (
@@ -109,7 +110,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
-  const renderLetterboxd = () => {
+  const renderLetterboxd = (isFullWidth: boolean = false) => {
     if (!letterboxdData?.url) return null;
 
     return (
@@ -153,7 +154,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     }
   };
 
-  const renderMetascore = () => {
+  const renderMetascore = (isFullWidth: boolean = false) => {
     if (!metascoreData?.url || !metascoreData?.score) return null;
 
     const scoreValue = parseInt(metascoreData.score, 10);
@@ -182,11 +183,13 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
-  const renderCommonSense = () => {
+  const renderCommonSense = (isFullWidth: boolean = false) => {
     if (!commonSenseData?.url) return null;
 
     const commonSenseIcon =
       theme === "dark" ? commonSenseIconDark : commonSenseIconLight;
+
+    const label = isFullWidth ? "Common Sense Media" : "Common Sense";
 
     return (
       <a
@@ -210,33 +213,52 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
               {commonSenseData.rating || "--"}
             </p>
           </div>
-          <p className={styles.label}>CSM</p>
+          <p className={styles.label}>{label}</p>
         </div>
       </a>
     );
   };
 
+  // Build ordered array of available score cards
+  const scoreCards: Array<{ key: string; renderer: (isFullWidth?: boolean) => JSX.Element | null }> = [];
+
+  if (imdbData?.url) {
+    scoreCards.push({ key: 'imdb', renderer: renderIMDb });
+  }
+  if (letterboxdData?.url) {
+    scoreCards.push({ key: 'letterboxd', renderer: renderLetterboxd });
+  }
+  if (metascoreData?.url) {
+    scoreCards.push({ key: 'metascore', renderer: renderMetascore });
+  }
+  if (commonSenseData?.url) {
+    scoreCards.push({ key: 'commonsense', renderer: renderCommonSense });
+  }
+
+  // Group cards into rows (max 2 per row)
+  const rows: Array<Array<{ key: string; renderer: (isFullWidth?: boolean) => JSX.Element | null }>> = [];
+  for (let i = 0; i < scoreCards.length; i += 2) {
+    rows.push(scoreCards.slice(i, i + 2));
+  }
+
   return (
     <>
       {renderRottenTomatoes()}
-      {metascoreData ? (
-        <>
-          <div className={styles.ratingsContainer}>
-            {renderIMDb()}
-            {renderMetascore()}
+      {rows.map((row, rowIndex) => {
+        const isFullWidth = row.length === 1;
+        return (
+          <div
+            key={rowIndex}
+            className={isFullWidth ? styles.ratingsContainerFullWidth : styles.ratingsContainer}
+          >
+            {row.map(card => (
+              <React.Fragment key={card.key}>
+                {card.renderer(isFullWidth)}
+              </React.Fragment>
+            ))}
           </div>
-          <div className={styles.ratingsContainer}>
-            {renderLetterboxd()}
-            {renderCommonSense()}
-          </div>
-        </>
-      ) : (
-        <div className={styles.ratingsContainer}>
-          {renderIMDb()}
-          {renderLetterboxd()}
-          {renderCommonSense()}
-        </div>
-      )}
+        );
+      })}
     </>
   );
 };
