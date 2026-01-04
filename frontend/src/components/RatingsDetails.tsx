@@ -80,7 +80,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
-  const renderIMDb = (isFullWidth: boolean = false) => {
+  const renderIMDb = (_isFullWidth: boolean = false) => {
     if (!imdbData?.url) return null;
 
     return (
@@ -110,7 +110,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
-  const renderLetterboxd = (isFullWidth: boolean = false) => {
+  const renderLetterboxd = (_isFullWidth: boolean = false) => {
     if (!letterboxdData?.url) return null;
 
     return (
@@ -154,7 +154,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     }
   };
 
-  const renderMetascore = (isFullWidth: boolean = false) => {
+  const renderMetascore = (_isFullWidth: boolean = false) => {
     if (!metascoreData?.url || !metascoreData?.score) return null;
 
     const scoreValue = parseInt(metascoreData.score, 10);
