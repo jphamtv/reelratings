@@ -3,7 +3,7 @@ import imdbStar from "../assets/img/imdb_star.svg";
 import imdbStarEmpty from "../assets/img/imdb_star_empty.svg";
 import letterboxdStar from "../assets/img/letterboxd_star.svg";
 import letterboxdStarEmpty from "../assets/img/letterboxd_star_empty.svg";
-import tomatometerCertfiedFresh from "../assets/img/rt_tomatometer_certified_fresh.svg";
+import tomatometerCertifiedFresh from "../assets/img/rt_tomatometer_certified_fresh.svg";
 import tomatometerFresh from "../assets/img/rt_tomatometer_fresh.svg";
 import tomatometerRotten from "../assets/img/rt_tomatometer_rotten.svg";
 import tomatometerEmpty from "../assets/img/rt_tomatometer_empty.svg";
@@ -289,7 +289,7 @@ const RatingScore: React.FC<RatingScoreProps> = ({
 function getTomatoMeterImage(state: string | null): string {
   switch (state) {
     case "certified-fresh":
-      return tomatometerCertfiedFresh;
+      return tomatometerCertifiedFresh;
     case "fresh":
       return tomatometerFresh;
     case "rotten":
