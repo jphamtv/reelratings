@@ -154,6 +154,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderMetascore = (_isFullWidth: boolean = false) => {
     if (!metascoreData?.url || !metascoreData?.score) return null;
 
