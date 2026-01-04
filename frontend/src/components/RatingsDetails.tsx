@@ -1,8 +1,9 @@
+import React from "react";
 import imdbStar from "../assets/img/imdb_star.svg";
 import imdbStarEmpty from "../assets/img/imdb_star_empty.svg";
 import letterboxdStar from "../assets/img/letterboxd_star.svg";
 import letterboxdStarEmpty from "../assets/img/letterboxd_star_empty.svg";
-import tomatometerCertfiedFresh from "../assets/img/rt_tomatometer_certified_fresh.svg";
+import tomatometerCertifiedFresh from "../assets/img/rt_tomatometer_certified_fresh.svg";
 import tomatometerFresh from "../assets/img/rt_tomatometer_fresh.svg";
 import tomatometerRotten from "../assets/img/rt_tomatometer_rotten.svg";
 import tomatometerEmpty from "../assets/img/rt_tomatometer_empty.svg";
@@ -182,11 +183,13 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
-  const renderCommonSense = () => {
+  const renderCommonSense = (isFullWidth: boolean = false) => {
     if (!commonSenseData?.url) return null;
 
     const commonSenseIcon =
       theme === "dark" ? commonSenseIconDark : commonSenseIconLight;
+
+    const label = isFullWidth ? "Common Sense Media" : "Common Sense";
 
     return (
       <a
@@ -210,33 +213,46 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
               {commonSenseData.rating || "--"}
             </p>
           </div>
-          <p className={styles.label}>CSM</p>
+          <p className={styles.label}>{label}</p>
         </div>
       </a>
     );
   };
 
+  // Build ordered array of available score cards
+  const scoreCards = [
+    imdbData?.url ? { key: 'imdb', renderer: renderIMDb } : null,
+    letterboxdData?.url ? { key: 'letterboxd', renderer: renderLetterboxd } : null,
+    metascoreData?.url ? { key: 'metascore', renderer: renderMetascore } : null,
+    commonSenseData?.url ? { key: 'commonsense', renderer: renderCommonSense } : null,
+  ].filter((card): card is { key: string; renderer: (isFullWidth?: boolean) => JSX.Element | null } =>
+    card !== null
+  );
+
+  // Group cards into rows (max 2 per row)
+  const rows = Array.from(
+    { length: Math.ceil(scoreCards.length / 2) },
+    (_, i) => scoreCards.slice(i * 2, i * 2 + 2)
+  );
+
   return (
     <>
       {renderRottenTomatoes()}
-      {metascoreData ? (
-        <>
-          <div className={styles.ratingsContainer}>
-            {renderIMDb()}
-            {renderMetascore()}
+      {rows.map((row, rowIndex) => {
+        const isFullWidth = row.length === 1;
+        return (
+          <div
+            key={rowIndex}
+            className={isFullWidth ? styles.ratingsContainerFullWidth : styles.ratingsContainer}
+          >
+            {row.map(card => (
+              <React.Fragment key={card.key}>
+                {card.renderer(isFullWidth)}
+              </React.Fragment>
+            ))}
           </div>
-          <div className={styles.ratingsContainer}>
-            {renderLetterboxd()}
-            {renderCommonSense()}
-          </div>
-        </>
-      ) : (
-        <div className={styles.ratingsContainer}>
-          {renderIMDb()}
-          {renderLetterboxd()}
-          {renderCommonSense()}
-        </div>
-      )}
+        );
+      })}
     </>
   );
 };
@@ -273,7 +289,7 @@ const RatingScore: React.FC<RatingScoreProps> = ({
 function getTomatoMeterImage(state: string | null): string {
   switch (state) {
     case "certified-fresh":
-      return tomatometerCertfiedFresh;
+      return tomatometerCertifiedFresh;
     case "fresh":
       return tomatometerFresh;
     case "rotten":
