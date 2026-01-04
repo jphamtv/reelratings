@@ -236,10 +236,10 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
   }
 
   // Group cards into rows (max 2 per row)
-  const rows: Array<Array<{ key: string; renderer: (isFullWidth?: boolean) => JSX.Element | null }>> = [];
-  for (let i = 0; i < scoreCards.length; i += 2) {
-    rows.push(scoreCards.slice(i, i + 2));
-  }
+  const rows = Array.from(
+    { length: Math.ceil(scoreCards.length / 2) },
+    (_, i) => scoreCards.slice(i * 2, i * 2 + 2)
+  );
 
   return (
     <>
