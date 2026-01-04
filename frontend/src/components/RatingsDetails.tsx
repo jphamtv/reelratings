@@ -80,7 +80,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
-  const renderIMDb = (_isFullWidth: boolean = false) => {
+  const renderIMDb = () => {
     if (!imdbData?.url) return null;
 
     return (
@@ -110,7 +110,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     );
   };
 
-  const renderLetterboxd = (_isFullWidth: boolean = false) => {
+  const renderLetterboxd = () => {
     if (!letterboxdData?.url) return null;
 
     return (
@@ -154,8 +154,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const renderMetascore = (_isFullWidth: boolean = false) => {
+  const renderMetascore = () => {
     if (!metascoreData?.url || !metascoreData?.score) return null;
 
     const scoreValue = parseInt(metascoreData.score, 10);
@@ -221,20 +220,14 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
   };
 
   // Build ordered array of available score cards
-  const scoreCards: Array<{ key: string; renderer: (isFullWidth?: boolean) => JSX.Element | null }> = [];
-
-  if (imdbData?.url) {
-    scoreCards.push({ key: 'imdb', renderer: renderIMDb });
-  }
-  if (letterboxdData?.url) {
-    scoreCards.push({ key: 'letterboxd', renderer: renderLetterboxd });
-  }
-  if (metascoreData?.url) {
-    scoreCards.push({ key: 'metascore', renderer: renderMetascore });
-  }
-  if (commonSenseData?.url) {
-    scoreCards.push({ key: 'commonsense', renderer: renderCommonSense });
-  }
+  const scoreCards = [
+    imdbData?.url ? { key: 'imdb', renderer: renderIMDb } : null,
+    letterboxdData?.url ? { key: 'letterboxd', renderer: renderLetterboxd } : null,
+    metascoreData?.url ? { key: 'metascore', renderer: renderMetascore } : null,
+    commonSenseData?.url ? { key: 'commonsense', renderer: renderCommonSense } : null,
+  ].filter((card): card is { key: string; renderer: (isFullWidth?: boolean) => JSX.Element | null } =>
+    card !== null
+  );
 
   // Group cards into rows (max 2 per row)
   const rows = Array.from(
