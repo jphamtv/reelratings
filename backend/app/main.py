@@ -15,6 +15,7 @@ from app.tmdb_api import (
     fetch_director_movies,
     fetch_actor_movies,
 )
+from app.data_collection import scrape_letterboxd_watchlist
 
 # Version declaration
 __version__ = "2.0.3"
@@ -158,6 +159,62 @@ async def actor_movies(actor_id: str) -> dict:
         raise HTTPException(status_code=500, detail="Error fetching actor's movies")
 
 
+@app.get("/api/letterboxd-watchlist/{username}")
+async def letterboxd_watchlist(username: str) -> dict:
+    try:
+        # Scrape Letterboxd watchlist
+        watchlist_data = await scrape_letterboxd_watchlist(username)
+
+        # Check for errors from scraping
+        if "error" in watchlist_data:
+            if "not found" in watchlist_data["error"].lower():
+                raise HTTPException(status_code=404, detail=watchlist_data["error"])
+            elif "private" in watchlist_data["error"].lower():
+                raise HTTPException(status_code=403, detail=watchlist_data["error"])
+            else:
+                raise HTTPException(status_code=500, detail=watchlist_data["error"])
+
+        movies = watchlist_data.get("movies", [])
+        if not movies:
+            return {"results": []}
+
+        # Search TMDB for each movie and find best match by year
+        results = []
+        for movie in movies:
+            title = movie["title"]
+            year = movie["year"]
+
+            try:
+                # Search TMDB
+                search_results = await search_title(title, TMDB_API_KEY)
+
+                # Filter by year (exact match or ±1 year for discrepancies)
+                year_int = int(year)
+                best_match = None
+                for result in search_results:
+                    result_year = int(result.get("year", 0))
+                    if abs(result_year - year_int) <= 1 and result.get("media_type") == "movie":
+                        best_match = result
+                        break
+
+                if best_match:
+                    results.append(best_match)
+                else:
+                    logging.warning(f"No TMDB match found for {title} ({year})")
+            except Exception as e:
+                logging.error(f"Error searching TMDB for {title} ({year}): {type(e).__name__}: {str(e)}")
+                continue
+
+        return {"results": results}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(
+            f"Error fetching Letterboxd watchlist: {type(e).__name__}: {str(e)}."
+        )
+        raise HTTPException(status_code=500, detail="Error fetching Letterboxd watchlist")
+
+
 @app.get("/api/details/{tmdb_id}/{media_type}")
 async def title_details(tmdb_id: str, media_type: str) -> dict:
     cached_key = f"details_{tmdb_id}_{media_type}"
@@ -222,13 +279,19 @@ async def title_details(tmdb_id: str, media_type: str) -> dict:
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     logging.error(f"An HTTP exception occurred: {exc}")
-    return {"error": str(exc), "status_code": exc.status_code}
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail}
+    )
 
 
 @app.exception_handler(Exception)
 async def internal_server_error(request: Request, exc: Exception):
     logging.error(f"An error occurred: {exc}")
-    return {"error": "Internal Server Error", "status_code": 500}
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error"}
+    )
 
 
 if __name__ == "__main__":

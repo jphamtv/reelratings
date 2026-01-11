@@ -54,3 +54,17 @@ export const fetchTitleDetails = async (tmdbId: string, mediaType: string) => {
     throw error;
   }
 };
+
+export const fetchLetterboxdWatchlist = async (username: string) => {
+  const response = await fetch(
+    `${API_BASE_URL}/letterboxd-watchlist/${encodeURIComponent(username)}`,
+  );
+  if (!response.ok) {
+    // Get error message from response
+    const errorData = await response.json().catch(() => ({ detail: "Unknown error" }));
+    throw new Error(
+      errorData.detail || `Failed to fetch watchlist. Status: ${response.status}`,
+    );
+  }
+  return await response.json();
+};

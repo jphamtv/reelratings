@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import SearchBar from "./SearchBar";
 import Footer from "./Footer";
+import LetterboxdModal from "./LetterboxdModal";
 import { useSearch } from "../hooks/useSearch";
 import { useTheme } from "../hooks/useTheme";
 import styles from "./Layout.module.css";
@@ -12,6 +13,7 @@ const Layout: React.FC = () => {
   const navigate = useNavigate();
   const { setSearchValue } = useSearch();
   const { theme } = useTheme();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -28,6 +30,14 @@ const Layout: React.FC = () => {
     navigate("/");
   };
 
+  const handleLetterboxdClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
       <Header onLogoClick={handleLogoClick} />
@@ -37,7 +47,8 @@ const Layout: React.FC = () => {
       <main>
         <Outlet />
       </main>
-      <Footer />
+      <Footer onLetterboxdClick={handleLetterboxdClick} />
+      <LetterboxdModal isOpen={isModalOpen} onClose={handleModalClose} />
     </div>
   );
 };

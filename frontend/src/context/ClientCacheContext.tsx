@@ -37,8 +37,16 @@ export const ClientCacheProvider: React.FC<{ children: React.ReactNode }> = ({
     const item = cache[key] as CacheItem<T> | undefined;
     if (!item) return null;
 
+    // Username is stored permanently (no expiration)
+    if (key === 'letterboxd_username') {
+      return item.data;
+    }
+
     const now = Date.now();
-    const expirationTime = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
+    // Use 24-hour cache for watchlist, 4-hour cache for everything else
+    const expirationTime = key.startsWith('letterboxd_watchlist_')
+      ? 24 * 60 * 60 * 1000  // 24 hours in milliseconds
+      : 4 * 60 * 60 * 1000;   // 4 hours in milliseconds
 
     if (now - item.timestamp > expirationTime) {
       // Remove expired item

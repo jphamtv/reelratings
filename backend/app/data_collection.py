@@ -332,3 +332,55 @@ async def get_letterboxd_rating(letterboxd_url):
         rating = None
 
     return round(float(rating[0:5]), 1) if rating else None
+
+
+async def scrape_letterboxd_watchlist(username):
+    """
+    Scrape Letterboxd watchlist for a given username.
+    Extracts movie title and year from each grid item.
+
+    :param username: Letterboxd username
+    :return: List of dicts with 'title' and 'year', or error dict
+    """
+    watchlist_url = f"https://letterboxd.com/{username}/watchlist/"
+    soup = await make_request(watchlist_url, HEADERS)
+
+    if soup is None:
+        return {"error": "Unable to fetch watchlist. Please check the username and try again."}
+
+    # Check if the page is a 404 (username not found)
+    if soup.find("h1", string="404 Page not found"):
+        return {"error": "Username not found. Please check the username and try again."}
+
+    # Check if watchlist is private
+    if soup.find("p", string=re.compile("This watchlist is private", re.IGNORECASE)):
+        return {"error": "This watchlist is private and cannot be accessed."}
+
+    # Find all grid items (movies in watchlist)
+    grid_items = soup.find_all("li", class_="griditem")
+
+    if not grid_items:
+        return {"error": "No movies found in watchlist or watchlist is empty."}
+
+    movies = []
+    for item in grid_items:
+        # Extract data-item-name which contains "Title (Year)" format
+        poster_div = item.find("div")
+        if poster_div and poster_div.get("data-item-name"):
+            item_name = poster_div.get("data-item-name")
+
+            # Parse "Title (Year)" format using regex
+            match = re.match(r"(.+?)\s*\((\d{4})\)$", item_name)
+            if match:
+                title = match.group(1).strip()
+                year = match.group(2)
+                movies.append({
+                    "title": title,
+                    "year": year
+                })
+
+    if not movies:
+        return {"error": "Could not extract movie data from watchlist."}
+
+    logging.info(f"Successfully scraped {len(movies)} movies from {username}'s watchlist")
+    return {"movies": movies}
