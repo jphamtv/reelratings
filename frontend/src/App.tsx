@@ -6,6 +6,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import DetailsPage from "./pages/DetailsPage";
+import WatchlistPage from "./pages/WatchlistPage";
 import Layout from "./components/Layout";
 
 const App: React.FC = () => {
@@ -18,6 +19,7 @@ const App: React.FC = () => {
               <Route path="/" element={<HomePage />} />
               <Route element={<Layout />}>
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/watchlist" element={<WatchlistPage />} />
                 <Route
                   path="/details/:tmdbId/:mediaType"
                   element={<DetailsPage />}
