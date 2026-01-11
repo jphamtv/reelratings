@@ -357,20 +357,23 @@ async def scrape_letterboxd_watchlist(username):
         return {"error": "This watchlist is private and cannot be accessed."}
 
     # Find all grid items (movies in watchlist)
-    grid_items = soup.find_all("li", class_="poster-container")
+    grid_items = soup.find_all("li", class_="griditem")
 
     if not grid_items:
         return {"error": "No movies found in watchlist or watchlist is empty."}
 
     movies = []
     for item in grid_items:
-        # Extract data-item-name which contains "Title Year" format
+        # Extract data-item-name which contains "Title (Year)" format
         poster_div = item.find("div")
-        if poster_div and poster_div.get("data-film-name"):
-            title = poster_div.get("data-film-name")
-            year = poster_div.get("data-film-release-year")
+        if poster_div and poster_div.get("data-item-name"):
+            item_name = poster_div.get("data-item-name")
 
-            if title and year:
+            # Parse "Title (Year)" format using regex
+            match = re.match(r"(.+?)\s*\((\d{4})\)$", item_name)
+            if match:
+                title = match.group(1).strip()
+                year = match.group(2)
                 movies.append({
                     "title": title,
                     "year": year

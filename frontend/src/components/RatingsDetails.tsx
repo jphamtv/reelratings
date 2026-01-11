@@ -169,7 +169,7 @@ const RatingsDetails: React.FC<RatingsDetailsProps> = ({
       >
         <div className={`${styles.ratingContainer} card`}>
           <div
-            className={styles.metascoreBox}
+            className={`${styles.metascoreBox} ${scoreValue === 100 ? styles.metascorePerfect : ''}`}
             style={{
               backgroundColor: colors.backgroundColor,
               color: colors.color,
