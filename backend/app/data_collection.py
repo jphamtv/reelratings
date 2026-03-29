@@ -200,25 +200,9 @@ async def get_imdb_rating(imdb_id):
             )
             imdb_rating = rating.text[:-3] if rating else None
 
-        # Extract Metascore from __NEXT_DATA__ JSON
-        metascore = None
-        next_data_tag = soup.find("script", id="__NEXT_DATA__")
-        if next_data_tag:
-            try:
-                next_data = json.loads(next_data_tag.string)
-                page_props = next_data.get("props", {}).get("pageProps", {})
-                for section in ("aboveTheFoldData", "mainColumnData"):
-                    metacritic = page_props.get(section, {}).get("metacriticScore")
-                    if metacritic and metacritic.get("metaScore") is not None:
-                        metascore = str(metacritic["metaScore"])
-                        break
-            except (json.JSONDecodeError, AttributeError, KeyError):
-                pass
-
-        # Fallback: extract from DOM
-        if not metascore:
-            metascore_element = soup.find("span", class_="metacritic-score-box")
-            metascore = metascore_element.text.strip() if metascore_element else None
+        # Locate the Metascore
+        metascore_element = soup.find("span", class_="metacritic-score-box")
+        metascore = metascore_element.text.strip() if metascore_element else None
 
         return {
             "imdb_rating": imdb_rating,
