@@ -21,13 +21,9 @@ BASE_URLS = {
 }
 
 HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0"
-    ),
+    "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+    "Accept": "text/html,application/xhtml+xml",
     "Accept-Language": "en-US,en;q=0.5",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Referer": "https://www.google.com",
 }
 
 """
@@ -132,8 +128,10 @@ async def get_commonsense_info(title, year, media_type):
     # Construct direct URL based on media type
     if media_type.lower() == "movie":
         url = f"https://www.commonsensemedia.org/movie-reviews/{slug}"
+        year_class = "detail--release-dates-theaters"
     elif media_type.lower() == "tv":
         url = f"https://www.commonsensemedia.org/tv-reviews/{slug}"
+        year_class = "detail--premiere-date"
     else:
         return None
 
@@ -142,27 +140,31 @@ async def get_commonsense_info(title, year, media_type):
     if soup is None:
         return None
 
-    # Extract rating from JSON-LD structured data
-    rating = None
-    script_tags = soup.find_all("script", {"type": "application/ld+json"})
-    for script_tag in script_tags:
-        try:
-            data = json.loads(script_tag.string)
-            if isinstance(data, dict) and 'typicalAgeRange' in data:
-                rating = data['typicalAgeRange']
-                break
-        except (json.JSONDecodeError, TypeError):
-            continue
+    # Extract year from HTML element (different class for movies vs TV)
+    page_year = None
+    year_element = soup.find("span", class_=year_class)
+    if year_element:
+        year_text = year_element.get_text().strip()
+        # Extract 4-digit year from date text (e.g., "February 14, 1931" → 1931)
+        year_match = re.search(r'\b(19|20)\d{2}\b', year_text)
+        if year_match:
+            page_year = int(year_match.group())
 
-    # Fallback: Extract rating from HTML span element
-    if not rating:
-        rating_element = soup.find("span", {"class": "rating__age"})
-        if rating_element:
-            rating_text = rating_element.text.strip()
-            # Extract just the age number (e.g., "age 14+" -> "14+")
-            age_match = re.search(r'(\d+\+?)', rating_text)
-            if age_match:
-                rating = age_match.group(1)
+    # Verify year matches within ±2 tolerance (for foreign/animation release discrepancies)
+    if page_year:
+        expected_year = int(year)
+        if abs(page_year - expected_year) > 2:
+            return None
+
+    # Extract rating from HTML span element
+    rating = None
+    rating_element = soup.find("span", {"class": "rating__age"})
+    if rating_element:
+        rating_text = rating_element.text.strip()
+        # Extract just the age number (e.g., "age 14+" -> "14+")
+        age_match = re.search(r'(\d+\+?)', rating_text)
+        if age_match:
+            rating = age_match.group(1)
 
     if rating:
         return {

@@ -49,7 +49,7 @@ const LetterboxdModal: React.FC<LetterboxdModalProps> = ({ isOpen, onClose }) =>
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="e.g., jtvp"
+            placeholder="username"
             className={styles.input}
             autoFocus
           />
