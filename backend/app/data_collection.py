@@ -8,6 +8,8 @@ import json
 import logging
 import re
 
+from curl_cffi.requests import AsyncSession
+
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 from app.utils.similar_utils import similar
@@ -25,6 +27,7 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml",
     "Accept-Language": "en-US,en;q=0.5",
 }
+
 
 """
 Makes an asynchronous HTTP GET request and parses the response with BeautifulSoup.
@@ -60,6 +63,18 @@ async def make_request(url, headers=None):
     return None
 
 
+async def make_letterboxd_request(url):
+    """Makes a request to Letterboxd using browser TLS impersonation to bypass bot detection."""
+    try:
+        async with AsyncSession() as session:
+            response = await session.get(url, impersonate="chrome120")
+            response.raise_for_status()
+            return BeautifulSoup(response.content, "html.parser")
+    except Exception as exc:
+        logging.error(f"Letterboxd Request Error: {exc}")
+    return None
+
+
 async def get_rottentomatoes_url(title, year, media_type):
     """Extract the RottenTomatoes URL for the title"""
     search_url = f"{BASE_URLS['rottentomatoes']}{title.replace(' ', '%20')}"
@@ -92,7 +107,7 @@ async def get_rottentomatoes_url(title, year, media_type):
 async def get_letterboxd_url(title, year):
     """Extract the Letterboxd URL for the movie"""
     search_url = f"{BASE_URLS['letterboxd']}{title.replace(' ', '+')}/"
-    soup = await make_request(search_url, HEADERS)
+    soup = await make_letterboxd_request(search_url)
     if soup is None:
         return None
 
@@ -336,7 +351,7 @@ async def get_letterboxd_rating(letterboxd_url):
     if not letterboxd_url:
         return None
 
-    soup = await make_request(letterboxd_url, HEADERS)
+    soup = await make_letterboxd_request(letterboxd_url)
     if soup is None:
         return None
 
@@ -346,7 +361,7 @@ async def get_letterboxd_rating(letterboxd_url):
     except AttributeError:
         rating = None
 
-    return round(float(rating[0:5]), 1) if rating else None
+    return round(float(rating.split()[0]), 1) if rating else None
 
 
 async def scrape_letterboxd_watchlist(username):
@@ -358,7 +373,7 @@ async def scrape_letterboxd_watchlist(username):
     :return: List of dicts with 'title' and 'year', or error dict
     """
     watchlist_url = f"https://letterboxd.com/{username}/watchlist/"
-    soup = await make_request(watchlist_url, HEADERS)
+    soup = await make_letterboxd_request(watchlist_url)
 
     if soup is None:
         return {"error": "Unable to fetch watchlist. Please check the username and try again."}
