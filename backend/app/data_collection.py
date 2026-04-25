@@ -6,6 +6,7 @@ It provides functions to fetch and parse data from these sources.
 import httpx
 import json
 import logging
+import os
 import re
 
 from curl_cffi.requests import AsyncSession
@@ -67,7 +68,7 @@ async def make_letterboxd_request(url):
     """Makes a request to Letterboxd using browser TLS impersonation to bypass bot detection."""
     try:
         async with AsyncSession() as session:
-            response = await session.get(url, impersonate="chrome120")
+            response = await session.get(url, impersonate="chrome124")
             response.raise_for_status()
             return BeautifulSoup(response.content, "html.parser")
     except Exception as exc:
@@ -191,42 +192,32 @@ async def get_commonsense_info(title, year, media_type):
 
 
 async def get_imdb_rating(imdb_id):
-    """Extract the average user rating and Metascore"""
-    if imdb_id:
-        imdb_url = f"{BASE_URLS['imdb']}{imdb_id}"
-        soup = await make_request(imdb_url, HEADERS)
-        if soup is None:
-            return None
-
-        # Extract IMDb rating from JSON-LD structured data (most reliable)
-        imdb_rating = None
-        script_tag = soup.find("script", type="application/ld+json")
-        if script_tag:
-            try:
-                ld_data = json.loads(script_tag.string)
-                rating_value = ld_data.get("aggregateRating", {}).get("ratingValue")
-                if rating_value is not None:
-                    imdb_rating = str(rating_value)
-            except (json.JSONDecodeError, AttributeError):
-                pass
-
-        # Fallback: extract from DOM
-        if not imdb_rating:
-            rating = soup.find(
-                "div", {"data-testid": "hero-rating-bar__aggregate-rating__score"}
-            )
-            imdb_rating = rating.text[:-3] if rating else None
-
-        # Locate the Metascore
-        metascore_element = soup.find("span", class_="metacritic-score-box")
-        metascore = metascore_element.text.strip() if metascore_element else None
-
-        return {
-            "imdb_rating": imdb_rating,
-            "metascore": metascore
-        }
-    else:
+    """Extract IMDb rating and Metascore via OMDb API"""
+    if not imdb_id:
         return None
+
+    omdb_api_key = os.environ.get("OMDB_API_KEY")
+    if not omdb_api_key:
+        logging.error("OMDB_API_KEY not set")
+        return None
+
+    url = f"https://www.omdbapi.com/?i={imdb_id}&apikey={omdb_api_key}"
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            response = await client.get(url)
+            response.raise_for_status()
+            data = response.json()
+    except Exception as exc:
+        logging.error(f"OMDb API Error: {exc}")
+        return None
+
+    imdb_rating = data.get("imdbRating")
+    metascore = data.get("Metascore")
+
+    return {
+        "imdb_rating": imdb_rating if imdb_rating != "N/A" else None,
+        "metascore": metascore if metascore != "N/A" else None,
+    }
 
 
 async def get_boxofficemojo_url(imdb_id):
