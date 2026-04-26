@@ -6,14 +6,18 @@ It provides functions to fetch and parse data from these sources.
 import httpx
 import json
 import logging
-import os
 import re
 
 from curl_cffi.requests import AsyncSession
+from environs import Env
 
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 from app.utils.similar_utils import similar
+
+env = Env()
+env.read_env()
+OMDB_API_KEY = env.str("OMDB_API_KEY", "")
 
 BASE_URLS = {
     "rottentomatoes": "https://www.rottentomatoes.com/search?search=",
@@ -196,12 +200,11 @@ async def get_imdb_rating(imdb_id):
     if not imdb_id:
         return None
 
-    omdb_api_key = os.environ.get("OMDB_API_KEY")
-    if not omdb_api_key:
+    if not OMDB_API_KEY:
         logging.error("OMDB_API_KEY not set")
         return None
 
-    url = f"https://www.omdbapi.com/?i={imdb_id}&apikey={omdb_api_key}"
+    url = f"https://www.omdbapi.com/?i={imdb_id}&apikey={OMDB_API_KEY}"
     try:
         async with httpx.AsyncClient(timeout=15) as client:
             response = await client.get(url)
