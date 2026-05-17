@@ -21,7 +21,6 @@ OMDB_API_KEY = env.str("OMDB_API_KEY", "")
 
 BASE_URLS = {
     "rottentomatoes": "https://www.rottentomatoes.com/search?search=",
-    "letterboxd": "https://letterboxd.com/s/search/",
     "commonsensemedia": "https://www.commonsensemedia.org/search/",
     "imdb": "https://www.imdb.com/title/",
     "boxofficemojo": "https://www.boxofficemojo.com/title/",
@@ -110,25 +109,37 @@ async def get_rottentomatoes_url(title, year, media_type):
 
 
 async def get_letterboxd_url(title, year):
-    """Extract the Letterboxd URL for the movie"""
-    search_url = f"{BASE_URLS['letterboxd']}{title.replace(' ', '+')}/"
-    soup = await make_letterboxd_request(search_url)
-    if soup is None:
+    """Resolve a Letterboxd film URL by constructing the slug directly.
+
+    The search endpoint is gated by Cloudflare, but `/film/<slug>/` pages
+    are reachable with a plain request. Letterboxd slugs are deterministic
+    (ASCII-normalized, lowercased, non-alphanumerics collapsed to hyphens).
+    For titles with no name conflict the bare slug works; for conflicts
+    Letterboxd appends `-<year>`. TMDB and Letterboxd can disagree on the
+    release year (especially for anime / foreign films), so we tolerate
+    ±2 years on the page-year check and probe the same ±2 window when
+    falling back to the year-suffixed variant.
+    """
+    slug = unidecode(title).lower().replace("'", "")
+    slug = re.sub(r"[^a-z0-9]+", "-", slug).strip("-")
+    if not slug:
         return None
 
-    search_results = soup.find_all("span", {"class": "film-title-wrapper"})
     year = int(year)
 
-    # Loop through to check exact year, then -/+ 1 year for discrepencies
-    for check_year in [year, year - 1, year + 1]:
-        for result in search_results:
-            # Extract the text content
-            year_element = result.find("small", class_="metadata")
+    bare_url = f"https://letterboxd.com/film/{slug}/"
+    soup = await make_request(bare_url, HEADERS)
+    if soup is not None:
+        title_meta = soup.find("meta", {"name": "twitter:title"})
+        if title_meta:
+            year_match = re.search(r"\((\d{4})\)", title_meta.get("content", ""))
+            if year_match and abs(int(year_match.group(1)) - year) <= 2:
+                return bare_url
 
-            # If matched, get the href from the parent <a> tag
-            if year_element and year_element.text.strip() == str(check_year):
-                href = result.find("a")["href"]
-                return f"https://letterboxd.com{href}"
+    for delta in (0, -1, 1, -2, 2):
+        candidate_url = f"https://letterboxd.com/film/{slug}-{year + delta}/"
+        if await make_request(candidate_url, HEADERS) is not None:
+            return candidate_url
 
     return None
 
@@ -345,11 +356,10 @@ async def get_letterboxd_rating(letterboxd_url):
     if not letterboxd_url:
         return None
 
-    soup = await make_letterboxd_request(letterboxd_url)
+    soup = await make_request(letterboxd_url, HEADERS)
     if soup is None:
         return None
 
-    # Locate the class that contains the Tomatometer and Audience scores
     try:
         rating = soup.find("meta", {"name": "twitter:data2"}).get("content")
     except AttributeError:
