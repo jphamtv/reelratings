@@ -3,6 +3,7 @@ This module handles data collection from various external sources such as
 RottenTomatoes, Letterboxd, CommonSenseMedia, IMDb, and BoxOfficeMojo.
 It provides functions to fetch and parse data from these sources.
 """
+import asyncio
 import httpx
 import json
 import logging
@@ -368,16 +369,39 @@ async def get_letterboxd_rating(letterboxd_url):
     return round(float(rating.split()[0]), 1) if rating else None
 
 
+def _extract_watchlist_movies(soup):
+    """Parse title/year pairs from the grid items on a single watchlist page."""
+    movies = []
+    for item in soup.find_all("li", class_="griditem"):
+        # Extract data-item-name which contains "Title (Year)" format
+        poster_div = item.find("div")
+        if poster_div and poster_div.get("data-item-name"):
+            item_name = poster_div.get("data-item-name")
+
+            # Parse "Title (Year)" format using regex
+            match = re.match(r"(.+?)\s*\((\d{4})\)$", item_name)
+            if match:
+                movies.append({
+                    "title": match.group(1).strip(),
+                    "year": match.group(2),
+                })
+    return movies
+
+
 async def scrape_letterboxd_watchlist(username):
     """
-    Scrape Letterboxd watchlist for a given username.
-    Extracts movie title and year from each grid item.
+    Scrape a Letterboxd watchlist for a given username, across all pages.
+
+    Letterboxd paginates watchlists (28 items per page at time of writing).
+    The first page's `.paginate-pages` block lists every page number, so we
+    read the highest one and fetch the remaining pages concurrently rather
+    than relying on a fixed per-page count.
 
     :param username: Letterboxd username
-    :return: List of dicts with 'title' and 'year', or error dict
+    :return: dict with 'movies' (list of {'title', 'year'}), or error dict
     """
-    watchlist_url = f"https://letterboxd.com/{username}/watchlist/"
-    soup = await make_letterboxd_request(watchlist_url)
+    base_url = f"https://letterboxd.com/{username}/watchlist/"
+    soup = await make_letterboxd_request(base_url)
 
     if soup is None:
         return {"error": "Unable to fetch watchlist. Please check the username and try again."}
@@ -391,27 +415,34 @@ async def scrape_letterboxd_watchlist(username):
         return {"error": "This watchlist is private and cannot be accessed."}
 
     # Find all grid items (movies in watchlist)
-    grid_items = soup.find_all("li", class_="griditem")
-
-    if not grid_items:
+    if not soup.find_all("li", class_="griditem"):
         return {"error": "No movies found in watchlist or watchlist is empty."}
 
-    movies = []
-    for item in grid_items:
-        # Extract data-item-name which contains "Title (Year)" format
-        poster_div = item.find("div")
-        if poster_div and poster_div.get("data-item-name"):
-            item_name = poster_div.get("data-item-name")
+    # Determine the last page number from the pagination block (absent = single page)
+    last_page = 1
+    pagination = soup.find("div", class_="paginate-pages")
+    if pagination:
+        page_numbers = [
+            int(text)
+            for li in pagination.find_all("li", class_="paginate-page")
+            if (text := li.get_text(strip=True)).isdigit()
+        ]
+        if page_numbers:
+            last_page = max(page_numbers)
 
-            # Parse "Title (Year)" format using regex
-            match = re.match(r"(.+?)\s*\((\d{4})\)$", item_name)
-            if match:
-                title = match.group(1).strip()
-                year = match.group(2)
-                movies.append({
-                    "title": title,
-                    "year": year
-                })
+    movies = _extract_watchlist_movies(soup)
+
+    # Fetch any remaining pages concurrently and append their movies in order
+    if last_page > 1:
+        remaining = await asyncio.gather(
+            *(
+                make_letterboxd_request(f"{base_url}page/{page}/")
+                for page in range(2, last_page + 1)
+            )
+        )
+        for page_soup in remaining:
+            if page_soup is not None:
+                movies.extend(_extract_watchlist_movies(page_soup))
 
     if not movies:
         return {"error": "Could not extract movie data from watchlist."}
